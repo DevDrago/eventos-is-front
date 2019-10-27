@@ -13,11 +13,16 @@
                     <mdb-tab-item :active="tabs==2" @click.native.prevent="tabs = 2"><mdb-icon icon="user-plus" class="mr-1"/> Registro</mdb-tab-item>
                 </mdb-tab>
                 <mdb-modal-body class="mx-3" v-if="tabs==1">
-                    <mdb-input label="Correo" icon="envelope" type="email" class="mb-5"/>
-                    <mdb-input label="Contraseña" icon="lock" type="password"/>
-                    <div class="mt-2 text-center">
-                        <mdb-btn color="info">Iniciar <mdb-icon icon="sign-in-alt" class="ml-1"/></mdb-btn>
-                    </div>
+                    <form @submit.prevent="submitLogin">
+                        <mdb-input v-model="$v.emailLogin.$model" required label="Correo" :class="{'is-invalid': $v.emailLogin.$error}" icon="envelope" type="email" class="mb-5"/>
+                        <mdb-input v-model="$v.passwordLogin.$model" :class="{'is-invalid': $v.passwordLogin.$error}" required label="Contraseña" icon="lock" type="password"/>
+                        <p v-if="!$v.passwordLogin.minLength" class="text-danger">La contraseña debe contener al menos seis caracteres.</p>
+                        <p v-if="submitStatusLogin === 'ERROR'" class="text-danger">Favor llenar el formulario correctamente.</p>
+                        <p v-if="submitStatusLogin === 'PENDING'" class="text-success">Enviando...</p>
+                        <div class="mt-2 text-center">
+                            <mdb-btn type="submit" color="info">Iniciar <mdb-icon icon="sign-in-alt" class="ml-1"/></mdb-btn>
+                        </div>
+                    </form>
                 </mdb-modal-body>
                 <mdb-modal-footer center v-if="tabs==1">
                     <div class="row w-100">
@@ -34,24 +39,32 @@
                     </div>
                 </mdb-modal-footer>
                 <mdb-modal-body class="mx-3" v-if="tabs==2">
-                    <div class="row">
-                        <div class="col-lg-6"><mdb-input label="Nombres" icon="user" type="text" class="mb-1"/></div>
-                        <div class="col-lg-6"><mdb-input label="Apellidos" icon="user" type="text" class="mb-1"/></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6"><mdb-input label="# de cuenta/empleado" icon="address-card" type="number" class="mb-1"/></div>
-                        <div class="col-lg-6"><mdb-input label="Teléfono" icon="mobile-alt" type="number" class="mb-1"/></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12"><mdb-input label="Correo" icon="envelope" type="email" class="mb-1"/></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6"><mdb-input label="Contraseña" icon="lock" type="password" class="mb-1"/></div>
-                        <div class="col-lg-6"><mdb-input label="Repetir contraseña" icon="lock" type="password"/></div>
-                    </div>
-                    <div class="mt-2 text-center">
-                        <mdb-btn color="info">Registrar<mdb-icon icon="sign-in-alt" class="ml-1"/></mdb-btn>
-                    </div>
+                    <form @submit.prevent="submit">
+                        <div class="row">
+                            <div class="col-lg-6"><mdb-input required label="Nombres" icon="user" type="text" class="mb-1"/></div>
+                            <div class="col-lg-6"><mdb-input required label="Apellidos" icon="user" type="text" class="mb-1"/></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6"><mdb-input required label="# de cuenta/empleado" icon="address-card" type="number" class="mb-1"/></div>
+                            <div class="col-lg-6"><mdb-input required label="Teléfono" icon="mobile-alt" type="number" class="mb-1"/></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12"><mdb-input required v-model="$v.email.$model" :class="{'is-invalid': $v.email.$error}" label="Correo" icon="envelope" type="email" class="mb-1"/></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6"><mdb-input required v-model="$v.password.$model" :class="{'is-invalid': $v.password.$error}" label="Contraseña" icon="lock" type="password" class="mb-1"/></div>
+                            <div class="col-lg-6"><mdb-input required v-model="$v.repeatPassword.$model" :class="{'is-invalid': $v.repeatPassword.$error}" label="Repetir contraseña" icon="lock" type="password"/></div>
+                            <div class="col-lg-12" v-if="!$v.password.minLength"><p class="text-danger">La contraseña debe contener al menos seis caracteres.</p></div>
+                            <div class="col-lg-12" v-if="!$v.repeatPassword.sameAsPassword"><p class="text-danger">Las contraseñas no son iguales.</p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12" v-if="submitStatus === 'ERROR'"><p class="text-danger">Favor llenar el formulario correctamente.</p></div>
+                            <div class="col-lg-12" v-if="submitStatus === 'PENDING'"><p class="text-success">Enviando...</p></div>
+                        </div>
+                        <div class="mt-2 text-center">
+                            <mdb-btn type="submit" color="info">Registrar<mdb-icon icon="sign-in-alt" class="ml-1"/></mdb-btn>
+                        </div>
+                    </form>
                 </mdb-modal-body>
                 <mdb-modal-footer center v-if="tabs==2">
                     <div class="row w-100">
@@ -96,10 +109,27 @@
 }
 .login-logo-cont { text-align: center; }
 .login-cont { background-color: white; border-radius: 4px; }
+.is-invalid input {
+    border-bottom: 1px solid #dc3545 !important;
+    box-shadow: none !important;
+}
+.is-invalid input[type="email"]:not(.browser-default):focus:not([readonly]) + label {
+    color: #dc3545 !important;
+}
+.is-invalid .prefix.active {
+    color: #dc3545 !important;
+}
+.is-invalid .prefix {
+    color: #dc3545 !important;
+}
+.is-invalid label {
+    color: #dc3545 !important;
+}
 </style>
 
 <script>
     import { mdbContainer, mdbRow, mdbCol, mdbBtn, mdbModal, mdbTab, mdbTabItem, mdbModalBody, mdbInput, mdbModalFooter, mdbModalTitle, mdbIcon } from 'mdbvue';
+    import { required, email, sameAs, minLength } from 'vuelidate/lib/validators';
     export default {
         name: 'LoginRegister',
             components: {
@@ -119,8 +149,53 @@
         },
         data() {
             return {
+                email:'',
+                emailLogin:'',
+                password: '',
+                passwordLogin: '',
+                repeatPassword: '',
+                submitStatus: null,
+                submitStatusLogin: null,
                 cascading: false,
                 tabs: 1
+            }
+        },
+        validations: {
+            email: {required, email},
+            emailLogin: {required, email},
+            password:{
+                required,
+                minLength: minLength(6)
+            },
+            passwordLogin:{
+                required,
+                minLength: minLength(6)
+            },
+            repeatPassword:{
+                sameAsPassword: sameAs('password')
+            }
+        },
+        methods:{
+            submit(){
+                this.$v.password.$touch();
+                this.$v.email.$touch();
+                this.$v.repeatPassword.$touch();
+                if (this.$v.password.$invalid || this.$v.repeatPassword.$invalid || this.$v.email.$invalid ) {
+                    this.submitStatus = 'ERROR';
+                } else {
+                    this.submitStatus = 'PENDING';
+                    console.log("Submit");
+                }
+            },
+            submitLogin(){
+                this.$v.passwordLogin.$touch();
+                this.$v.emailLogin.$touch();
+                if (this.$v.passwordLogin.$invalid || this.$v.emailLogin.$invalid ) {
+                    this.submitStatusLogin = 'ERROR';
+                } else {
+                    this.submitStatusLogin = 'PENDING';
+                    console.log("Submit");
+                }
             }
         }
     }
