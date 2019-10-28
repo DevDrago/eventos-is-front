@@ -41,12 +41,12 @@
                 <mdb-modal-body class="mx-3" v-if="tabs==2">
                     <form @submit.prevent="submit">
                         <div class="row">
-                            <div class="col-lg-6"><mdb-input required label="Nombres" icon="user" type="text" class="mb-1"/></div>
-                            <div class="col-lg-6"><mdb-input required label="Apellidos" icon="user" type="text" class="mb-1"/></div>
+                            <div class="col-lg-6"><mdb-input v-model="nombres" required label="Nombres" icon="user" type="text" class="mb-1"/></div>
+                            <div class="col-lg-6"><mdb-input v-model="apellidos" required label="Apellidos" icon="user" type="text" class="mb-1"/></div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-6"><mdb-input required label="# de cuenta/empleado" icon="address-card" type="number" class="mb-1"/></div>
-                            <div class="col-lg-6"><mdb-input required label="Teléfono" icon="mobile-alt" type="number" class="mb-1"/></div>
+                            <div class="col-lg-6"><mdb-input v-model="numCuentaEmpleado" required label="# de cuenta/empleado" icon="address-card" type="number" class="mb-1"/></div>
+                            <div class="col-lg-6"><mdb-input v-model="telefono" required label="Teléfono" icon="mobile-alt" type="number" class="mb-1"/></div>
                         </div>
                         <div class="row">
                             <div class="col-lg-12"><mdb-input required v-model="$v.email.$model" :class="{'is-invalid': $v.email.$error}" label="Correo" icon="envelope" type="email" class="mb-1"/></div>
@@ -130,6 +130,7 @@
 <script>
     import { mdbContainer, mdbRow, mdbCol, mdbBtn, mdbModal, mdbTab, mdbTabItem, mdbModalBody, mdbInput, mdbModalFooter, mdbModalTitle, mdbIcon } from 'mdbvue';
     import { required, email, sameAs, minLength } from 'vuelidate/lib/validators';
+    import {mapActions, mapState} from 'vuex';
     export default {
         name: 'LoginRegister',
             components: {
@@ -154,6 +155,10 @@
                 password: '',
                 passwordLogin: '',
                 repeatPassword: '',
+                numCuentaEmpleado: '',
+                nombres: '',
+                apellidos: '',
+                telefono: '',
                 submitStatus: null,
                 submitStatusLogin: null,
                 cascading: false,
@@ -176,6 +181,7 @@
             }
         },
         methods:{
+            ...mapActions(['login', 'register']),
             submit(){
                 this.$v.password.$touch();
                 this.$v.email.$touch();
@@ -184,7 +190,16 @@
                     this.submitStatus = 'ERROR';
                 } else {
                     this.submitStatus = 'PENDING';
+                    let tipoUsuario = 1;
+                    let numCuentaEmpleado = this.numCuentaEmpleado;
+                    let nombres = this.nombres;
+                    let apellidos = this.apellidos;
+                    let correo = this.$v.email.$model;
+                    let telefono = this.telefono;
+                    let contrasenia = this.$v.password.$model;
                     console.log("Submit");
+                    this.register({tipoUsuario, numCuentaEmpleado, nombres, apellidos,
+                                   correo, telefono, contrasenia});
                 }
             },
             submitLogin(){
@@ -194,9 +209,12 @@
                     this.submitStatusLogin = 'ERROR';
                 } else {
                     this.submitStatusLogin = 'PENDING';
+                    let correo = this.$v.emailLogin.$model;
+                    let contrasenia = this.$v.passwordLogin.$model; 
+                    this.login({correo, contrasenia});
                     console.log("Submit");
                 }
-            }
+            },
         }
     }
 </script>

@@ -19,6 +19,7 @@
               <mdb-icon icon="money-bill-alt" far class="primary-color"/>
               <div class="data">
                 <p>SALES</p>
+                {{actividades}}
                 <h4>
                   <strong>$2000</strong>
                 </h4>
@@ -537,7 +538,8 @@
 </template>
 
 <script>
-import { mdbRow, mdbCol, mdbBtn, mdbCard, mdbCardBody, mdbCardHeader, mdbCardText, mdbIcon, mdbTbl, mdbBarChart, mdbPieChart, mdbLineChart, mdbRadarChart, mdbDoughnutChart, mdbListGroup, mdbListGroupItem, mdbBadge, mdbModal, mdbModalHeader, mdbModalTitle, mdbModalBody, mdbModalFooter } from 'mdbvue'
+import { mdbRow, mdbCol, mdbBtn, mdbCard, mdbCardBody, mdbCardHeader, mdbCardText, mdbIcon, mdbTbl, mdbBarChart, mdbPieChart, mdbLineChart, mdbRadarChart, mdbDoughnutChart, mdbListGroup, mdbListGroupItem, mdbBadge, mdbModal, mdbModalHeader, mdbModalTitle, mdbModalBody, mdbModalFooter } from 'mdbvue';
+import {mapActions, mapState} from 'vuex';
 
 export default {
   name: 'Dashboard',
@@ -715,6 +717,15 @@ export default {
         maintainAspectRatio: false
       }
     }
+  },
+  methods:{
+    ...mapActions(['getActividades'])
+  },
+  created() {
+    this.getActividades()
+  },
+  computed: {
+    ...mapState(['actividades'])
   }
 }
 </script>
