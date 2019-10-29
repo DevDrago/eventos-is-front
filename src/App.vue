@@ -9,6 +9,7 @@
 				<mdb-navbar-nav right>
 					<mdb-nav-item href="#">Usuarios</mdb-nav-item>
 					<mdb-nav-item href="#">Eventos</mdb-nav-item>
+					<mdb-nav-item @click="cerrarSesion" v-if="isLoggedIn">Cerrar sesión</mdb-nav-item>
 				</mdb-navbar-nav>
 			</mdb-navbar-toggler>
 		</mdb-navbar>
@@ -36,6 +37,8 @@
 
 <script>
 import { mdbFooter, mdbContainer, mdbRow, mdbCol, mdbDropdown, mdbDropdownToggle, mdbDropdownMenu, mdbDropdownItem, mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem } from 'mdbvue';
+import {mapActions, mapGetters} from 'vuex';
+import router from './router/index';
 export default {
 	name: "App",
 	components: {
@@ -52,6 +55,15 @@ export default {
     mdbDropdownToggle,
     mdbDropdownMenu,
     mdbDropdownItem
+	},
+	methods: {
+		...mapActions(['logout']),
+		cerrarSesion(){
+			this.logout().then(()=>router.push({name:'LoginRegister'}));
+		}
+	},
+	computed: {
+		...mapGetters(['isLoggedIn'])
 	}
 };
 </script>
