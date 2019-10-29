@@ -19,6 +19,7 @@
               <mdb-icon icon="money-bill-alt" far class="primary-color"/>
               <div class="data">
                 <p>SALES</p>
+                {{usuario.nombres}}
                 <h4>
                   <strong>$2000</strong>
                 </h4>
@@ -724,7 +725,13 @@ export default {
     this.getActividades()
   },
   computed: {
-    ...mapState(['actividades'])
+    ...mapState(['actividades', 'isAdmin', 'user']),
+    usuario(){
+      if (typeof this.user === 'string') 
+        return JSON.parse(this.user);
+      else
+        return this.user;
+    }
   }
 }
 </script>

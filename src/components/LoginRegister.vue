@@ -18,7 +18,8 @@
                         <mdb-input v-model="$v.passwordLogin.$model" :class="{'is-invalid': $v.passwordLogin.$error}" required label="Contraseña" icon="lock" type="password"/>
                         <p v-if="!$v.passwordLogin.minLength" class="text-danger">La contraseña debe contener al menos seis caracteres.</p>
                         <p v-if="submitStatusLogin === 'ERROR'" class="text-danger">Favor llenar el formulario correctamente.</p>
-                        <p v-if="submitStatusLogin === 'PENDING'" class="text-success">Enviando...</p>
+                        <div class="col-lg-12" v-if="status === 'Error'"><p class="text-danger">{{errMensaje}}</p></div>
+                        <p v-if="status === 'Cargando'" class="text-success">Enviando...</p>
                         <div class="mt-2 text-center">
                             <mdb-btn type="submit" color="info">Iniciar <mdb-icon icon="sign-in-alt" class="ml-1"/></mdb-btn>
                         </div>
@@ -59,7 +60,8 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-12" v-if="submitStatus === 'ERROR'"><p class="text-danger">Favor llenar el formulario correctamente.</p></div>
-                            <div class="col-lg-12" v-if="submitStatus === 'PENDING'"><p class="text-success">Enviando...</p></div>
+                            <div class="col-lg-12" v-if="status === 'Error'"><p class="text-danger">{{errMensaje}}</p></div>
+                            <div class="col-lg-12" v-if="status === 'Cargando'"><p class="text-success">Enviando...</p></div>
                         </div>
                         <div class="mt-2 text-center">
                             <mdb-btn type="submit" color="info">Registrar<mdb-icon icon="sign-in-alt" class="ml-1"/></mdb-btn>
@@ -131,6 +133,7 @@
     import { mdbContainer, mdbRow, mdbCol, mdbBtn, mdbModal, mdbTab, mdbTabItem, mdbModalBody, mdbInput, mdbModalFooter, mdbModalTitle, mdbIcon } from 'mdbvue';
     import { required, email, sameAs, minLength } from 'vuelidate/lib/validators';
     import {mapActions, mapState} from 'vuex';
+    import router from '../router/index';
     export default {
         name: 'LoginRegister',
             components: {
@@ -189,7 +192,6 @@
                 if (this.$v.password.$invalid || this.$v.repeatPassword.$invalid || this.$v.email.$invalid ) {
                     this.submitStatus = 'ERROR';
                 } else {
-                    this.submitStatus = 'PENDING';
                     let tipoUsuario = 1;
                     let numCuentaEmpleado = this.numCuentaEmpleado;
                     let nombres = this.nombres;
@@ -197,9 +199,8 @@
                     let correo = this.$v.email.$model;
                     let telefono = this.telefono;
                     let contrasenia = this.$v.password.$model;
-                    console.log("Submit");
                     this.register({tipoUsuario, numCuentaEmpleado, nombres, apellidos,
-                                   correo, telefono, contrasenia});
+                                   correo, telefono, contrasenia}).then(()=>router.push({name:'Admin'}));
                 }
             },
             submitLogin(){
@@ -208,13 +209,14 @@
                 if (this.$v.passwordLogin.$invalid || this.$v.emailLogin.$invalid ) {
                     this.submitStatusLogin = 'ERROR';
                 } else {
-                    this.submitStatusLogin = 'PENDING';
                     let correo = this.$v.emailLogin.$model;
                     let contrasenia = this.$v.passwordLogin.$model; 
-                    this.login({correo, contrasenia});
-                    console.log("Submit");
+                    this.login({correo, contrasenia}).then(() => router.push({name:'Admin'}));
                 }
             },
+        },
+        computed:{
+            ...mapState(['status', 'errMensaje'])
         }
     }
 </script>
