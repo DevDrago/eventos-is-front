@@ -19,7 +19,6 @@
               <mdb-icon icon="money-bill-alt" far class="primary-color"/>
               <div class="data">
                 <p>SALES</p>
-                {{actividades}}
                 <h4>
                   <strong>$2000</strong>
                 </h4>

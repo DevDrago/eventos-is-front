@@ -27,7 +27,6 @@
 			</div>
 		</mdb-footer>
 		<!-- Footer -->
-
 	</div>
 </template>
 
@@ -36,6 +35,7 @@
 
 <script>
 import { mdbFooter, mdbContainer, mdbRow, mdbCol, mdbDropdown, mdbDropdownToggle, mdbDropdownMenu, mdbDropdownItem, mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem } from 'mdbvue';
+
 export default {
 	name: "App",
 	components: {
@@ -44,14 +44,14 @@ export default {
 		mdbRow,
 		mdbCol,
 		mdbNavbar,
-    mdbNavbarBrand,
-    mdbNavbarToggler,
-    mdbNavbarNav,
-    mdbNavItem,
-    mdbDropdown,
-    mdbDropdownToggle,
-    mdbDropdownMenu,
-    mdbDropdownItem
+		mdbNavbarBrand,
+		mdbNavbarToggler,
+		mdbNavbarNav,
+		mdbNavItem,
+		mdbDropdown,
+		mdbDropdownToggle,
+		mdbDropdownMenu,
+		mdbDropdownItem
 	}
 };
 </script>

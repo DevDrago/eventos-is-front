@@ -37,7 +37,7 @@ export default new Vuex.Store({
     getActividades({commit}){
       axios.get(baseUrl+'/actividades')
         .then(response => {
-          console.log(response.data.actividades);
+          //console.log(response.data.actividades);
           let actividades = response.data.actividades;
           commit('setActividades', actividades);
         })
