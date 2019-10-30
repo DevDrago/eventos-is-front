@@ -9,15 +9,20 @@ const baseUrl = 'http://localhost:3000/api';
 export default new Vuex.Store({
   state:{
     status:'',
+    statusDT: '',
     token: localStorage.getItem('token') || '',
     user: localStorage.getItem('user') || '',
     errMensaje: '',
     isAdmin: localStorage.getItem('isAdmin') || '',
-    actividades: []
+    actividades: [],
+    eventos: []
   },
   mutations:{
     setActividades(state, actividades){
       state.actividades = actividades;
+    },
+    setEventos(state, eventos){
+      state.eventos = eventos;
     },
     auth_request(state){
       state.status = 'Cargando';
@@ -37,6 +42,10 @@ export default new Vuex.Store({
     logout(state){
       state.status = '';
       state.token = '';
+    },
+    error(state, err){
+      state.statusDT = 'Error';
+      state.errMensaje = err;
     }
   },
   actions:{
@@ -100,13 +109,32 @@ export default new Vuex.Store({
       });
     },
     getActividades({commit}){
-      axios.get(baseUrl+'/actividades')
-        .then(response => {
-          //console.log(response.data.actividades);
-          let actividades = response.data.actividades;
-          commit('setActividades', actividades);
-        })
-        .catch(error => {console.log(error);});
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/actividades')
+          .then(response => {
+            let actividades = response.data.actividades;
+            commit('setActividades', actividades);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
+    getEventos({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/eventos')
+          .then(response => {
+            let eventos = response.data.eventos;
+            commit('setEventos', eventos);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
     }
   },
   getters : {
