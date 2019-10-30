@@ -7,8 +7,9 @@
 			</mdb-navbar-brand>
 			<mdb-navbar-toggler>
 				<mdb-navbar-nav right>
-					<mdb-nav-item href="#">Usuarios</mdb-nav-item>
-					<mdb-nav-item href="#">Eventos</mdb-nav-item>
+					<mdb-nav-item href="#" v-if="isLoggedIn && isAdmin">Usuarios</mdb-nav-item>
+					<mdb-nav-item href="#" v-if="isLoggedIn && isAdmin">Eventos</mdb-nav-item>
+					<mdb-nav-item href="/actividades" v-if="isLoggedIn && isAdmin">Actvidades</mdb-nav-item>
 					<mdb-nav-item @click="cerrarSesion" v-if="isLoggedIn">Cerrar sesión</mdb-nav-item>
 				</mdb-navbar-nav>
 			</mdb-navbar-toggler>
@@ -36,7 +37,7 @@
 
 <script>
 import { mdbFooter, mdbContainer, mdbRow, mdbCol, mdbDropdown, mdbDropdownToggle, mdbDropdownMenu, mdbDropdownItem, mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem } from 'mdbvue';
-import {mapActions, mapGetters} from 'vuex';
+import {mapActions, mapGetters, mapState} from 'vuex';
 import router from './router/index';
 export default {
 	name: "App",
@@ -54,6 +55,15 @@ export default {
 		mdbDropdownToggle,
 		mdbDropdownMenu,
 		mdbDropdownItem
+	},
+	methods:{
+		...mapActions(['logout']),
+		cerrarSesion(){
+			this.logout().then(() => router.push({name:'LoginRegister'}));
+		}
+	},
+	computed:{
+		...mapGetters(['isLoggedIn', 'isAdmin'])
 	}
 };
 </script>

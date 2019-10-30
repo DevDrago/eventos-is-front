@@ -36,35 +36,21 @@ let router = new Router({
         is_admin: true
       }
     },
-    { path: '/actividades', name: 'Actividades', component: Actividades }
+    { 
+      path: '/actividades', 
+      name: 'Actividades', 
+      component: Actividades,
+      meta: {
+        requiresAuth: true,
+        is_admin: true
+      }
+    }
   ],
   linkActiveClass: "active",
   mode: "history"
 });
 
 export default router;
-
-/*export default new router({
-  routes: [
-    {
-      path: '/',
-      name: 'LoginRegister',
-      component: LoginRegister
-    },
-    {
-      path: '/admin',
-      name: 'Admin',
-      component: Dashboard,
-      meta: {
-        requiresAuth: true,
-        is_admin: true
-      }
-    },
-    { path: '/actividades', name: 'Actividades', component: Datatables }
-  ],
-  linkActiveClass: "active",
-  mode: "history"
-});*/
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
@@ -78,11 +64,13 @@ router.beforeEach((to, from, next) => {
         }
       } else {
         next();
-        return;
       }
     }
-    // eslint-disable-next-line callback-return
-    next('/'); 
+    else {
+      // eslint-disable-next-line callback-return
+      next('/'); 
+    }
+
   } else if (to.matched.some(record => record.meta.guest)){
     if (store.getters.isLoggedIn) {
       if (store.getters.isAdmin){
