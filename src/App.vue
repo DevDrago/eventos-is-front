@@ -8,7 +8,7 @@
 			<mdb-navbar-toggler>
 				<mdb-navbar-nav right>
 					<mdb-nav-item href="#" v-if="isLoggedIn && isAdmin">Usuarios</mdb-nav-item>
-					<mdb-nav-item href="#" v-if="isLoggedIn && isAdmin">Eventos</mdb-nav-item>
+					<mdb-nav-item href="/eventos" v-if="isLoggedIn && isAdmin">Eventos</mdb-nav-item>
 					<mdb-nav-item href="/actividades" v-if="isLoggedIn && isAdmin">Actvidades</mdb-nav-item>
 					<mdb-nav-item @click="cerrarSesion" v-if="isLoggedIn">Cerrar sesión</mdb-nav-item>
 				</mdb-navbar-nav>
