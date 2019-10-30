@@ -6,15 +6,46 @@
 		<mdb-btn color="danger" @click.native="modal3 = true"><i class="fas fa-plus"></i> Eliminar</mdb-btn>
         <mdb-datatable :data="data" striped bordered />
     </div>
-
 	<mdb-modal v-if="modal" @close="modal = false">
 		<mdb-modal-header>
 			<mdb-modal-title tag="h4" class="w-100 text-center font-weight-bold">Agregar actividad</mdb-modal-title>
 		</mdb-modal-header>
-		<mdb-modal-body>TODO: Formulario</mdb-modal-body>
-		<mdb-modal-footer class="justify-content-center">
-			<mdb-btn color="info">Agregar</mdb-btn>
-		</mdb-modal-footer>
+		<mdb-modal-body>
+
+      <form @submit.prevent="submit">
+          <div class="row">
+              <div class="col-lg-12"><mdb-input v-model="nombre" required label="Nombre" type="text" class="mb-1"/></div>
+              <div class="col-lg-12"><mdb-input v-model="descripcion" required label="Descripción" type="text" class="mb-1"/></div>
+              <div class="col-lg-12 mt-3">
+                <label>Coordinador</label>
+                <select v-model="coordinador" class="browser-default custom-select" required>
+                  <option value=""> - Seleccione - </option>
+                  <option v-for="coor in coordinadores" :value="coor.idUsuario">{{ coor.coordinador }}</option>
+                </select>
+              </div>
+              <div class="col-lg-12"><mdb-input v-model="nombreEvento" required label="Nombre del evento" type="number" class="mb-1"/></div>
+              <div class="col-lg-12 mt-3">
+                <label>Categorías</label>
+                <select v-model="categorias" class="browser-default custom-select" required>
+                  <option value=""> - Seleccione - </option>
+                  <option v-for="cat in categorias" :value="cat.idCategoriaActividad">{{ cat.categoriaActividad }}</option>
+                </select>
+              </div>
+              <div class="col-lg-12 mt-3"><mdb-input v-model="fechaInicio" required label="Fecha de inicio" type="date" class="mb-1"/></div>
+              <div class="col-lg-12 mt-3"><mdb-input v-model="fechaFin" required label="Fecha de finalización" type="date" class="mb-1"/></div>
+              <div class="col-lg-12"><mdb-input v-model="cupos" required label="Cupos" type="number" class="mb-1"/></div>
+          </div>
+          <div class="row">
+              <div class="col-lg-12" v-if="submitStatus === 'ERROR'"><p class="text-danger">Favor llenar el formulario correctamente.</p></div>
+              <div class="col-lg-12" v-if="status === 'Error'"><p class="text-danger">{{errMensaje}}</p></div>
+              <div class="col-lg-12" v-if="status === 'Cargando'"><p class="text-success">Enviando...</p></div>
+          </div>
+          <div class="mt-2 text-center">
+              <mdb-btn type="submit" color="info">Agregar</mdb-btn>
+          </div>
+      </form>
+
+    </mdb-modal-body>
 	</mdb-modal>
 
 	<mdb-modal v-if="modal2" @close="modal2 = false">
@@ -48,8 +79,9 @@
 </style>
 
 <script>
-  import { mdbDatatable, mdbContainer, mdbModal, mdbModalHeader, mdbModalTitle, mdbModalBody, mdbModalFooter, mdbBtn } from 'mdbvue';
+  import { mdbDatatable, mdbContainer, mdbModal, mdbModalHeader, mdbModalTitle, mdbModalBody, mdbModalFooter, mdbBtn, mdbInput } from 'mdbvue';
   import {mapActions, mapState} from 'vuex';
+  import axios from "axios";
 
   const baseUrl = 'http://localhost:3000/api';
 
@@ -63,18 +95,37 @@
 		mdbModalTitle,
 		mdbModalBody,
 		mdbModalFooter,
-		mdbBtn
+    mdbBtn,
+    mdbInput
     },
     data() {
-		return {
-			columns: [],
-			rows: [],
-			modal: false,
-			modal2: false,
-			modal3: false,
-		};
+      return {
+        columns: [],
+        rows: [],
+        modal: false,
+        modal2: false,
+        modal3: false,
+
+        nombre: '',
+        descripcion: '',
+        nombreEvento: '',
+        fechaInicio: '',
+        fechaFin: '',
+        cupos: '',
+        coordinador: '',
+
+        coordinadores: [],
+        categorias: [],
+
+        submitStatus: null,
+      };
+    },
+    created: function () {
+        this.getCoordinadores();
+        this.getCategorias();
     },
     computed: {
+      ...mapState(['status', 'errMensaje']),
       data() {
         return {
           columns: this.columns,
@@ -83,24 +134,40 @@
       },
     },
     methods: {
-        filterData(dataArr, keys) {
-            let data = dataArr.map(entry => {
-                let filteredEntry = {};
-                keys.forEach(key => {
-                    if (key.field in entry) {
-                        filteredEntry[key.field] = entry[key.field];
-                    }
-                });
-                return filteredEntry;
+      filterData(dataArr, keys) {
+        let data = dataArr.map(entry => {
+            let filteredEntry = {};
+            keys.forEach(key => {
+                if (key.field in entry) {
+                    filteredEntry[key.field] = entry[key.field];
+                }
             });
-            return data;
-		}
+            return filteredEntry;
+        });
+        return data;
+      },
+      getCoordinadores: function() {
+        axios.get(baseUrl+'/usuarios/coordinadores')
+        .then(response => {
+          //console.log(response.data.coordinadores);
+          this.coordinadores = response.data.coordinadores;  
+        })
+        .catch(error => {console.log(error);});
+      },
+      getCategorias: function() {
+        axios.get(baseUrl+'/actividades/categorias')
+        .then(response => {
+          //console.log(response.data.coordinadores);
+          this.categorias = response.data.categorias;  
+        })
+        .catch(error => {console.log(error);});
+      },
     },
     mounted(){
-      fetch(baseUrl + '/actividades')
-        .then(res => res.json())
-        .then(json => {
-            let keys = [
+      axios.get(baseUrl+'/actividades')
+        .then(response => {
+          //console.log(response.data.actividades);
+          let keys = [
                 { field: "idActividad", label: "ID"},
                 { field: "nombreActividad", label: "Nombre" },
                 { field: "descripcion", label: "Descripción" },
@@ -111,7 +178,7 @@
                 { field: "fechaFin", label: "Fecha de finalización" },
                 { field: "numCupos", label: "Cupos" },
             ];
-            let entries = this.filterData(json.actividades, keys);
+            let entries = this.filterData(response.data.actividades, keys);
             //columns
             this.columns = keys.map(key => {
                 //console.log(key);
@@ -125,7 +192,7 @@
             console.log(entries);
             entries.map(entry => this.rows.push(entry));
         })
-        .catch(err => console.log(err));
+        .catch(error => {console.log(error);});
     }
   };
 </script>

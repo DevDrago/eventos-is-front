@@ -192,7 +192,7 @@
                 if (this.$v.password.$invalid || this.$v.repeatPassword.$invalid || this.$v.email.$invalid ) {
                     this.submitStatus = 'ERROR';
                 } else {
-                    let tipoUsuario = 1;
+                    let tipoUsuario = 4;
                     let numCuentaEmpleado = this.numCuentaEmpleado;
                     let nombres = this.nombres;
                     let apellidos = this.apellidos;
