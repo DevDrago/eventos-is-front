@@ -1,18 +1,30 @@
 <template>
 <div>
     <div class="datatable-container">
+
+        <transition name="fade">
+            <div style="display:none;" :class="['alert', fondoalert, 'alert-dismissible']" v-show="mostrarMensaje">
+                <button type="button" class="close" @click.prevent="ocultarMensaje" aria-hidden="true">×</button>
+                <h4 class="mensaje">
+                    <i :class="['icon', 'fas', icono]"></i> @{{mensaje}}
+                </h4>
+            </div>
+        </transition>
+
         <mdb-btn color="info" @click.native="modal = true"><i class="fas fa-plus"></i> Agregar</mdb-btn>
-		<mdb-btn color="success" @click.native="modal2 = true"><i class="fas fa-plus"></i> Editar</mdb-btn>
-		<mdb-btn color="danger" @click.native="modal3 = true"><i class="fas fa-plus"></i> Eliminar</mdb-btn>
+		    <mdb-btn color="success" @click.native="modal2 = true"><i class="fas fa-plus"></i> Editar</mdb-btn>
+		    <mdb-btn color="danger" @click.native="modal3 = true"><i class="fas fa-plus"></i> Eliminar</mdb-btn>
         <mdb-datatable :data="data" striped bordered />
     </div>
+    {{ coordinadores }}
+
 	<mdb-modal v-if="modal" @close="modal = false">
 		<mdb-modal-header>
 			<mdb-modal-title tag="h4" class="w-100 text-center font-weight-bold">Agregar actividad</mdb-modal-title>
 		</mdb-modal-header>
 		<mdb-modal-body>
 
-      <form @submit.prevent="submit">
+      <form @submit.prevent="crear">
           <div class="row">
               <div class="col-lg-12"><mdb-input v-model="nombre" required label="Nombre" type="text" class="mb-1"/></div>
               <div class="col-lg-12"><mdb-input v-model="descripcion" required label="Descripción" type="text" class="mb-1"/></div>
@@ -23,12 +35,18 @@
                   <option v-for="coor in coordinadores" :value="coor.idUsuario">{{ coor.coordinador }}</option>
                 </select>
               </div>
-              <div class="col-lg-12"><mdb-input v-model="nombreEvento" required label="Nombre del evento" type="number" class="mb-1"/></div>
+              <div class="col-lg-12 mt-3">
+                <label>Evento</label>
+                <select v-model="evento" class="browser-default custom-select" required>
+                  <option value=""> - Seleccione - </option>
+                  <option v-for="eve in eventos" :value="eve.idEvento">{{ eve.nombreEvento }}</option>
+                </select>
+              </div>
               <div class="col-lg-12 mt-3">
                 <label>Categorías</label>
-                <select v-model="categorias" class="browser-default custom-select" required>
+                <select v-model="categoria" class="browser-default custom-select" required>
                   <option value=""> - Seleccione - </option>
-                  <option v-for="cat in categorias" :value="cat.idCategoriaActividad">{{ cat.categoriaActividad }}</option>
+                  <option v-for="cat in actividadesCat" :value="cat.idCategoriaActividad">{{ cat.categoriaActividad }}</option>
                 </select>
               </div>
               <div class="col-lg-12 mt-3"><mdb-input v-model="fechaInicio" required label="Fecha de inicio" type="date" class="mb-1"/></div>
@@ -106,23 +124,28 @@
         modal2: false,
         modal3: false,
 
+        coordinadores: [],
+        actividadesCat: [],
+        eventos: [],
+
+        submitStatus: null,
+
+        mostrarMensaje: false,
+        mensaje: '',
+        fondoalert: 'alert-success',
+        icono: 'fa-check',
+
+        //Al crear
         nombre: '',
         descripcion: '',
-        nombreEvento: '',
+        evento: '',
         fechaInicio: '',
         fechaFin: '',
         cupos: '',
         coordinador: '',
+        categoria: '',
 
-        coordinadores: [],
-        categorias: [],
-
-        submitStatus: null,
       };
-    },
-    created: function () {
-        this.getCoordinadores();
-        this.getCategorias();
     },
     computed: {
       ...mapState(['status', 'errMensaje']),
@@ -134,6 +157,7 @@
       },
     },
     methods: {
+      ...mapActions(['getActividades', 'getCoordinadores', 'getActividadesCat', 'getEventos', 'crearActividad']),
       filterData(dataArr, keys) {
         let data = dataArr.map(entry => {
             let filteredEntry = {};
@@ -146,25 +170,47 @@
         });
         return data;
       },
-      getCoordinadores: function() {
-        axios.get(baseUrl+'/usuarios/coordinadores')
-        .then(response => {
-          //console.log(response.data.coordinadores);
-          this.coordinadores = response.data.coordinadores;  
-        })
-        .catch(error => {console.log(error);});
+      crear() {
+        this.crearActividad(
+          {
+            nombreActividad: this.nombre,
+            descripcion: this.descripcion,
+            idEvento_fk: this.evento,
+            fechaInicio: this.fechaInicio,
+            fechaFin: this.fechaFin,
+            noCupos: this.cupos,
+            idUsuario_fk: this.coordinador,
+            idCategoriaActividad_fk: this.categoria
+          }).then(response => {
+              this.mensaje = response.data.mensaje;
+              this.mostrarRespuesta(this.mensaje, 0, 1);
+              this.habilitar=false;
+          }).catch(error => {
+              this.mensaje = error.response.data.mensaje;
+              this.mostrarRespuesta(this.mensaje, 2, 0);
+              this.habilitar=false;
+          });
       },
-      getCategorias: function() {
-        axios.get(baseUrl+'/actividades/categorias')
-        .then(response => {
-          //console.log(response.data.coordinadores);
-          this.categorias = response.data.categorias;  
-        })
-        .catch(error => {console.log(error);});
-      },
+      mostrarRespuesta: function(respuesta, tipo, proceso){
+            this.fondoalert = (tipo == 0) ? "alert-success" : (tipo == 1) ? "alert-info" : "alert-danger";
+            this.icono = (tipo == 0) ? "fa-check-circle" : (tipo == 1) ? "fa-info-circle" : "fa-exclamation-triangle";
+            this.mensaje = respuesta;
+            this.mostrarMensaje = true;
+            setTimeout(function(){
+                this.ocultarMensaje();
+            }.bind(this), 5000);
+            if(tipo == 0){
+                //this.limpiar();
+                //this.reload(proceso);
+            }
+        },
+      ocultarMensaje: function(){
+            this.mostrarMensaje = false;
+        }
+
     },
     mounted(){
-      axios.get(baseUrl+'/actividades')
+      this.getActividades()
         .then(response => {
           //console.log(response.data.actividades);
           let keys = [
@@ -189,10 +235,31 @@
                 };
             });
             //rows
-            console.log(entries);
+            //console.log(entries);
             entries.map(entry => this.rows.push(entry));
         })
         .catch(error => {console.log(error);});
+
+      this.getCoordinadores()
+        .then(response => {
+          this.coordinadores = response.data.coordinadores;
+        })
+        .catch(error => {console.log(error);});
+
+      this.getActividadesCat()
+        .then(response => {
+          //console.log(response.data.categorias);
+          this.actividadesCat = response.data.categorias;
+        })
+        .catch(error => {console.log(error);});
+
+      this.getEventos()
+        .then(response => {
+          //console.log(response.data.categorias);
+          this.eventos = response.data.eventos;
+        })
+        .catch(error => {console.log(error);});
+
     }
   };
 </script>

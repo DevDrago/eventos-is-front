@@ -15,11 +15,19 @@ export default new Vuex.Store({
     errMensaje: '',
     isAdmin: localStorage.getItem('isAdmin') || '',
     actividades: [],
+    coordinadores: [],
+    actividadesCat: [],
     eventos: []
   },
   mutations:{
     setActividades(state, actividades){
       state.actividades = actividades;
+    },
+    setCoordinadores(state, coordinadores){
+      state.coordinadores = coordinadores;
+    },
+    setActividadesCat(state, actividadesCat){
+      state.actividadesCat = actividadesCat;
     },
     setEventos(state, eventos){
       state.eventos = eventos;
@@ -118,6 +126,48 @@ export default new Vuex.Store({
           })
           .catch(error => {
             commit("error", error);
+            reject(error);
+          });
+      });
+    },
+    getCoordinadores({commit}) {
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/usuarios/coordinadores')
+          .then(response => {
+            let coordinadores = response.data.coordinadores;
+            commit('setCoordinadores', coordinadores);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
+    getActividadesCat({commit}) {
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/actividades/categorias')
+          .then(response => {
+            //console.log(response.data.coordinadores);
+            let actividadesCat = response.data.categorias;
+            commit('setActividadesCat', actividadesCat);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
+    crearActividad({commit}, usuario){
+      return new Promise((resolve,reject) => {
+        axios.post(baseUrl+'/actividades/crear', usuario)
+          .then(response => {
+            resolve(response);
+          })
+          .catch(error => {
+            const err = error.response.data.mensaje;
+            commit('auth_error', err);
             reject(error);
           });
       });
