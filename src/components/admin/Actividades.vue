@@ -32,21 +32,21 @@
                 <label>Coordinador</label>
                 <select v-model="coordinador" class="browser-default custom-select" required>
                   <option value=""> - Seleccione - </option>
-                  <option v-for="coor in coordinadores" :value="coor.idUsuario">{{ coor.coordinador }}</option>
+                  <option v-for="coor in coordinadores" :value="coor.idUsuario" :key="coor.idUsuario">npm  {{ coor.coordinador }} </option>
                 </select>
               </div>
               <div class="col-lg-12 mt-3">
                 <label>Evento</label>
                 <select v-model="evento" class="browser-default custom-select" required>
                   <option value=""> - Seleccione - </option>
-                  <option v-for="eve in eventos" :value="eve.idEvento">{{ eve.nombreEvento }}</option>
+                  <option v-for="eve in eventos" :value="eve.idEvento" :key="eve.idEvento">{{ eve.nombreEvento }}</option>
                 </select>
               </div>
               <div class="col-lg-12 mt-3">
                 <label>Categorías</label>
                 <select v-model="categoria" class="browser-default custom-select" required>
                   <option value=""> - Seleccione - </option>
-                  <option v-for="cat in actividadesCat" :value="cat.idCategoriaActividad">{{ cat.categoriaActividad }}</option>
+                  <option v-for="cat in actividadesCat" :value="cat.idCategoriaActividad" :key="cat.idCategoriaActividad">{{ cat.categoriaActividad }}</option>
                 </select>
               </div>
               <div class="col-lg-12 mt-3"><mdb-input v-model="fechaInicio" required label="Fecha de inicio" type="date" class="mb-1"/></div>
@@ -99,7 +99,8 @@
 <script>
   import { mdbDatatable, mdbContainer, mdbModal, mdbModalHeader, mdbModalTitle, mdbModalBody, mdbModalFooter, mdbBtn, mdbInput } from 'mdbvue';
   import {mapActions, mapState} from 'vuex';
-  import axios from "axios";
+  import axios from "axios"; 
+  import moment from "moment";
 
   const baseUrl = 'http://localhost:3000/api';
 
@@ -155,6 +156,12 @@
           rows: this.rows
         };
       },
+      fInicio() {
+        return moment(this.fechaInicio).format('DD-MM-YYYY');
+      },
+      fFin() {
+        return moment(this.fechaFin).format('DD-MM-YYYY');
+      }
     },
     methods: {
       ...mapActions(['getActividades', 'getCoordinadores', 'getActividadesCat', 'getEventos', 'crearActividad']),
@@ -175,12 +182,12 @@
           {
             nombreActividad: this.nombre,
             descripcion: this.descripcion,
-            idEvento_fk: this.evento,
-            fechaInicio: this.fechaInicio,
-            fechaFin: this.fechaFin,
-            noCupos: this.cupos,
-            idUsuario_fk: this.coordinador,
-            idCategoriaActividad_fk: this.categoria
+            evento: this.evento,
+            fechaInicio: this.fInicio,
+            fechaFin: this.fFin,
+            cupos: this.cupos,
+            usuario: this.coordinador,
+            categoria: this.categoria
           }).then(response => {
               this.mensaje = response.data.mensaje;
               this.mostrarRespuesta(this.mensaje, 0, 1);
@@ -222,7 +229,7 @@
                 { field: "categoriaActividad", label: "Categoría" },
                 { field: "fechaInicio", label: "Fecha de inicio" },
                 { field: "fechaFin", label: "Fecha de finalización" },
-                { field: "numCupos", label: "Cupos" },
+                { field: "noCupos", label: "Cupos" },
             ];
             let entries = this.filterData(response.data.actividades, keys);
             //columns

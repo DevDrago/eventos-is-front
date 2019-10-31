@@ -68,6 +68,7 @@ export default new Vuex.Store({
             const isAdmin = (us.tipoUsuario == 1) ? 'Admin' : '';
             localStorage.setItem('isAdmin', isAdmin);
             localStorage.setItem('user', JSON.stringify(us));
+            axios.defaults.headers.common.Authorization = token;
             commit('auth_success', token);
             commit('setUser', us);
             resolve(response);
@@ -93,6 +94,7 @@ export default new Vuex.Store({
             const isAdmin = (user.tipoUsuario == 1) ? 'Admin' : '';
             localStorage.setItem('isAdmin', isAdmin);
             localStorage.setItem('user', JSON.stringify(user));
+            axios.defaults.headers.common.Authorization = token;
             commit('auth_success', token);
             commit('setUser', user);
             resolve(response);
@@ -113,6 +115,7 @@ export default new Vuex.Store({
         localStorage.removeItem('token');
         localStorage.removeItem('isAdmin');
         localStorage.removeItem('user');
+        delete axios.defaults.headers.common.Authorization;
         resolve();
       });
     },
@@ -161,7 +164,10 @@ export default new Vuex.Store({
     },
     crearActividad({commit}, usuario){
       return new Promise((resolve,reject) => {
-        axios.post(baseUrl+'/actividades/crear', usuario)
+
+        axios.post(baseUrl+'/actividades/crear', usuario, {headers: { "content-type": "application/json" }, withCredentials: true})
+
+        /*axios({method: 'POST', data: {usuario}, 'url': baseUrl+'/actividades/crear', headers: { "content-type": "application/json" }, withCredentials: true })*/
           .then(response => {
             resolve(response);
           })
