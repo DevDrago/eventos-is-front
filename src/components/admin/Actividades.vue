@@ -14,9 +14,8 @@
         <mdb-btn color="info" @click.native="modal = true"><i class="fas fa-plus"></i> Agregar</mdb-btn>
 		    <mdb-btn color="success" @click.native="modal2 = true"><i class="fas fa-plus"></i> Editar</mdb-btn>
 		    <mdb-btn color="danger" @click.native="modal3 = true"><i class="fas fa-plus"></i> Eliminar</mdb-btn>
-        <mdb-datatable :data="data" striped bordered />
+        <mdb-datatable :data="data" striped bordered  :key="reloadDatatable" />
     </div>
-    {{ coordinadores }}
 
 	<mdb-modal v-if="modal" @close="modal = false">
 		<mdb-modal-header>
@@ -32,7 +31,7 @@
                 <label>Coordinador</label>
                 <select v-model="coordinador" class="browser-default custom-select" required>
                   <option value=""> - Seleccione - </option>
-                  <option v-for="coor in coordinadores" :value="coor.idUsuario" :key="coor.idUsuario">npm  {{ coor.coordinador }} </option>
+                  <option v-for="coor in coordinadores" :value="coor.idUsuario" :key="coor.idUsuario">{{ coor.coordinador }}</option>
                 </select>
               </div>
               <div class="col-lg-12 mt-3">
@@ -117,6 +116,8 @@
     mdbBtn,
     mdbInput
     },
+    created: function(){
+    },
     data() {
       return {
         columns: [],
@@ -130,6 +131,7 @@
         eventos: [],
 
         submitStatus: null,
+        reloadDatatable: 0,
 
         mostrarMensaje: false,
         mensaje: '',
@@ -155,12 +157,6 @@
           columns: this.columns,
           rows: this.rows
         };
-      },
-      fInicio() {
-        return moment(this.fechaInicio).format('DD-MM-YYYY');
-      },
-      fFin() {
-        return moment(this.fechaFin).format('DD-MM-YYYY');
       }
     },
     methods: {
@@ -183,43 +179,59 @@
             nombreActividad: this.nombre,
             descripcion: this.descripcion,
             evento: this.evento,
-            fechaInicio: this.fInicio,
-            fechaFin: this.fFin,
+            fechaInicio: moment(this.fechaInicio).format('DD-MM-YYYY'),
+            fechaFin: moment(this.fechaFin).format('DD-MM-YYYY'),
             cupos: this.cupos,
             usuario: this.coordinador,
             categoria: this.categoria
           }).then(response => {
               this.mensaje = response.data.mensaje;
-              this.mostrarRespuesta(this.mensaje, 0, 1);
+              this.mostrarRespuesta(this.mensaje, 0);
               this.habilitar=false;
+              this.modal = false;
           }).catch(error => {
+            if(error) {
               this.mensaje = error.response.data.mensaje;
-              this.mostrarRespuesta(this.mensaje, 2, 0);
+              this.mostrarRespuesta(this.mensaje, 2);
               this.habilitar=false;
+            }
           });
       },
-      mostrarRespuesta: function(respuesta, tipo, proceso){
-            this.fondoalert = (tipo == 0) ? "alert-success" : (tipo == 1) ? "alert-info" : "alert-danger";
-            this.icono = (tipo == 0) ? "fa-check-circle" : (tipo == 1) ? "fa-info-circle" : "fa-exclamation-triangle";
-            this.mensaje = respuesta;
-            this.mostrarMensaje = true;
-            setTimeout(function(){
-                this.ocultarMensaje();
-            }.bind(this), 5000);
-            if(tipo == 0){
-                //this.limpiar();
-                //this.reload(proceso);
-            }
-        },
-      ocultarMensaje: function(){
-            this.mostrarMensaje = false;
+      mostrarRespuesta: function(respuesta, tipo){
+        this.fondoalert = (tipo == 0) ? "alert-success" : (tipo == 1) ? "alert-info" : "alert-danger";
+        this.icono = (tipo == 0) ? "fa-check-circle" : (tipo == 1) ? "fa-info-circle" : "fa-exclamation-triangle";
+        this.mensaje = respuesta;
+        this.mostrarMensaje = true;
+        setTimeout(function(){
+            this.ocultarMensaje();
+        }.bind(this), 5000);
+        if(tipo == 0){
+            this.limpiar();
+            this.reload();
         }
+      },
+      ocultarMensaje: function(){
+        this.mostrarMensaje = false;
+      },
+      limpiar: function(){
+        this.nombre = '';
+        this.descripcion = '';
+        this.evento = '';
+        this.fechaInicio = '';
+        this.fechaFin = '';
+        this.cupos = '';
+        this.coordinador = '';
+        this.categoria = '';
+      },
+      reload: function() {
+        this.reloadDatatable += 1;  
+      },
 
     },
     mounted(){
       this.getActividades()
         .then(response => {
-          //console.log(response.data.actividades);
+          console.log(response.data.actividades);
           let keys = [
                 { field: "idActividad", label: "ID"},
                 { field: "nombreActividad", label: "Nombre" },
@@ -266,7 +278,6 @@
           this.eventos = response.data.eventos;
         })
         .catch(error => {console.log(error);});
-
     }
   };
 </script>
