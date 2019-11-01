@@ -7,6 +7,7 @@ import router from './router'
 import store from './store'
 import Vuelidate from 'vuelidate';
 import Axios from 'axios';
+import vuetify from './plugins/vuetify';
 
 Vue.use(Vuelidate);
 
@@ -14,7 +15,7 @@ Vue.use(Vuelidate);
 Vue.config.productionTip = false
 
 Vue.prototype.$http = Axios;
-Axios.defaults.withCredentials = true; 
+Axios.defaults.withCredentials = true;
 const token = localStorage.getItem('token');
 if (token) {
   Vue.prototype.$http.defaults.headers.common.Authorization = token;
@@ -23,5 +24,6 @@ if (token) {
 new Vue({
   router,
   store,
+  vuetify,
   render: h => h(App)
 }).$mount('#app')
