@@ -33,7 +33,6 @@
       mdbNavbarToggler,
       mdbNavbarNav,
       mdbNavItem,
-      mdbContainer,
       mdbDropdown,
       mdbDropdownToggle,
       mdbDropdownMenu,

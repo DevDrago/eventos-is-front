@@ -141,15 +141,12 @@
             mdbRow,
             mdbCol,
             mdbBtn,
-            mdbModal,
             mdbTab,
             mdbTabItem,
             mdbModalBody,
             mdbInput,
             mdbModalFooter,
-            mdbIcon,
-            mdbModalTitle,
-            mdbModalTitle
+            mdbIcon
         },
         data() {
             return {

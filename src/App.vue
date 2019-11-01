@@ -32,9 +32,6 @@
 	</div>
 </template>
 
-
-<!--<LoginRegister/>-->
-
 <script>
 import { mdbFooter, mdbContainer, mdbRow, mdbCol, mdbDropdown, mdbDropdownToggle, mdbDropdownMenu, mdbDropdownItem, mdbNavbar, mdbNavbarBrand, mdbNavbarToggler, mdbNavbarNav, mdbNavItem } from 'mdbvue';
 import {mapActions, mapGetters, mapState} from 'vuex';
@@ -44,17 +41,10 @@ export default {
 	components: {
 		mdbFooter,
 		mdbContainer,
-		mdbRow,
-		mdbCol,
 		mdbNavbar,
 		mdbNavbarBrand,
 		mdbNavbarToggler,
-		mdbNavbarNav,
-		mdbNavItem,
-		mdbDropdown,
-		mdbDropdownToggle,
-		mdbDropdownMenu,
-		mdbDropdownItem
+		mdbNavbarNav
 	},
 	methods:{
 		...mapActions(['logout']),
@@ -69,6 +59,8 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
+
 body { background-color: #DDD }
 .app {
   margin: 0 auto;

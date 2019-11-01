@@ -55,7 +55,6 @@
     name: 'Eventos',
     components: {
 		mdbDatatable,
-		mdbContainer,
 		mdbModal,
 		mdbModalHeader,
 		mdbModalTitle,
