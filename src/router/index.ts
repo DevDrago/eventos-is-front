@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import LoginRegister from '@/components/LoginRegister.vue';
+import Login from '@/views/Login.vue'
 import Dashboard from '@/components/Dashboard.vue';
 import Actividades from '@/components/admin/Actividades.vue';
 import Eventos from '@/components/admin/Eventos.vue';
@@ -12,7 +12,7 @@ const routes = [
   {
     path: '/',
     name: 'LoginRegister',
-    component: LoginRegister,
+    component: Login,
     meta: {
       guest: true
     }
