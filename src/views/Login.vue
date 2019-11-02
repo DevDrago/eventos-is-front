@@ -17,12 +17,16 @@
                 <v-tab>
                   <v-icon class="mr-1">mdi-account</v-icon>Iniciar Sesión
                 </v-tab>
-                <v-tab> <v-icon class="mr-1">mdi-account-plus</v-icon>Registro</v-tab>
+                <v-tab>
+                  <v-icon class="mr-1">mdi-account-plus</v-icon>Registro
+                </v-tab>
               </v-tabs>
               <v-tabs-items v-model="tabs">
                 <v-tab-item>
                   <LoginComponent></LoginComponent>
-                  
+                </v-tab-item>
+                <v-tab-item>
+                  <RegistroComponent></RegistroComponent>
                 </v-tab-item>
               </v-tabs-items>
             </v-card>
@@ -35,11 +39,13 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import LoginComponent from '@/components/login/LoginComponent.vue';
+import LoginComponent from "@/components/login/LoginComponent.vue";
+import RegistroComponent from "@/components/login/RegistroComponente.vue";
 
 @Component({
   components: {
     LoginComponent,
+    RegistroComponent,
   }
 })
 export default class Login extends Vue {
@@ -52,27 +58,28 @@ export default class Login extends Vue {
 
 <style>
 .md-tabs {
-    box-shadow: 0 5px 11px 0 rgba(0,0,0,.18), 0 4px 15px 0 rgba(0,0,0,.15);
-    border: 0;
-    padding: .7rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
-    margin-bottom: -20px;
-    background-color: #2bbbad;
-    z-index: 1;
-    position: relative;
-    border-radius: .25rem;
+  box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
+  border: 0;
+  padding: 0.7rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  margin-bottom: -20px;
+  background-color: #2bbbad;
+  z-index: 1;
+  position: relative;
+  border-radius: 0.25rem;
 }
-.md-tabs .nav-item.open .nav-link, .md-tabs .nav-link.active {
-    background-color: rgba(0,0,0,.2);
-    color: #fff;
-    transition: all 1s;
-    border-radius: .25rem;
-    border-color: transparent;
+.md-tabs .nav-item.open .nav-link,
+.md-tabs .nav-link.active {
+  background-color: rgba(0, 0, 0, 0.2);
+  color: #fff;
+  transition: all 1s;
+  border-radius: 0.25rem;
+  border-color: transparent;
 }
 .nav-tabs .nav-link {
-    border: 0px solid transparent;
-    color: #FFF;
+  border: 0px solid transparent;
+  color: #fff;
 }
 .login-logo {
   height: 150px;
@@ -81,19 +88,21 @@ export default class Login extends Vue {
   text-align: center;
 }
 .is-invalid input {
-    border-bottom: 1px solid #dc3545 !important;
-    box-shadow: none !important;
+  border-bottom: 1px solid #dc3545 !important;
+  box-shadow: none !important;
 }
-.is-invalid input[type="email"]:not(.browser-default):focus:not([readonly]) + label {
-    color: #dc3545 !important;
+.is-invalid
+  input[type="email"]:not(.browser-default):focus:not([readonly])
+  + label {
+  color: #dc3545 !important;
 }
 .is-invalid .prefix.active {
-    color: #dc3545 !important;
+  color: #dc3545 !important;
 }
 .is-invalid .prefix {
-    color: #dc3545 !important;
+  color: #dc3545 !important;
 }
 .is-invalid label {
-    color: #dc3545 !important;
+  color: #dc3545 !important;
 }
 </style>

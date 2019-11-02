@@ -75,10 +75,11 @@ import {
   maxLength,
   sameAs
 } from "vuelidate/lib/validators";
-import { validationMixin, Validation } from "vuelidate";
 import router from "@/router/index";
 import { Validate } from "vuelidate-property-decorators";
-@Component({})
+@Component({
+  name: "login"
+})
 export default class LoginComponent extends Vue {
   @Validate({ required, email })
   private emailLogin: String = "";
