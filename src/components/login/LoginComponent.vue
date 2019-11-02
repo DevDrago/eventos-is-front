@@ -20,16 +20,16 @@
         />
         <p
           v-if="!$v.passwordLogin.minLength"
-          class="text-danger"
+          class="red--text"
         >La contraseña debe contener al menos seis caracteres.</p>
         <p
           v-if="submitStatusLogin === 'ERROR'"
-          class="text-danger"
+          class="red--text"
         >Favor llenar el formulario correctamente.</p>
         <v-col lg="12" v-if="status === 'Error'">
-          <p class="text-danger">{{errMensaje}}</p>
+          <p class="red--text">{{errMensaje}}</p>
         </v-col>
-        <p v-if="status === 'Cargando'" class="text-success">Enviando...</p>
+        <p v-if="status === 'Cargando'" class="green--text">Enviando...</p>
         <div class="my-2">
           <v-btn 
           large 

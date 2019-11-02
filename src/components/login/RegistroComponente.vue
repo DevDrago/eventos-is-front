@@ -84,21 +84,21 @@
         </v-row>
         <v-row>
           <v-col lg="12" v-if="!$v.password.minLength">
-            <p class="text-danger">La contraseña debe contener al menos seis caracteres.</p>
+            <p class="red--text">La contraseña debe contener al menos seis caracteres.</p>
           </v-col>
           <v-col lg="12" v-if="!$v.repeatPassword.sameAsPassword">
-            <p class="text-danger">Las contraseñas no son iguales.</p>
+            <p class="red--text">Las contraseñas no son iguales.</p>
           </v-col>
         </v-row>
         <v-row>
           <v-col lg="12" v-if="submitStatus === 'ERROR'">
-            <p class="text-danger">Favor llenar el formulario correctamente.</p>
+            <p class="red--text">Favor llenar el formulario correctamente.</p>
           </v-col>
           <v-col lg="12" v-if="status === 'Error'">
-            <p class="text-danger">{{errMensaje}}</p>
+            <p class="red--text">{{errMensaje}}</p>
           </v-col>
           <v-col lg="12" v-if="status === 'Cargando'">
-            <p class="text-success">Enviando...</p>
+            <p class="green--text">Enviando...</p>
           </v-col>
         </v-row>
         <div class="mt-2 text-center">
