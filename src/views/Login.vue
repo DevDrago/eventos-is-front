@@ -23,10 +23,40 @@
               </v-tabs>
               <v-tabs-items v-model="tabs">
                 <v-tab-item>
-                  <LoginComponent></LoginComponent>
+                  <LoginComponent>
+                    <template slot="acciones">
+                      <v-col lg="6">
+                        <div class="options text-center mt-1">
+                          <p>
+                            ¿No estás registrado?
+                            <a href="#" @click="tabs=1">Registrar</a>
+                          </p>
+                        </div>
+                      </v-col>
+                      <v-col lg="6" class="text-center">
+                        <div class="options text-center mt-1">
+                          <p>
+                            ¿Olvidaste tu
+                            <a href="#">contraseña</a>?
+                          </p>
+                        </div>
+                      </v-col>
+                    </template>
+                  </LoginComponent>
                 </v-tab-item>
                 <v-tab-item>
-                  <RegistroComponent></RegistroComponent>
+                  <RegistroComponent>
+                    <template slot="acciones">
+                      <v-col class="12">
+                        <div class="options text-center mt-1">
+                          <p>
+                            ¿Ya tienes una cuenta?
+                            <a href="#" @click="tabs=0">Iniciar sesión</a>
+                          </p>
+                        </div>
+                      </v-col>
+                    </template>
+                  </RegistroComponent>
                 </v-tab-item>
               </v-tabs-items>
             </v-card>
@@ -45,7 +75,7 @@ import RegistroComponent from "@/components/login/RegistroComponente.vue";
 @Component({
   components: {
     LoginComponent,
-    RegistroComponent,
+    RegistroComponent
   }
 })
 export default class Login extends Vue {

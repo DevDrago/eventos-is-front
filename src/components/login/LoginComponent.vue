@@ -44,22 +44,7 @@
     </v-card-text>
     <v-card-actions>
       <v-row class="w-100">
-        <v-col lg="6">
-          <div class="options text-center mt-1">
-            <p>
-              ¿No estás registrado?
-              <a href="#" @click="tabs=2">Registrar</a>
-            </p>
-          </div>
-        </v-col>
-        <v-col lg="6" class="text-center">
-          <div class="options text-center mt-1">
-            <p>
-              ¿Olvidaste tu
-              <a href="#">contraseña</a>?
-            </p>
-          </div>
-        </v-col>
+       <slot name="acciones"></slot>
       </v-row>
     </v-card-actions>
   </div>

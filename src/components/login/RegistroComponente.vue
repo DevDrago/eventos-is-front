@@ -111,14 +111,7 @@
     </v-card-text>
     <v-card-actions center>
       <v-row class="w-100">
-        <v-col class="12">
-          <div class="options text-center mt-1">
-            <p>
-              ¿Ya tienes una cuenta?
-              <a href="#" @click="tabs=1">Iniciar sesión</a>
-            </p>
-          </div>
-        </v-col>
+        <slot name="acciones"></slot>
       </v-row>
     </v-card-actions>
   </div>
