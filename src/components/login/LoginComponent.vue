@@ -26,9 +26,9 @@
           v-if="submitStatusLogin === 'ERROR'"
           class="text-danger"
         >Favor llenar el formulario correctamente.</p>
-        <div class="col-lg-12" v-if="status === 'Error'">
+        <v-col lg="12" v-if="status === 'Error'">
           <p class="text-danger">{{errMensaje}}</p>
-        </div>
+        </v-col>
         <p v-if="status === 'Cargando'" class="text-success">Enviando...</p>
         <div class="my-2">
           <v-btn 
@@ -43,24 +43,24 @@
       </v-form>
     </v-card-text>
     <v-card-actions>
-      <div class="row w-100">
-        <div class="col-lg-6">
+      <v-row class="w-100">
+        <v-col lg="6">
           <div class="options text-center mt-1">
             <p>
               ¿No estás registrado?
               <a href="#" @click="tabs=2">Registrar</a>
             </p>
           </div>
-        </div>
-        <div class="col-lg-6 text-center">
+        </v-col>
+        <v-col lg="6" class="text-center">
           <div class="options text-center mt-1">
             <p>
               ¿Olvidaste tu
               <a href="#">contraseña</a>?
             </p>
           </div>
-        </div>
-      </div>
+        </v-col>
+      </v-row>
     </v-card-actions>
   </div>
 </template>

@@ -2,9 +2,9 @@
   <div class="mx-3">
     <v-card-text>
       <v-form @submit.prevent="submit">
-        <div class="row">
-          <div class="col-lg-6">
-            <mdb-input
+        <v-row>
+          <v-col lg="6">
+            <v-text-field
               v-model="nombres"
               required
               label="Nombres"
@@ -12,9 +12,9 @@
               type="text"
               class="mb-1"
             />
-          </div>
-          <div class="col-lg-6">
-            <mdb-input
+          </v-col>
+          <v-col lg="6">
+            <v-text-field
               v-model="apellidos"
               required
               label="Apellidos"
@@ -22,11 +22,11 @@
               type="text"
               class="mb-1"
             />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-6">
-            <mdb-input
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col lg="6">
+            <v-text-field
               v-model="numCuentaEmpleado"
               required
               label="# de cuenta/empleado"
@@ -34,9 +34,9 @@
               type="number"
               class="mb-1"
             />
-          </div>
-          <div class="col-lg-6">
-            <mdb-input
+          </v-col>
+          <v-col lg="6">
+            <v-text-field
               v-model="telefono"
               required
               label="Teléfono"
@@ -44,11 +44,11 @@
               type="number"
               class="mb-1"
             />
-          </div>
-        </div>
-        <div class="row">
+          </v-col>
+        </v-row>
+        <v-row>
           <div class="col-lg-12">
-            <mdb-input
+            <v-text-field
               required
               v-model="$v.email.$model"
               :class="{'is-invalid': $v.email.$error}"
@@ -58,10 +58,10 @@
               class="mb-1"
             />
           </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-6">
-            <mdb-input
+        </v-row>
+        <v-row>
+          <v-col lg="6">
+            <v-text-field
               required
               v-model="$v.password.$model"
               :class="{'is-invalid': $v.password.$error}"
@@ -70,9 +70,9 @@
               type="password"
               class="mb-1"
             />
-          </div>
-          <div class="col-lg-6">
-            <mdb-input
+          </v-col>
+          <v-col lg="6">
+            <v-text-field
               required
               v-model="$v.repeatPassword.$model"
               :class="{'is-invalid': $v.repeatPassword.$error}"
@@ -80,45 +80,47 @@
               icon="lock"
               type="password"
             />
-          </div>
-          <div class="col-lg-12" v-if="!$v.password.minLength">
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col lg="12" v-if="!$v.password.minLength">
             <p class="text-danger">La contraseña debe contener al menos seis caracteres.</p>
-          </div>
-          <div class="col-lg-12" v-if="!$v.repeatPassword.sameAsPassword">
+          </v-col>
+          <v-col lg="12" v-if="!$v.repeatPassword.sameAsPassword">
             <p class="text-danger">Las contraseñas no son iguales.</p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-12" v-if="submitStatus === 'ERROR'">
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col lg="12" v-if="submitStatus === 'ERROR'">
             <p class="text-danger">Favor llenar el formulario correctamente.</p>
-          </div>
-          <div class="col-lg-12" v-if="status === 'Error'">
+          </v-col>
+          <v-col lg="12" v-if="status === 'Error'">
             <p class="text-danger">{{errMensaje}}</p>
-          </div>
-          <div class="col-lg-12" v-if="status === 'Cargando'">
+          </v-col>
+          <v-col lg="12" v-if="status === 'Cargando'">
             <p class="text-success">Enviando...</p>
-          </div>
-        </div>
+          </v-col>
+        </v-row>
         <div class="mt-2 text-center">
-          <mdb-btn type="submit" color="info">
+          <v-btn large color="info" type="submit">
             Registrar
-            <mdb-icon icon="sign-in-alt" class="ml-1" />
-          </mdb-btn>
+            <v-icon class="ml-1">mdi-login</v-icon>
+          </v-btn>
         </div>
       </v-form>
-      <mdb-modal-footer center>
-        <div class="row w-100">
-          <div class="col-lg-12">
-            <div class="options text-center mt-1">
-              <p>
-                ¿Ya tienes una cuenta?
-                <a href="#" @click="tabs=1">Iniciar sesión</a>
-              </p>
-            </div>
-          </div>
-        </div>
-      </mdb-modal-footer>
     </v-card-text>
+    <v-card-actions center>
+      <v-row class="w-100">
+        <v-col class="12">
+          <div class="options text-center mt-1">
+            <p>
+              ¿Ya tienes una cuenta?
+              <a href="#" @click="tabs=1">Iniciar sesión</a>
+            </p>
+          </div>
+        </v-col>
+      </v-row>
+    </v-card-actions>
   </div>
 </template>
 
@@ -134,34 +136,8 @@ import {
 } from "vuelidate/lib/validators";
 import router from "@/router/index";
 import { Validate } from "vuelidate-property-decorators";
-import {
-  mdbContainer,
-  mdbRow,
-  mdbCol,
-  mdbBtn,
-  mdbModal,
-  mdbTab,
-  mdbTabItem,
-  mdbModalBody,
-  mdbInput,
-  mdbModalFooter,
-  mdbModalTitle,
-  mdbIcon
-} from "mdbvue";
 @Component({
-  name: "registro",
-  components: {
-    mdbContainer,
-    mdbRow,
-    mdbCol,
-    mdbBtn,
-    mdbTab,
-    mdbTabItem,
-    mdbModalBody,
-    mdbInput,
-    mdbModalFooter,
-    mdbIcon
-  }
+  name: "registro"
 })
 export default class RegistroComponent extends Vue {
   @Validate({ required, email })
@@ -171,12 +147,12 @@ export default class RegistroComponent extends Vue {
   private password: String = "";
 
   @Validate({ required, minLength: minLength(6) })
-  private repeatPassword: String = "null";
+  private repeatPassword: String = "";
 
-  private numCuentaEmpleado: number = 0;
-  private nombres: String = "null";
-  private apellidos: String = "null";
-  private telefono: number = 0;
+  private numCuentaEmpleado = "";
+  private nombres: String = "";
+  private apellidos: String = "";
+  private telefono = "";
   private submitStatus: any = null;
   private cascading: boolean = false;
 
