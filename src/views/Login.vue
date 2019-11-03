@@ -1,14 +1,14 @@
 <template>
   <div>
     <v-app-bar color="light-blue darken-3" dark>
-      <v-toolbar-title>Sistema de Eventos IS</v-toolbar-title>
+      <v-toolbar-title>{{$appName}}</v-toolbar-title>
 
       <v-spacer></v-spacer>
     </v-app-bar>
     <v-content>
       <v-container fluid>
         <v-row justify="center">
-          <v-col cols="8" align="center">
+          <v-col lg="6" sm="8" cols="12" align="center">
             <v-card raised>
               <v-container>
                 <v-img class="login-logo my-5" src="@/assets/logo-is.jpg" contain></v-img>

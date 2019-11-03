@@ -3,6 +3,14 @@
     <v-app id="inspire">
       <v-navigation-drawer v-model="drawer" app clipped >
         <v-list dense>
+          <v-list-item :to="{ name: 'home'}" exact>
+            <v-list-item-action>
+              <v-icon>mdi-home</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>Home</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
           <v-list-item :to="{ name: 'eventos'}">
             <v-list-item-action>
               <v-icon>mdi-view-dashboard</v-icon>
@@ -24,7 +32,7 @@
 
       <v-app-bar app clipped-left dense color="light-blue darken-3" dark>
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-        <v-toolbar-title>Application</v-toolbar-title>
+        <v-toolbar-title >{{$appName}}</v-toolbar-title>
       </v-app-bar>
 
       <v-content>
@@ -44,13 +52,17 @@
   </div>
 </template>
 <script lang="ts">
-import Vue from "vue";
-export default Vue.extend({
-  data: () => ({
-    drawer: null
-  })
-});
+import { Component, Vue } from "vue-property-decorator";
+
+@Component({})
+export default class Home extends Vue {
+  private drawer: null;
+  constructor() {
+    super();
+  }
+}
 </script>
+
 <style lang="sass">
 
 </style>

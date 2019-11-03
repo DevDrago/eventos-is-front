@@ -15,6 +15,7 @@ Vue.use(Vuelidate);
 Vue.config.productionTip = false
 
 Vue.prototype.$http = Axios;
+Vue.prototype.$appName = 'Sistema de Eventos IS';
 Axios.defaults.withCredentials = true;
 const token = localStorage.getItem('token');
 if (token) {

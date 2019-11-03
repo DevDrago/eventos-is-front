@@ -88,7 +88,7 @@ export default class LoginComponent extends Vue {
       let correo = this.$v.emailLogin.$model;
       let contrasenia = this.$v.passwordLogin.$model;
       this.login({ correo, contrasenia }).then(() =>
-        router.push({ name: "Admin" })
+        router.push({ name: "home" })
       );
     }
   }
