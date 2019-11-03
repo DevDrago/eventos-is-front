@@ -1,8 +1,4 @@
 <template>
-  <!--
-    Everything is wrapped in a label, which acts as a clickable wrapper around a form element.
-    In this case, the file input.
-  -->
   <div style>
     <v-layout align-center wrap justify-space-between row fill-height>
       <v-flex xs12>
@@ -18,7 +14,6 @@
         <slot />
       </v-flex>
     </v-layout>
-    <!-- Now, the file input that we hide. -->
     <input
       ref="archivoInput"
       type="file"
@@ -31,12 +26,8 @@
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 
-interface FileInputEventTarget extends EventTarget {
+interface HTMLInputFileElement extends HTMLInputElement {
   files: FileList;
-}
-
-interface FileInputEvent extends Event {
-  srcElement: FileInputEventTarget;
 }
 
 @Component({
@@ -48,27 +39,29 @@ export default class Login extends Vue {
   @Prop() private accept!: String;
   @Prop() private name!: boolean;
 
+  private archivo: Array<File> = [];
+  private inputFile!: HTMLInputFileElement;
+
   $refs!: {
-    archivoInput: HTMLElement;
+    archivoInput: HTMLInputFileElement;
   };
 
-  private archivo: Array<File> = [];
+  mounted() {
+    this.inputFile = this.$refs.archivoInput;
+  }
 
-  private handleFileChange(e: FileInputEvent) {
-    let inputFile: FileInputEventTarget = e.srcElement;
+  private handleFileChange() {
     this.archivo = [];
-
-    if (inputFile !== null) {
-      for (const archivo of inputFile.files) {
-        console.log(archivo);
-        this.archivo.push(archivo);
-      }
+    let input = this.inputFile;
+    for (const archivo of input.files) {
+      console.log(archivo);
+      this.archivo.push(archivo);
     }
     this.$emit("input", this.archivo);
   }
 
   private abrir() {
-    this.$refs.archivoInput.click();
+    this.inputFile.click();
   }
 }
 </script>
