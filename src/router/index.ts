@@ -5,6 +5,7 @@ import Dashboard from '@/components/Dashboard.vue';
 import Actividades from '@/components/admin/Actividades.vue';
 import Eventos from '@/components/admin/Eventos.vue';
 import Profile from '@/components/Profile.vue';
+import Home from '@/views/Home.vue';
 
 Vue.use(VueRouter)
 
@@ -49,6 +50,15 @@ const routes = [
     component: Eventos,
     meta: {
       requiresAuth: true,
+      is_admin: true
+    }
+  },
+  { 
+    path: '/home', 
+    name: 'home', 
+    component: Home,
+    meta: {
+      requiresAuth: false,
       is_admin: true
     }
   }

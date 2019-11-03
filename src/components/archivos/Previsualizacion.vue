@@ -1,31 +1,23 @@
 <template>
-  <v-layout
-    row
-    wrap
-    align-end
-    xs12
-    sm6
-    pa-2
-    mr-3
-    style="min-height: 30em; background-color: #49ace71a;"
-  >
-    <!--Se cargan imagenes-->
-    <v-flex xs12 v-if="imagenes.length">
+  <v-row align-content="end" justify="center">
+    <v-col cols="12"  v-if="imagenes.length">
       <v-card>
-        <v-container grid-list-sm fluid>
-          <v-layout row wrap>
-            <v-flex
+        <v-container fluid>
+          <v-row>
+            <v-col
               v-for="(imagen, key) in imagenes"
-              :class="tamGridImagen"
-              d-flex
               ref="imagenes"
               :key="key"
+              class="d-flex child-flex"
+              :cols="tamGridImagen"
             >
               <v-card flat tile class="d-flex">
-                <v-img :src="imagen" :alt="imagen" aspect-ratio="1" class="grey lighten-2">
-                  <v-layout slot="placeholder" fill-height align-center justify-center ma-0>
-                    <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-                  </v-layout>
+                <v-img :src="imagen" :lazy-src="imagen" aspect-ratio="1" class="grey lighten-2">
+                  <template v-slot:placeholder>
+                    <v-row class="fill-height ma-0" align="center" justify="center">
+                      <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                    </v-row>
+                  </template>
                   <slot>
                     <v-btn
                       absolute
@@ -38,50 +30,49 @@
                       small
                       @click="retirar(key)"
                     >
-                      <v-icon>delete_forever</v-icon>
+                      <v-icon>mdi-delete-forever</v-icon>
                     </v-btn>
                   </slot>
                 </v-img>
               </v-card>
-            </v-flex>
-          </v-layout>
+            </v-col>
+          </v-row>
         </v-container>
       </v-card>
-    </v-flex>
-    <!--Fin de Contenedor de Imagenes-->
-    <!--Contenedor de boton para cargar imagenes-->
-    <v-flex xs12>
+    </v-col>
+    <v-col cols="12">
       <file-input color="#160c7b" v-model="farchivos" multiple :accept="accept">
         <slot>
-          <v-alert :value="errorArchivo" color="error" icon="warning" outline>Seleccione archivo</v-alert>
+          <v-alert :value="errorArchivo" color="error" icon="warning" outlined>Seleccione archivo</v-alert>
         </slot>
       </file-input>
-    </v-flex>
-    <!--Fin de Contenedor de boton para cargar imagenes-->
-  </v-layout>
+    </v-col>
+  </v-row>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
+import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import FileInput from "@/components/archivos/FileInput.vue";
 @Component({
   components: {
     FileInput
   }
 })
-export default class Login extends Vue {
-  @Prop() public value!: boolean;
+export default class Previsualizacion extends Vue {
+  @Prop() public value!: Array<File>;
+  @Prop() public accept!:String;
   public errorArchivo: boolean = false;
-  public archivos = [];
-  public farchivos = [];
-  public inmueble: any;
+  public archivos:Array<File> = [];
+  public farchivos:Array<File> = [];
   public imagenes: string[] = [];
-  public depto = ""; // Se usa debido a que no detecta la asignacion dentro del objeto
-  public estado!: number;
-  public accept = "image/*";
+  private MIMEpermitidos:Array<string> = [];
 
   constructor() {
     super();
+  }
+
+  mounted(){
+    this.MIMEpermitidos = this.accept.split(",");
   }
 
   @Watch("archivos")
@@ -89,7 +80,8 @@ export default class Login extends Vue {
     this.imagenes = [];
     if (this.archivos) {
       for (const imagen of this.archivos) {
-        this.imagenes.push(URL.createObjectURL(imagen));
+        if(imagen.type.match(/(image)\/.*/))
+          this.imagenes.push(URL.createObjectURL(imagen));
       }
     }
   }
@@ -98,19 +90,24 @@ export default class Login extends Vue {
   private arregloImagen() {
     if (this.farchivos) {
       for (const imagen of this.farchivos) {
-        this.archivos.push(imagen);
+        if(this.MIMEpermitidos.includes(imagen.type) || imagen.type.match(/(image)\/.*/)){
+          this.archivos.push(imagen);
+        } else{
+          console.log(imagen)
+        }
       }
+      this.$emit("input", this.archivos);
     }
   }
 
   get tamGridImagen() {
     switch (this.archivos.length) {
       case 1:
-        return "xs12";
+        return "12";
       case 2:
-        return "xs6";
+        return "6";
       default:
-        return "xs4";
+        return "4";
     }
   }
 
@@ -118,8 +115,5 @@ export default class Login extends Vue {
     this.archivos.splice(e, 1);
   }
 
-  private cancelar() {
-    this.$emit("input", false);
-  }
 }
 </script>

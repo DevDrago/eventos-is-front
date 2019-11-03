@@ -34,7 +34,7 @@ interface HTMLInputFileElement extends HTMLInputElement {
   name: "file-input"
 })
 export default class Login extends Vue {
-  @Prop() private value!: any;
+  @Prop() private value!: Array<File>;
   @Prop() private multiple!: boolean;
   @Prop() private accept!: String;
   @Prop() private name!: boolean;
@@ -52,9 +52,7 @@ export default class Login extends Vue {
 
   private handleFileChange() {
     this.archivo = [];
-    let input = this.inputFile;
-    for (const archivo of input.files) {
-      console.log(archivo);
+    for (const archivo of this.inputFile.files) {
       this.archivo.push(archivo);
     }
     this.$emit("input", this.archivo);

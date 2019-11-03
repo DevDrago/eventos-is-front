@@ -1,18 +1,26 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-container>
+    <Previsulizacion accept="image/*,application/pdf" v-model="archivos"/>
+  </v-container>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import Previsulizacion from '@/components/archivos/Previsualizacion.vue';
+//import File from '@/components/archivos/FileInput.vue';
 
 export default {
   name: 'home',
   components: {
-    HelloWorld
+    Previsulizacion
+  },
+  data(){
+   return { archivos: ""} 
+  },
+  watch:{
+    log(){
+      console.log(archivos)
+    }
   }
 }
 </script>
