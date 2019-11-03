@@ -7,6 +7,8 @@ import Eventos from '@/components/admin/Eventos.vue';
 import Profile from '@/components/Profile.vue';
 import Home from '@/views/Home.vue';
 
+import RutasHome from './home';
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -57,6 +59,7 @@ const routes = [
     path: '/home', 
     name: 'home', 
     component: Home,
+    children: RutasHome,
     meta: {
       requiresAuth: false,
       is_admin: true
