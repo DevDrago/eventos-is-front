@@ -1,10 +1,10 @@
-import HelloWorld from '@/components/HelloWorld.vue';
+import Dashboard from '@/components/Dashboard.vue';
 
 export default [
   {
     path: '',
     name: 'home',
-    component: HelloWorld,
+    component: Dashboard,
   },
   {
     path: 'actividades',
