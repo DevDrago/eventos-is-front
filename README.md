@@ -25,3 +25,10 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### Iconos Material Desing
 (https://materialdesignicons.com)
+
+
+### Correr el proyecto con NPM
+```
+1. npm install
+2. npm run serve
+```
