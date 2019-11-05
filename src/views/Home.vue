@@ -52,7 +52,7 @@
                 <v-icon>mdi-account</v-icon>Perfil
               </v-btn>
             </v-list-item>
-            <v-list-item>
+            <v-list-item @click="cerrarSesion" v-if="isLoggedIn">
               <v-btn icon>
                 <v-icon>mdi-logout</v-icon>Salir
               </v-btn>
@@ -77,12 +77,24 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import {Action, Getter, State} from 'vuex-class';
+import router from '../router';
 
 @Component({})
 export default class Home extends Vue {
   private drawer: boolean = false;
   constructor() {
     super();
+  }
+
+  @Action("logout")
+  public logout(): any{}
+
+  @Getter("isLoggedIn") private isLoggedIn!: any;
+  @Getter("isAdmin") private isAdmin!: any;
+
+  cerrarSesion(){
+    this.logout().then(()=>router.push({name: '/'}));
   }
 }
 </script>

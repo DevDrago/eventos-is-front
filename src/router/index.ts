@@ -6,6 +6,7 @@ import Actividades from '@/components/admin/Actividades.vue';
 import Eventos from '@/components/admin/Eventos.vue';
 import Profile from '@/components/Profile.vue';
 import Home from '@/views/Home.vue';
+import store from '../store/index';
 
 import RutasHome from './home';
 
@@ -73,3 +74,41 @@ const router = new VueRouter({
 })
 
 export default router
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (store.getters.isLoggedIn) {
+      if (to.matched.some(record => record.meta.is_admin)){
+        if (store.getters.isAdmin){
+          // eslint-disable-next-line callback-return
+          next();
+        } else {
+          next('/profile');
+        }
+      } else {
+        next();
+      }
+    }
+    else {
+      // eslint-disable-next-line callback-return
+      next('/'); 
+    }
+
+  } else if (to.matched.some(record => record.meta.guest)){
+    if (store.getters.isLoggedIn) {
+      if (store.getters.isAdmin){
+        next('/admin');
+      } else {
+        next('/profile');
+      }
+    }
+    else {
+      next();
+    }
+  } 
+  else {
+    // eslint-disable-next-line callback-return
+    next(); 
+  }
+});
+
