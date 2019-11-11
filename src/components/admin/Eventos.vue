@@ -1,123 +1,149 @@
 <template>
-<div>
-    <div class="datatable-container">
-        <mdb-btn color="info" @click.native="modal = true"><i class="fas fa-plus"></i> Agregar</mdb-btn>
-		<mdb-btn color="success" @click.native="modal2 = true"><i class="fas fa-plus"></i> Editar</mdb-btn>
-		<mdb-btn color="danger" @click.native="modal3 = true"><i class="fas fa-plus"></i> Eliminar</mdb-btn>
-        <mdb-datatable :data="data" striped bordered />
-    </div>
-
-	<mdb-modal v-if="modal" @close="modal = false">
-		<mdb-modal-header>
-			<mdb-modal-title tag="h4" class="w-100 text-center font-weight-bold">Agregar actividad</mdb-modal-title>
-		</mdb-modal-header>
-		<mdb-modal-body>TODO: Formulario</mdb-modal-body>
-		<mdb-modal-footer class="justify-content-center">
-			<mdb-btn color="info">Agregar</mdb-btn>
-		</mdb-modal-footer>
-	</mdb-modal>
-
-	<mdb-modal v-if="modal2" @close="modal2 = false">
-		<mdb-modal-header>
-			<mdb-modal-title tag="h4" class="w-100 text-center font-weight-bold">Editar actividad</mdb-modal-title>
-		</mdb-modal-header>
-		<mdb-modal-body>TODO: Formulario</mdb-modal-body>
-		<mdb-modal-footer class="justify-content-center">
-			<mdb-btn color="success">Actualizar</mdb-btn>
-		</mdb-modal-footer>
-	</mdb-modal>
-
-	<mdb-modal v-if="modal3" @close="modal3 = false">
-		<mdb-modal-header>
-			<mdb-modal-title tag="h4" class="w-100 text-center font-weight-bold">Eliminar actividad</mdb-modal-title>
-		</mdb-modal-header>
-		<mdb-modal-body>¿Está seguro de querer eliminar el registro seleccionado?</mdb-modal-body>
-		<mdb-modal-footer class="justify-content-center">
-			<mdb-btn color="danger">Eliminar</mdb-btn>
-		</mdb-modal-footer>
-	</mdb-modal>
-</div>
+  <v-container fluid>
+    <v-row>
+      <v-col cols="12">
+        <v-card>
+          <v-card-title>
+            Eventos
+            <v-spacer></v-spacer>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-search"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+            <v-spacer></v-spacer>
+            <v-dialog v-model="dialog" max-width="500px">
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  color="primary"
+                  dark
+                  class="mb-2"
+                  v-on="on"
+                  @click="editarEvento = false"
+                >Nuevo Evento</v-btn>
+              </template>
+              <modal-eventos v-model="evento" v-on:cerrar="dialog=false" :esEdicion="editarEvento">
+                <!-- <template slot="acciones">
+                  
+                </template>-->
+              </modal-eventos>
+            </v-dialog>
+          </v-card-title>
+          <v-data-table :headers="columns" :items="rows" :search="search">
+            <template v-slot:item.action="{ item }">
+              <v-btn class="ma-1" tile large color="teal" icon  @click="editar(item)">
+                <v-icon>mdi-pencil</v-icon>
+              </v-btn>
+              <v-btn class="ma-1" tile large color="teal" icon  @click="eliminar(item)">
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </template>
+          </v-data-table>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
-<style>
-    .datatable-container {
-        background: white;
-        padding: 2%;
-        border-radius: 6px;
-    }
-</style>
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import { Action, State } from "vuex-class";
+import { AxiosResponse } from "axios";
+import { DataTableHeader } from "@/interfaces/VuetifyComponents";
+import { EventoDTO } from "@/interfaces/Eventos";
+import ModalEventos from "@/components/admin/eventos/ModalEventos.vue";
+import moment from "moment";
 
-<script>
-  import { mdbDatatable, mdbContainer, mdbModal, mdbModalHeader, mdbModalTitle, mdbModalBody, mdbModalFooter, mdbBtn } from 'mdbvue';
-  import {mapActions, mapState} from 'vuex';
+@Component({
+  name: "eventos",
+  components: {
+    ModalEventos
+  }
+})
+export default class Eventos extends Vue {
+  private columns: Array<DataTableHeader> = [];
+  private rows: Array<EventoDTO> = [];
+  private search = "";
+  private modal = false;
+  private modal2 = false;
+  private modal3 = false;
+  private keys: Array<DataTableHeader>;
+  private dialog = false;
+  private evento = {};
+  private editarEvento = true;
 
-  export default {
-    name: 'Eventos',
-    components: {
-		mdbDatatable,
-		mdbModal,
-		mdbModalHeader,
-		mdbModalTitle,
-		mdbModalBody,
-		mdbModalFooter,
-		mdbBtn
-    },
-    data() {
-		return {
-			columns: [],
-			rows: [],
-			modal: false,
-			modal2: false,
-			modal3: false,
-		};
-    },
-    computed: {
-      data() {
-        return {
-          columns: this.columns,
-          rows: this.rows
-        };
-      },
-    },
-    methods: {
-      ...mapActions(['getEventos']),
-      filterData(dataArr, keys) {
-        let data = dataArr.map(entry => {
-            let filteredEntry = {};
-            keys.forEach(key => {
-                if (key.field in entry) {
-                    filteredEntry[key.field] = entry[key.field];
-                }
-            });
-            return filteredEntry;
+  @Action("getEventos")
+  private getEventos(): any {}
+
+  constructor() {
+    super();
+
+    this.keys = [
+      { value: "idEvento", text: "ID" },
+      { value: "nombreEvento", text: "Nombre" },
+      { value: "usuario", text: "Usuario" },
+      { value: "fechaInicio", text: "Fecha de inicio" },
+      { value: "fechaFin", text: "Fecha de finalización" },
+      { text: "Acciones", value: "action", sortable: false }
+    ];
+
+    moment.locale("es");
+  }
+
+  private filterData(dataArr: Array<EventoDTO>, keys: Array<DataTableHeader>) {
+    let data = dataArr.map((entry: EventoDTO) => {
+      let filteredEntry: {
+        [key: string]: number | string;
+      } = {};
+      this.keys.forEach((key: DataTableHeader) => {
+        if (key.value in entry) {
+          filteredEntry[key.value] = entry[key.value];
+        }
+      });
+      return filteredEntry;
+    });
+    return data;
+  }
+
+  mounted() {
+    this.obtenerEventos();
+    this.editarEvento = true;
+  }
+
+  private async obtenerEventos() {
+    try {
+      let eventos = await this.getEventos();
+
+      if (eventos.data !== undefined) {
+        let entries = this.filterData(eventos.data.eventos, this.keys);
+        //columns
+        this.columns = this.keys.map(key => {
+          //console.log(key);
+          return {
+            text: key.text.toUpperCase(),
+            value: key.value,
+            sort: "asc"
+          };
         });
-        return data;
+
+        //rows
+        entries.map((entry: any) => {
+          this.rows.push(entry);
+        });
       }
-    },
-    mounted(){
-        this.getEventos()
-            .then((response) => {
-                let keys = [
-                { field: "idEvento", label: "ID"},
-                { field: "nombreEvento", label: "Nombre" },
-                { field: "usuario", label: "Usuario" },
-                { field: "fechaInicio", label: "Fecha de inicio" },
-                { field: "fechaFin", label: "Fecha de finalización" },
-                ];
-                let entries = this.filterData(response.data.eventos, keys);
-                //columns
-                this.columns = keys.map(key => {
-                    //console.log(key);
-                    return {
-                        label: key.label.toUpperCase(),
-                        field: key.field,
-                        sort: 'asc'
-                    };
-                });
-                //rows
-                entries.map(entry => this.rows.push(entry));
-            })
-            .catch(err => console.log(err));
+    } catch (error) {
+      console.log(error);
     }
   }
+
+  private editar(item: EventoDTO) {
+    this.editarEvento = true;
+    this.evento = Object.assign({}, item);
+    this.dialog = true;
+  }
+
+  private eliminar(item: any) {}
+}
 </script>
