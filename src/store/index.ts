@@ -196,7 +196,8 @@ export default new Vuex.Store({
   getters : {
     isLoggedIn: state => Boolean(state.token),
     authStatus: state => state.status,
-    isAdmin: state => Boolean(state.isAdmin)
+    isAdmin: state => Boolean(state.isAdmin),
+    usuario: state => JSON.parse(state.user)
   },
   modules: {
   }

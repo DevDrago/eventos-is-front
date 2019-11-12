@@ -11,7 +11,7 @@
             <v-text-field v-model="eventoEditado.nombreEvento" label="Nombre del Evento"></v-text-field>
           </v-col>
           <v-col cols="12">
-            <v-text-field v-model="eventoEditado.usuario" label="Usuario"></v-text-field>
+            <v-text-field v-model="eventoEditado.usuario" label="Usuario" readonly></v-text-field>
           </v-col>
           <v-col cols="12">
             <v-menu
@@ -53,12 +53,19 @@
       <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
       <v-btn color="blue darken-1" text @click="save">Guardar</v-btn>
     </v-card-actions>
+    <v-snackbar v-model="snackbar" vertical>
+      {{ mensaje }}
+      <v-btn color="indigo" text @click="snackbar = false">Close</v-btn>
+    </v-snackbar>
   </v-card>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import { EventoDTO } from "@/interfaces/Eventos";
+import { Getter } from "vuex-class";
+import axios from "axios";
+
 import moment from "moment";
 
 @Component({
@@ -67,29 +74,32 @@ import moment from "moment";
 export default class ModalEventos extends Vue {
   @Prop() private value!: EventoDTO;
   @Prop() private esEdicion!: string;
+  @Getter("usuario") private usuario!: any;
   private titulo = "Nuevo Evento";
   private eventoEditado: EventoDTO;
   private fechaInicio = false;
   private fechaFin = false;
-
+  private snackbar = false;
+  private mensaje = "";
+  private nombreUsuario = ""
   constructor() {
     super();
     this.eventoEditado = this.resetEventoEditado();
   }
 
-
-  mounted(){
+  mounted() {
     this.edicion();
   }
-  @Watch('esEdicion')
-  private edicion(){
-    console.log("puto w")
+  @Watch("esEdicion")
+  private edicion() {
     if (this.esEdicion) {
       this.titulo = "Editar Evento";
       this.eventoEditado = this.value;
     } else {
+      console.log( this.usuario)
       this.titulo = "Nuevo Evento";
-       this.eventoEditado = this.resetEventoEditado();
+      this.eventoEditado = this.resetEventoEditado();
+      this.eventoEditado.usuario =  this.usuario.nombres + " " + this.usuario.apellidos;
     }
   }
 
@@ -117,25 +127,44 @@ export default class ModalEventos extends Vue {
 
   private close() {
     this.eventoEditado = Object.assign({}, this.resetEventoEditado());
-    this.$emit('cerrar');
+    this.$emit("cerrar");
   }
 
   private save() {
-    if(this.esEdicion){
+    if (this.esEdicion) {
       this.actualizar();
     } else {
       this.guardar();
     }
-    this.$emit('input',this.eventoEditado)
+    this.$emit("input", this.eventoEditado);
     this.close();
   }
 
-  private guardar(){
-    //Inserte llamada a la api
+  private async guardar() {
+    let res = await axios.post(this.$baseUrl+"/eventos/crear", this.eventoEditado, {
+      headers: { "content-type": "application/json" },
+      withCredentials: true
+    });
+    this.mensajes("creado", "crear", res.status === 200);
   }
 
-  private actualizar(){
-    //Inserte llamada a la api
+  private async actualizar() {
+    let res = await axios.put("/eventos/actualizar", this.eventoEditado, {
+      headers: { "content-type": "application/json" },
+      withCredentials: true
+    });
+    this.mensajes("actualizado", "actualizar", res.status === 200);
+  }
+
+  private mensajes(msgC: string, msgE: string, ok: boolean) {
+    if (ok) {
+      this.mensaje =
+        `Se ha ${msgC} correctamente el evento ${this.eventoEditado.nombreEvento}`;
+      this.snackbar = true;
+    } else {
+      this.mensaje = `No se pudo ${msgC} el evento ${this.eventoEditado.nombreEvento}`;
+      this.snackbar = true;
+    }
   }
 }
 </script>

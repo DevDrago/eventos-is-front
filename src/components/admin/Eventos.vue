@@ -14,7 +14,7 @@
               hide-details
             ></v-text-field>
             <v-spacer></v-spacer>
-            <v-dialog v-model="dialog" max-width="500px">
+            <v-dialog v-model="dialog" max-width="500px" v-if="isAdmin">
               <template v-slot:activator="{ on }">
                 <v-btn
                   color="primary"
@@ -32,11 +32,11 @@
             </v-dialog>
           </v-card-title>
           <v-data-table :headers="columns" :items="rows" :search="search">
-            <template v-slot:item.action="{ item }">
-              <v-btn class="ma-1" tile large color="teal" icon  @click="editar(item)">
+            <template v-slot:item.action="{ item }" v-if="isAdmin">
+              <v-btn class="ma-1" tile large color="teal" icon @click="editar(item)">
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
-              <v-btn class="ma-1" tile large color="teal" icon  @click="eliminar(item)">
+              <v-btn class="ma-1" tile large color="teal" icon @click="eliminar(item)">
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </template>
@@ -44,13 +44,17 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-snackbar v-model="snackbar" vertical>
+      {{ mensaje }}
+      <v-btn color="indigo" text @click="snackbar = false">Close</v-btn>
+    </v-snackbar>
   </v-container>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Action, State } from "vuex-class";
-import { AxiosResponse } from "axios";
+import { Action, State, Getter } from "vuex-class";
+import axios, { AxiosResponse, AxiosRequestConfig } from "axios";
 import { DataTableHeader } from "@/interfaces/VuetifyComponents";
 import { EventoDTO } from "@/interfaces/Eventos";
 import ModalEventos from "@/components/admin/eventos/ModalEventos.vue";
@@ -73,6 +77,10 @@ export default class Eventos extends Vue {
   private dialog = false;
   private evento = {};
   private editarEvento = true;
+  private snackbar = false;
+  private mensaje = "";
+
+  @Getter("isAdmin") private isAdmin!: any;
 
   @Action("getEventos")
   private getEventos(): any {}
@@ -85,10 +93,8 @@ export default class Eventos extends Vue {
       { value: "nombreEvento", text: "Nombre" },
       { value: "usuario", text: "Usuario" },
       { value: "fechaInicio", text: "Fecha de inicio" },
-      { value: "fechaFin", text: "Fecha de finalización" },
-      { text: "Acciones", value: "action", sortable: false }
+      { value: "fechaFin", text: "Fecha de finalización" }
     ];
-
     moment.locale("es");
   }
 
@@ -108,6 +114,9 @@ export default class Eventos extends Vue {
   }
 
   mounted() {
+    if (this.isAdmin) {
+      this.keys.push({ text: "Acciones", value: "action", sortable: false });
+    }
     this.obtenerEventos();
     this.editarEvento = true;
   }
@@ -144,6 +153,23 @@ export default class Eventos extends Vue {
     this.dialog = true;
   }
 
-  private eliminar(item: any) {}
+  private async eliminar(item: EventoDTO) {
+    let config: AxiosRequestConfig = {
+      headers: { "content-type": "application/json" },
+      withCredentials: true,
+      data: item
+    };
+    let res = await axios.delete("/eventos/eliminar", config);
+    this.mensajes("actualizado", "actualizar", res.status === 200, item);
+  }
+  private mensajes(msgC: string, msgE: string, ok: boolean, evento: EventoDTO) {
+    if (ok) {
+      this.mensaje = `Se ha ${msgC} correctamente el evento ${evento.nombreEvento}`;
+      this.snackbar = true;
+    } else {
+      this.mensaje = `No se pudo ${msgC} el evento ${evento.nombreEvento}`;
+      this.snackbar = true;
+    }
+  }
 }
 </script>
