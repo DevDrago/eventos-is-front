@@ -95,6 +95,8 @@ export default class ModalEventos extends Vue {
     if (this.esEdicion) {
       this.titulo = "Editar Evento";
       this.eventoEditado = this.value;
+      this.eventoEditado.fechaInicio = moment(this.eventoEditado.fechaInicio).format('YYYY-MM-DD');
+    this.eventoEditado.fechaFin = moment(this.eventoEditado.fechaFin).format('YYYY-MM-DD');
     } else {
       console.log( this.usuario)
       this.titulo = "Nuevo Evento";
@@ -131,6 +133,8 @@ export default class ModalEventos extends Vue {
   }
 
   private save() {
+    this.eventoEditado.fechaInicio = moment(this.eventoEditado.fechaInicio).format('DD-MM-YYYY');
+    this.eventoEditado.fechaFinal = moment(this.eventoEditado.fechaFin).format('DD-MM-YYYY');
     if (this.esEdicion) {
       this.actualizar();
     } else {
@@ -153,10 +157,11 @@ export default class ModalEventos extends Vue {
       headers: { "content-type": "application/json" },
       withCredentials: true
     });
-    this.mensajes("actualizado", "actualizar", res.status === 200);
+    this.mensajes("actualizado", "actualizar", res.status == 200);
   }
 
   private mensajes(msgC: string, msgE: string, ok: boolean) {
+    console.log(ok)
     if (ok) {
       this.mensaje =
         `Se ha ${msgC} correctamente el evento ${this.eventoEditado.nombreEvento}`;
