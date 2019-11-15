@@ -89,6 +89,7 @@ export default class ModalEventos extends Vue {
 
   mounted() {
     this.edicion();
+    //this.usuario = JSON.stringify(this.gusuario);
   }
   @Watch("esEdicion")
   private edicion() {
@@ -98,7 +99,6 @@ export default class ModalEventos extends Vue {
       this.eventoEditado.fechaInicio = moment(this.eventoEditado.fechaInicio).format('YYYY-MM-DD');
     this.eventoEditado.fechaFin = moment(this.eventoEditado.fechaFin).format('YYYY-MM-DD');
     } else {
-      console.log( this.usuario)
       this.titulo = "Nuevo Evento";
       this.eventoEditado = this.resetEventoEditado();
       this.eventoEditado.usuario =  this.usuario.nombres + " " + this.usuario.apellidos;
