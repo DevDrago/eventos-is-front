@@ -62,8 +62,8 @@
       </v-app-bar>
 
       <v-content>
-        <v-container fluid fill-height>
-          <v-row align="center" justify="center">
+        <v-container fluid >
+          <v-row align-content="start" justify="center">
             <router-view></router-view>
           </v-row>
         </v-container>

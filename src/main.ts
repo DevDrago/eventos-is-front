@@ -16,6 +16,7 @@ Vue.config.productionTip = false
 
 Vue.prototype.$http = Axios;
 Vue.prototype.$appName = 'Sistema de Eventos IS';
+Vue.prototype.$baseUrl = 'http://localhost:3000/api';
 Axios.defaults.withCredentials = true;
 const token = localStorage.getItem('token');
 if (token) {
