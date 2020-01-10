@@ -1,10 +1,10 @@
-import Dashboard from '@/components/Dashboard.vue';
+import Admin from '@/components/Admin.vue';
 
 export default [
   {
     path: '',
     name: 'home',
-    component: Dashboard,
+    component: Admin,
   },
   {
     path: 'actividades',

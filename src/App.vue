@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
+import Admin from './components/Admin.vue';
 
 export default Vue.extend({
   name: 'App',

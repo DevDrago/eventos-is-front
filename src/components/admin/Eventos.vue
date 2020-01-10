@@ -16,13 +16,9 @@
             <v-spacer></v-spacer>
             <v-dialog v-model="dialog" max-width="500px" v-if="isAdmin">
               <template v-slot:activator="{ on }">
-                <v-btn
-                  color="primary"
-                  dark
-                  class="mb-2"
-                  v-on="on"
-                  @click="editarEvento = false"
-                >Nuevo Evento</v-btn>
+                <v-btn color="primary" dark class="mb-2" v-on="on" @click="editarEvento = false">
+                  Nuevo Evento
+                </v-btn>
               </template>
               <modal-eventos v-model="evento" v-on:cerrar="dialog=false" :esEdicion="editarEvento">
                 <!-- <template slot="acciones">

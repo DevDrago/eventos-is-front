@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '@/views/Login.vue'
-import Dashboard from '@/components/Dashboard.vue';
+import Admin from '@/components/Admin.vue';
 import Actividades from '@/components/admin/Actividades.vue';
 import Eventos from '@/components/admin/Eventos.vue';
 import Profile from '@/components/Profile.vue';
@@ -32,7 +32,7 @@ const routes = [
   {
     path: '/admin',
     name: 'Admin',
-    component: Dashboard,
+    component: Admin,
     meta: {
       requiresAuth: true,
       is_admin: true

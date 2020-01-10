@@ -10,6 +10,9 @@
           :class="{'is-invalid': $v.emailLogin.$error}"
           type="email"
         />
+        <span class="red--text" lg="12" v-if="!$v.emailLogin.email">
+          <p class="mb-0">Escriba un correo válido.</p>
+        </span>
         <v-text-field
           prepend-icon="mdi-lock"
           v-model="$v.passwordLogin.$model"
@@ -18,24 +21,18 @@
           label="Contraseña"
           type="password"
         />
-        <p
-          v-if="!$v.passwordLogin.minLength"
-          class="red--text"
-        >La contraseña debe contener al menos seis caracteres.</p>
-        <p
-          v-if="submitStatusLogin === 'ERROR'"
-          class="red--text"
-        >Favor llenar el formulario correctamente.</p>
+        <p class="red--text" v-if="!$v.passwordLogin.minLength">
+          La contraseña debe contener al menos seis caracteres.
+        </p>
+        <p class="red--text" v-if="submitStatusLogin === 'ERROR'">
+          Favor llenar el formulario correctamente.
+        </p>
         <v-col lg="12" v-if="status === 'Error'">
           <p class="red--text">{{errMensaje}}</p>
         </v-col>
         <p v-if="status === 'Cargando'" class="green--text">Enviando...</p>
         <div class="my-2">
-          <v-btn 
-          large 
-          color="info"
-          type="submit"
-          >
+          <v-btn large color="info" type="submit">
             Iniciar
             <v-icon class="ml-1">mdi-login</v-icon>
           </v-btn>

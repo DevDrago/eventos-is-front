@@ -3,7 +3,6 @@
     <v-card-title>
       <span class="headline">{{ titulo }}</span>
     </v-card-title>
-
     <v-card-text>
       <v-container>
         <v-row>
@@ -65,7 +64,6 @@ import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import { EventoDTO } from "@/interfaces/Eventos";
 import { Getter } from "vuex-class";
 import axios from "axios";
-
 import moment from "moment";
 
 @Component({
@@ -81,7 +79,9 @@ export default class ModalEventos extends Vue {
   private fechaFin = false;
   private snackbar = false;
   private mensaje = "";
-  private nombreUsuario = ""
+  private nombreUsuario = "";
+  private $baseUrl = "http://localhost:3000/api";
+  
   constructor() {
     super();
     this.eventoEditado = this.resetEventoEditado();

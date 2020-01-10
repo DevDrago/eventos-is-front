@@ -57,6 +57,9 @@
               type="email"
               class="mb-1"
             />
+            <span class="red--text" lg="12" v-if="!$v.email.email">
+              <p class="mb-0">Escriba un correo válido.</p>
+            </span>
           </div>
         </v-row>
         <v-row>
@@ -81,13 +84,13 @@
               type="password"
             />
           </v-col>
-        </v-row>
-        <v-row>
-          <v-col lg="12" v-if="!$v.password.minLength">
-            <p class="red--text">La contraseña debe contener al menos seis caracteres.</p>
-          </v-col>
-          <v-col lg="12" v-if="!$v.repeatPassword.sameAsPassword">
-            <p class="red--text">Las contraseñas no son iguales.</p>
+          <v-col v-col lg="12">
+          <span class="red--text" lg="12" v-if="!$v.password.minLength">
+            <p class="mb-0">La contraseña debe contener al menos seis caracteres.</p>
+          </span>
+          <span class="red--text" v-if="!$v.repeatPassword.sameAsPassword">
+            <p>Las contraseñas no coinciden.</p>
+          </span>
           </v-col>
         </v-row>
         <v-row>
@@ -139,7 +142,7 @@ export default class RegistroComponent extends Vue {
   @Validate({ required, minLength: minLength(6) })
   private password: String = "";
 
-  @Validate({ required, minLength: minLength(6) })
+  @Validate({ required, minLength: minLength(6), sameAsPassword: sameAs('password') })
   private repeatPassword: String = "";
 
   private numCuentaEmpleado = "";

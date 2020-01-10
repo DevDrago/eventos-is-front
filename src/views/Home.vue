@@ -16,15 +16,15 @@
               <v-icon>mdi-view-dashboard</v-icon>
             </v-list-item-action>
             <v-list-item-content>
-              <v-list-item-title>Dashboard</v-list-item-title>
+              <v-list-item-title>Eventos</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item :to="{ name: 'actividades'}">
             <v-list-item-action>
-              <v-icon>mdi-settings</v-icon>
+              <v-icon>mdi-view-dashboard</v-icon>
             </v-list-item-action>
             <v-list-item-content>
-              <v-list-item-title>Settings</v-list-item-title>
+              <v-list-item-title>Actividades</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
