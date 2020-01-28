@@ -110,8 +110,7 @@ export default class ModalEventos extends Vue {
       idEvento: 0,
       nombreEvento: "",
       fechaInicio: "",
-      fechaFin: "",
-      usuario: ""
+      fechaFin: ""
     };
   }
 
