@@ -50,13 +50,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { Action, State } from "vuex-class";
-import {
-  required,
-  email,
-  minLength,
-  maxLength,
-  sameAs
-} from "vuelidate/lib/validators";
+import { required, email, minLength, maxLength, sameAs } from "vuelidate/lib/validators";
 import router from "@/router/index";
 import { Validate } from "vuelidate-property-decorators";
 @Component({
@@ -84,6 +78,7 @@ export default class LoginComponent extends Vue {
     } else {
       let correo = this.$v.emailLogin.$model;
       let contrasenia = this.$v.passwordLogin.$model;
+      this.submitStatusLogin = "SUCCESS";
       this.login({ correo, contrasenia }).then(() =>
         router.push({ name: "home" })
       );

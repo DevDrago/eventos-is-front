@@ -96,12 +96,10 @@ export default class Eventos extends Vue {
 
   private filterData(dataArr: Array<EventoDTO>, keys: Array<DataTableHeader>) {
     let data = dataArr.map((entry: EventoDTO) => {
-      let filteredEntry: {
-        [key: string]: number | string;
-      } = {};
+      let filteredEntry = {};
       this.keys.forEach((key: DataTableHeader) => {
         if (key.value in entry) {
-          filteredEntry[key.value] = entry[key.value];
+          filteredEntry = entry;
         }
       });
       return filteredEntry;
@@ -120,7 +118,7 @@ export default class Eventos extends Vue {
   @Watch("evento")
   private actualizarTabla(){
     if(!this.editarEvento){
-      this.rows.push(this.evento);
+      //this.rows.push(this.evento);
       
     }
   }
