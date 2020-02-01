@@ -110,8 +110,7 @@ export default class ModalEventos extends Vue {
       idEvento: 0,
       nombreEvento: "",
       fechaInicio: "",
-      fechaFin: "",
-      usuario: ""
+      fechaFin: ""
     };
   }
 
@@ -134,7 +133,7 @@ export default class ModalEventos extends Vue {
 
   private save() {
     this.eventoEditado.fechaInicio = moment(this.eventoEditado.fechaInicio).format('DD-MM-YYYY');
-    this.eventoEditado.fechaFinal = moment(this.eventoEditado.fechaFin).format('DD-MM-YYYY');
+    this.eventoEditado.fechaFin = moment(this.eventoEditado.fechaFin).format('DD-MM-YYYY');
     if (this.esEdicion) {
       this.actualizar();
     } else {

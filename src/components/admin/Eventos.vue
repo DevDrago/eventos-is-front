@@ -48,7 +48,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import { Action, State, Getter } from "vuex-class";
 import axios, { AxiosResponse, AxiosRequestConfig } from "axios";
 import { DataTableHeader } from "@/interfaces/VuetifyComponents";
@@ -96,12 +96,10 @@ export default class Eventos extends Vue {
 
   private filterData(dataArr: Array<EventoDTO>, keys: Array<DataTableHeader>) {
     let data = dataArr.map((entry: EventoDTO) => {
-      let filteredEntry: {
-        [key: string]: number | string;
-      } = {};
+      let filteredEntry = {};
       this.keys.forEach((key: DataTableHeader) => {
         if (key.value in entry) {
-          filteredEntry[key.value] = entry[key.value];
+          filteredEntry = entry;
         }
       });
       return filteredEntry;
@@ -115,6 +113,14 @@ export default class Eventos extends Vue {
     }
     this.obtenerEventos();
     this.editarEvento = true;
+  }
+
+  @Watch("evento")
+  private actualizarTabla(){
+    if(!this.editarEvento){
+      //this.rows.push(this.evento);
+      
+    }
   }
 
   private async obtenerEventos() {
@@ -158,6 +164,7 @@ export default class Eventos extends Vue {
     let res = await axios.delete("/eventos/eliminar", config);
     this.mensajes("actualizado", "actualizar", res.status === 200, item);
   }
+
   private mensajes(msgC: string, msgE: string, ok: boolean, evento: EventoDTO) {
     if (ok) {
       this.mensaje = `Se ha ${msgC} correctamente el evento ${evento.nombreEvento}`;
@@ -167,5 +174,6 @@ export default class Eventos extends Vue {
       this.snackbar = true;
     }
   }
+
 }
 </script>
