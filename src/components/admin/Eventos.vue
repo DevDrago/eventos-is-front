@@ -9,7 +9,7 @@
             <v-text-field
               v-model="search"
               append-icon="mdi-search"
-              label="Search"
+              label="Buscar"
               single-line
               hide-details
             ></v-text-field>
@@ -64,7 +64,7 @@ import moment from "moment";
 })
 export default class Eventos extends Vue {
   private columns: Array<DataTableHeader> = [];
-  private rows: Array<EventoDTO> = [];
+  private rows: Array<any> = [];
   private search = "";
   private modal = false;
   private modal2 = false;
@@ -118,8 +118,7 @@ export default class Eventos extends Vue {
   @Watch("evento")
   private actualizarTabla(){
     if(!this.editarEvento){
-      //this.rows.push(this.evento);
-      
+      this.rows.push(this.evento);
     }
   }
 

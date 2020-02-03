@@ -144,6 +144,7 @@ export default class ModalEventos extends Vue {
   }
 
   private async guardar() {
+    console.log(this.eventoEditado)
     let res = await axios.post(this.$baseUrl+"/eventos/crear", this.eventoEditado, {
       headers: { "content-type": "application/json" },
       withCredentials: true
