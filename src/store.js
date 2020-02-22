@@ -20,6 +20,9 @@ export default new Vuex.Store({
     eventos: []
   },
   mutations:{
+    clear(state){
+      state.status = '';
+    },
     setActividades(state, actividades){
       state.actividades = actividades;
     },
@@ -57,6 +60,9 @@ export default new Vuex.Store({
     }
   },
   actions:{
+    clear(){
+      this.commit('clear');
+    },
     login({commit}, usuario){
       return new Promise((resolve, reject) => {
         commit('auth_request');

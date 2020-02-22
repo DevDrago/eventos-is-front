@@ -9,8 +9,8 @@
                     </mdb-col>
                 </mdb-row>
                 <mdb-tab tabs justify class="light-blue darken-3">
-                    <mdb-tab-item :active="tabs==1" @click.native.prevent="tabs = 1"><mdb-icon icon="user" class="mr-1"/> Iniciar Sesión</mdb-tab-item>
-                    <mdb-tab-item :active="tabs==2" @click.native.prevent="tabs = 2"><mdb-icon icon="user-plus" class="mr-1"/> Registro</mdb-tab-item>
+                    <mdb-tab-item :active="tabs==1" @click.native.prevent="tabsF(1)"><mdb-icon icon="user" class="mr-1"/> Iniciar Sesión</mdb-tab-item>
+                    <mdb-tab-item :active="tabs==2" @click.native.prevent="tabsF(2)"><mdb-icon icon="user-plus" class="mr-1"/> Registro</mdb-tab-item>
                 </mdb-tab>
                 <mdb-modal-body class="mx-3" v-if="tabs==1">
                     <form @submit.prevent="submitLogin">
@@ -184,7 +184,13 @@
             }
         },
         methods:{
-            ...mapActions(['login', 'register']),
+            tabsF(tabIndex){
+                this.submitStatus = '';
+                this.submitStatusLogin = '';
+                this.tabs = tabIndex;
+                this.clear();
+            },
+            ...mapActions(['login', 'register', 'clear']),
             submit(){
                 this.$v.password.$touch();
                 this.$v.email.$touch();
