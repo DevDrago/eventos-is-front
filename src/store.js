@@ -17,7 +17,10 @@ export default new Vuex.Store({
     actividades: [],
     coordinadores: [],
     actividadesCat: [],
-    eventos: []
+    eventos: [],
+    usersCount: 0,
+    eventsCount: 0,
+    actsCount: 0
   },
   mutations:{
     clear(state){
@@ -34,6 +37,15 @@ export default new Vuex.Store({
     },
     setEventos(state, eventos){
       state.eventos = eventos;
+    },
+    setUsersCount(state, usersCount){
+      state.usersCount = usersCount;
+    },
+    setEventsCount(state, eventsCount){
+      state.eventsCount = eventsCount;
+    },
+    setActsCount(state, actCount){
+      state.actsCount = actCount;
     },
     auth_request(state){
       state.status = 'Cargando';
@@ -197,8 +209,51 @@ export default new Vuex.Store({
             reject(error);
           });
       });
+    },
+    getUsersCount({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/usuarios/count')
+          .then(response => {
+            let userCount = response.data.us;
+            commit('setUsersCount', userCount);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
+    getEventsCount({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/eventos/count')
+          .then(response => {
+            let eventCount = response.data.evCount;
+            commit('setEventsCount', eventCount);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
+    getActsCount({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/actividades/count')
+          .then(response => {
+            let actCount = response.data.acCount;
+            commit('setActsCount', actCount);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
     }
   },
+  
   getters : {
     isLoggedIn: state => Boolean(state.token),
     authStatus: state => state.status,
