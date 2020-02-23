@@ -69,6 +69,10 @@ export default new Vuex.Store({
     error(state, err){
       state.statusDT = 'Error';
       state.errMensaje = err;
+      state.isLoggedIn = false;
+      state.token = '';
+      state.isAdmin = false;
+      localStorage.removeItem('token');
     }
   },
   actions:{
