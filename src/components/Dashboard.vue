@@ -7,9 +7,9 @@
         </h4>
       </mdb-card-body>
     </mdb-card>
-    <section class="mt-lg-5">
-      <mdb-row>
-        <mdb-col xl="4" md="6" class="mb-r">
+    <v-container fluid>
+      <v-row>
+        <v-col cols="4">
           <mdb-card cascade class="cascading-admin-card">
             <div class="admin-up">
               <mdb-icon icon="users" fas class="primary-color"/>
@@ -29,8 +29,8 @@
               </div>
             </mdb-card-body>
           </mdb-card>
-        </mdb-col>
-        <mdb-col xl="4" md="6" class="mb-r">
+        </v-col>
+        <v-col cols="4">
           <mdb-card cascade class="cascading-admin-card">
             <div class="admin-up">
               <mdb-icon icon="calendar-alt" class="warning-color"/>
@@ -50,8 +50,8 @@
               </div>
             </mdb-card-body>
           </mdb-card>
-        </mdb-col>
-        <mdb-col xl="4" md="6" class="mb-r">
+        </v-col>
+        <v-col cols="4">
           <mdb-card cascade class="cascading-admin-card">
             <div class="admin-up">
               <mdb-icon icon="list" class="red accent-2"/>
@@ -71,9 +71,9 @@
               </div>
             </mdb-card-body>
           </mdb-card>
-        </mdb-col>
-      </mdb-row>
-    </section>
+        </v-col>
+      </v-row>
+    </v-container>
 
   </section>
 </template>
