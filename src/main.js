@@ -9,13 +9,16 @@ import router from './router';
 import Vuelidate from 'vuelidate';
 import store from './store';
 import Axios from 'axios';
+import vuetify from './plugins/vuetify';
+import 'roboto-fontface/css/roboto/roboto-fontface.css';
+import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
 Vue.use(Vuelidate);
 
 Vue.config.productionTip = false;
 
 Vue.prototype.$http = Axios;
-Axios.defaults.withCredentials = true; 
+Axios.defaults.withCredentials = true;
 const token = localStorage.getItem('token');
 if (token) {
   Vue.prototype.$http.defaults.headers.common.Authorization = token;
@@ -27,5 +30,6 @@ new Vue({
   router,
   store,
   components: { App },
+  vuetify,
   template: '<App/>'
 });
