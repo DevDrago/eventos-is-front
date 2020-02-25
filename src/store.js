@@ -20,14 +20,30 @@ export default new Vuex.Store({
     eventos: [],
     usersCount: 0,
     eventsCount: 0,
-    actsCount: 0
+    actsCount: 0,
+    users: [],
+    loaded: false,
+    editedItem:{},
+    dialog: false
   },
   mutations:{
     clear(state){
       state.status = '';
     },
+    openModal(state){
+      state.dialog = true;
+      state.editedItem = {};
+    },
     setActividades(state, actividades){
       state.actividades = actividades;
+    },
+    setItem(state, item){
+      state.editedItem = item;
+      state.dialog = true;
+    },
+    closeModal(state){
+      state.editedItem = {};
+      state.dialog = false;
     },
     setCoordinadores(state, coordinadores){
       state.coordinadores = coordinadores;
@@ -37,6 +53,10 @@ export default new Vuex.Store({
     },
     setEventos(state, eventos){
       state.eventos = eventos;
+    },
+    setUsers(state, users){
+      state.users = users;
+      state.loaded = true;
     },
     setUsersCount(state, usersCount){
       state.usersCount = usersCount;
@@ -78,6 +98,12 @@ export default new Vuex.Store({
   actions:{
     clear(){
       this.commit('clear');
+    },
+    closeModal(){
+      this.commit('closeModal');
+    },
+    openModalStore(){
+      this.commit('openModal');
     },
     login({commit}, usuario){
       return new Promise((resolve, reject) => {
@@ -214,6 +240,23 @@ export default new Vuex.Store({
           });
       });
     },
+    setItem({commit}, item){
+      commit('setItem', item);
+    },
+    getUsers({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/usuarios')
+          .then(response => {
+            let users = response.data.users;
+            commit('setUsers', users);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
     getUsersCount({commit}){
       return new Promise((resolve, reject) => {
         axios.get(baseUrl+'/usuarios/count')
@@ -261,6 +304,7 @@ export default new Vuex.Store({
   getters : {
     isLoggedIn: state => Boolean(state.token),
     authStatus: state => state.status,
-    isAdmin: state => Boolean(state.isAdmin)
+    isAdmin: state => Boolean(state.isAdmin),
+    isLoaded: state => state.loaded
   }
 });

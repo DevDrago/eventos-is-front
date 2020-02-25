@@ -7,6 +7,7 @@ import Dashboard from '@/components/Dashboard';
 import Actividades from '@/components/admin/Actividades';
 import Eventos from '@/components/admin/Eventos';
 import Profile from '@/components/Profile';
+import Usuarios from '@/components/admin/Usuarios';
 
 Vue.use(Router);
 
@@ -50,6 +51,15 @@ let router = new Router({
       path: '/eventos', 
       name: 'Eventos', 
       component: Eventos,
+      meta: {
+        requiresAuth: true,
+        is_admin: true
+      }
+    },
+    { 
+      path: '/usuarios', 
+      name: 'Usuarios', 
+      component: Usuarios,
       meta: {
         requiresAuth: true,
         is_admin: true

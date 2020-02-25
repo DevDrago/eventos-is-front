@@ -1,124 +1,99 @@
 <template>
-<div>
-    <div class="datatable-container">
-        <mdb-btn color="info" @click.native="modal = true"><i class="fas fa-plus"></i> Agregar</mdb-btn>
-		<mdb-btn color="success" @click.native="modal2 = true"><i class="fas fa-plus"></i> Editar</mdb-btn>
-		<mdb-btn color="danger" @click.native="modal3 = true"><i class="fas fa-plus"></i> Eliminar</mdb-btn>
-        <mdb-datatable :data="data" striped bordered />
-    </div>
+  <v-container fluid>
+    <Breadcrumb :items="breadcrumb"></Breadcrumb>
+    <Datatable title="Eventos"
+    :columnas="headers"
+    :datos="eventos"
+    :nuevo=true
+    ></Datatable>
+    <v-dialog v-model="dialog" max-width="500px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">{{ formTitle }}</span>
+        </v-card-title>
 
-	<mdb-modal v-if="modal" @close="modal = false">
-		<mdb-modal-header>
-			<mdb-modal-title tag="h4" class="w-100 text-center font-weight-bold">Agregar actividad</mdb-modal-title>
-		</mdb-modal-header>
-		<mdb-modal-body>TODO: Formulario</mdb-modal-body>
-		<mdb-modal-footer class="justify-content-center">
-			<mdb-btn color="info">Agregar</mdb-btn>
-		</mdb-modal-footer>
-	</mdb-modal>
+        <v-card-text>
+          <v-container>
+            <v-row>
+                <v-col cols="12" sm="6" md="6">
+                    <v-text-field v-model="editedItem.nombreEvento" label="Nombre"></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="6">
+                    <v-text-field v-model="editedItem.usuario" label="Usuario"></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="6">
+                    <v-text-field v-model="editedItem.fechaInicio" label="Fecha de inicio"></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="6">
+                    <v-text-field v-model="editedItem.fechaFin" label="Fecha de fin"></v-text-field>
+                </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
 
-	<mdb-modal v-if="modal2" @close="modal2 = false">
-		<mdb-modal-header>
-			<mdb-modal-title tag="h4" class="w-100 text-center font-weight-bold">Editar actividad</mdb-modal-title>
-		</mdb-modal-header>
-		<mdb-modal-body>TODO: Formulario</mdb-modal-body>
-		<mdb-modal-footer class="justify-content-center">
-			<mdb-btn color="success">Actualizar</mdb-btn>
-		</mdb-modal-footer>
-	</mdb-modal>
-
-	<mdb-modal v-if="modal3" @close="modal3 = false">
-		<mdb-modal-header>
-			<mdb-modal-title tag="h4" class="w-100 text-center font-weight-bold">Eliminar actividad</mdb-modal-title>
-		</mdb-modal-header>
-		<mdb-modal-body>¿Está seguro de querer eliminar el registro seleccionado?</mdb-modal-body>
-		<mdb-modal-footer class="justify-content-center">
-			<mdb-btn color="danger">Eliminar</mdb-btn>
-		</mdb-modal-footer>
-	</mdb-modal>
-</div>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
+          <v-btn color="blue darken-1" text @click="save">Guardar</v-btn>
+        </v-card-actions>
+      </v-card>
+  </v-dialog>
+   
+</v-container>
 </template>
 
-<style>
-    .datatable-container {
-        background: white;
-        padding: 2%;
-        border-radius: 6px;
-    }
-</style>
-
 <script>
-  import { mdbDatatable, mdbContainer, mdbModal, mdbModalHeader, mdbModalTitle, mdbModalBody, mdbModalFooter, mdbBtn } from 'mdbvue';
   import {mapActions, mapState} from 'vuex';
+  import Datatable from '../../components/Datatable';
+  import Breadcrumb from '../../components/Breadcrumbs';
 
   export default {
     name: 'Eventos',
     components: {
-		mdbDatatable,
-		mdbContainer,
-		mdbModal,
-		mdbModalHeader,
-		mdbModalTitle,
-		mdbModalBody,
-		mdbModalFooter,
-		mdbBtn
+      Breadcrumb,
+      Datatable
     },
-    data() {
-		return {
-			columns: [],
-			rows: [],
-			modal: false,
-			modal2: false,
-			modal3: false,
-		};
-    },
+    data: () => ({
+      editedIndex: -1,
+      breadcrumb: [
+        {
+          text: 'Dashboard',
+          disabled: false,
+          href: '/',
+        },
+        {
+          text: 'Eventos',
+          disabled: true,
+          href: '/',
+        }
+      ],
+      headers: [
+        { text: 'id', align: 'left', value: 'idEvento'},
+        { text: 'Evento', value: 'nombreEvento' },
+        { text: 'Usuario', value: 'usuario' },
+        { text: 'Fecha de inicio', value: 'fechaInicio' },
+        { text: 'Fecha de finalización', value: 'fechaFin' },
+        { text: 'Acciones', value: 'action', sortable: false }
+      ],
+      
+    }),
     computed: {
-      data() {
-        return {
-          columns: this.columns,
-          rows: this.rows
-        };
+      ...mapState(['eventos','dialog', 'editedItem']),
+      formTitle () {
+        return this.editedIndex === -1 ? 'Nuevo registro' : 'Editar registro'
       },
     },
     methods: {
-      ...mapActions(['getEventos']),
-      filterData(dataArr, keys) {
-        let data = dataArr.map(entry => {
-            let filteredEntry = {};
-            keys.forEach(key => {
-                if (key.field in entry) {
-                    filteredEntry[key.field] = entry[key.field];
-                }
-            });
-            return filteredEntry;
-        });
-        return data;
-      }
+      save () {
+
+      },
+      ...mapActions(['getEventos', 'closeModal']),
+      close () {
+        this.closeModal();
+      },
     },
-    mounted(){
-        this.getEventos()
-            .then((response) => {
-                let keys = [
-                { field: "idEvento", label: "ID"},
-                { field: "nombreEvento", label: "Nombre" },
-                { field: "usuario", label: "Usuario" },
-                { field: "fechaInicio", label: "Fecha de inicio" },
-                { field: "fechaFin", label: "Fecha de finalización" },
-                ];
-                let entries = this.filterData(response.data.eventos, keys);
-                //columns
-                this.columns = keys.map(key => {
-                    //console.log(key);
-                    return {
-                        label: key.label.toUpperCase(),
-                        field: key.field,
-                        sort: 'asc'
-                    };
-                });
-                //rows
-                entries.map(entry => this.rows.push(entry));
-            })
-            .catch(err => console.log(err));
-    }
+    created() {
+      this.getEventos();
+    },
   }
 </script>

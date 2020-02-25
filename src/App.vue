@@ -14,7 +14,7 @@
       <v-spacer></v-spacer>
 
       <v-btn
-        href="/"
+        href="/usuarios"
         text
         v-if="isLoggedIn && isAdmin"
       >

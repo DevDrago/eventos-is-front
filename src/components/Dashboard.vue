@@ -1,13 +1,7 @@
 <template>
   <section id="dashboard">
-    <mdb-card class="mb-4">
-      <mdb-card-body style="padding-bottom: 9px;" class="d-sm-flex justify-content-between">
-        <h4 class="mb-sm-0 pt-2">
-          <a href="" target="">Inicio</a><span>/</span><span>Dashboard</span>
-        </h4>
-      </mdb-card-body>
-    </mdb-card>
-    <v-container fluid>
+    <Breadcrumb :items="breadcrumb"></Breadcrumb>
+    <v-container fluid style="padding: 15px 25px 0px 25px;">
       <v-row>
         <v-col cols="4">
           <mdb-card cascade class="cascading-admin-card">
@@ -81,10 +75,12 @@
 <script>
 import { mdbRow, mdbCol, mdbBtn, mdbCard, mdbCardBody, mdbCardHeader, mdbCardText, mdbIcon, mdbTbl, mdbBarChart, mdbPieChart, mdbLineChart, mdbRadarChart, mdbDoughnutChart, mdbListGroup, mdbListGroupItem, mdbBadge, mdbModal, mdbModalHeader, mdbModalTitle, mdbModalBody, mdbModalFooter } from 'mdbvue';
 import {mapActions, mapState} from 'vuex';
+import Breadcrumb from '../components/Breadcrumbs';
 
 export default {
   name: 'Dashboard',
   components: {
+    Breadcrumb,
     mdbRow,
     mdbCol,
     mdbBtn,
@@ -124,6 +120,13 @@ export default {
       showFluidModalLeft: false,
       showFluidModalTop: false,
       showFluidModalBottom: false,
+      breadcrumb: [
+        {
+          text: 'Dashboard',
+          disabled: true,
+          href: '/',
+        }
+      ],
       barChartData: {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
         datasets: [
