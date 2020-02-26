@@ -19,7 +19,10 @@
                     <v-text-field v-model="editedItem.nombreEvento" label="Nombre"></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
-                    <v-text-field v-model="editedItem.usuario" label="Usuario"></v-text-field>
+                  <v-select
+                    :items="organizadores"
+                    label="Usuario" v-model="editedItem.usuario"
+                  ></v-select>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                     <v-text-field v-model="editedItem.fechaInicio" label="Fecha de inicio"></v-text-field>
@@ -38,7 +41,8 @@
         </v-card-actions>
       </v-card>
   </v-dialog>
-   
+  <Alert :tipo="alertType"
+  :mensaje="alertMessage"></Alert>
 </v-container>
 </template>
 
@@ -46,12 +50,14 @@
   import {mapActions, mapState} from 'vuex';
   import Datatable from '../../components/Datatable';
   import Breadcrumb from '../../components/Breadcrumbs';
+  import Alert from '../Alert';
 
   export default {
     name: 'Eventos',
     components: {
       Breadcrumb,
-      Datatable
+      Datatable,
+      Alert
     },
     data: () => ({
       editedIndex: -1,
@@ -78,22 +84,25 @@
       
     }),
     computed: {
-      ...mapState(['eventos','dialog', 'editedItem']),
+      ...mapState(['eventos','dialog', 'editedItem', 'organizadores', 'alertType', 'alertMessage']),
       formTitle () {
         return this.editedIndex === -1 ? 'Nuevo registro' : 'Editar registro'
       },
     },
     methods: {
       save () {
-
+        this.crearEvento(this.editedItem).then(() => {
+          this.getEventos();
+        });
       },
-      ...mapActions(['getEventos', 'closeModal']),
+      ...mapActions(['getEventos', 'closeModal', 'getOrganizadores', 'crearEvento']),
       close () {
         this.closeModal();
       },
     },
     created() {
       this.getEventos();
+      this.getOrganizadores();
     },
   }
 </script>

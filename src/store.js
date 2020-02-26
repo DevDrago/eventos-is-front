@@ -17,6 +17,7 @@ export default new Vuex.Store({
     actividades: [],
     coordinadores: [],
     actividadesCat: [],
+    organizadores:[],
     eventos: [],
     usersCount: 0,
     eventsCount: 0,
@@ -24,7 +25,10 @@ export default new Vuex.Store({
     users: [],
     loaded: false,
     editedItem:{},
-    dialog: false
+    dialog: false,
+    showAlert: false,
+    alertType: '',
+    alertMessage: ''
   },
   mutations:{
     clear(state){
@@ -47,6 +51,9 @@ export default new Vuex.Store({
     },
     setCoordinadores(state, coordinadores){
       state.coordinadores = coordinadores;
+    },
+    setOrganizadores(state, organizadores){
+      state.organizadores = organizadores;
     },
     setActividadesCat(state, actividadesCat){
       state.actividadesCat = actividadesCat;
@@ -93,6 +100,15 @@ export default new Vuex.Store({
       state.token = '';
       state.isAdmin = false;
       localStorage.removeItem('token');
+    },
+    showAlert(state, [tipo, mensaje]){
+      state.alertType = tipo;
+      state.alertMessage = mensaje;
+      state.showAlert = true;
+      state.dialog = false;
+      setTimeout(() => {
+        state.showAlert = false;
+      },3000);
     }
   },
   actions:{
@@ -195,6 +211,20 @@ export default new Vuex.Store({
           });
       });
     },
+    getOrganizadores({commit}) {
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/usuarios/organizadores')
+          .then(response => {
+            let organizadores = response.data.organizadores;
+            commit('setOrganizadores', organizadores);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
     getActividadesCat({commit}) {
       return new Promise((resolve, reject) => {
         axios.get(baseUrl+'/actividades/categorias')
@@ -285,6 +315,21 @@ export default new Vuex.Store({
           });
       });
     },
+    crearEvento({commit}, evento){
+      return new Promise((resolve,reject) => {
+
+        axios.post(baseUrl+'/eventos/crear', evento, {headers: { "content-type": "application/json" }, withCredentials: true})
+          .then(response => {
+            resolve(response);
+            commit('showAlert', ['success', 'Evento guardado con éxito']);
+          })
+          .catch(error => {
+            const err = error.response.data.mensaje;
+            commit('auth_error', err);
+            reject(error);
+          });
+      });
+    },
     getActsCount({commit}){
       return new Promise((resolve, reject) => {
         axios.get(baseUrl+'/actividades/count')
@@ -300,7 +345,6 @@ export default new Vuex.Store({
       });
     }
   },
-  
   getters : {
     isLoggedIn: state => Boolean(state.token),
     authStatus: state => state.status,
