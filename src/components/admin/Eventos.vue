@@ -196,7 +196,7 @@
       },
       closeDeleteModal () {
         this.closeModalDelete();
-      }
+      },
       formatDate (date) {
         if (!date) return null
 
