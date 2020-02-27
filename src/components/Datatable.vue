@@ -74,10 +74,10 @@ import {mapActions, mapState} from 'vuex';
     methods: {
       initialize () {
       },
-      ...mapActions(['setItem', 'openModalStore']),
+      ...mapActions(['setItem', 'openModalStore', 'openModalDelete']),
 
       editItem (item) {
-        this.propModel = this.datos.indexOf(item)
+        //let indexItem = this.datos.indexOf(item)
         this.propModel = Object.assign({}, item)
         //this.dialog = true
         this.setItem(this.propModel);
@@ -87,8 +87,7 @@ import {mapActions, mapState} from 'vuex';
         this.openModalStore();
       },
       deleteItem (item) {
-        const index = this.desserts.indexOf(item)
-        confirm('¿Está seguro(a) de borrar este registro?') && this.desserts.splice(index, 1)
+        this.openModalDelete(item);
       },
     },
   }

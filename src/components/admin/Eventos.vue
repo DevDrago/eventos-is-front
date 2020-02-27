@@ -20,8 +20,8 @@
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   <v-select
-                    :items="organizadores"
-                    label="Usuario" v-model="editedItem.usuario"
+                    :items="organizadores" :value="editedItem.idUsuario_fk"
+                    label="Usuario" v-model="editedItem.idUsuario_fk"
                   ></v-select>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
@@ -40,12 +40,63 @@
           <v-btn color="blue darken-1" text @click="save">Guardar</v-btn>
         </v-card-actions>
       </v-card>
-  </v-dialog>
+    </v-dialog>
+        <v-dialog
+      v-model="dialogDelete"
+      max-width="350"
+    >
+      <v-card>
+        <v-card-title class="c-red">Eliminar</v-card-title>
+
+        <v-card-text class="v-texto">
+          <h4>¿Está seguro(a) de borrar este registro?</h4>
+        </v-card-text>
+
+        <v-card-actions class="v-acciones">
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="deleteEvent"
+          >
+            Eliminar
+          </v-btn>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="closeDeleteModal"
+          >
+            Cancelar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   <Alert :tipo="alertType"
   :mensaje="alertMessage"></Alert>
 </v-container>
 </template>
-
+<style>
+  .c-red{
+    background-color:#970a0acc;
+    color:white;
+  }
+  .v-texto{
+    background-color: #8606066e;
+    color: white !important;
+    padding-top: 10px !important;
+    padding-bottom: 6px !important;
+  }
+  .v-acciones{
+    background-color:#970a0acc;
+    color: white !important;
+  }
+  .v-application .green--text.text--darken-1 {
+    color: white !important;
+    caret-color: white !important;
+  }
+</style>
 <script>
   import {mapActions, mapState} from 'vuex';
   import Datatable from '../../components/Datatable';
@@ -60,7 +111,7 @@
       Alert
     },
     data: () => ({
-      editedIndex: -1,
+      
       breadcrumb: [
         {
           text: 'Dashboard',
@@ -84,21 +135,37 @@
       
     }),
     computed: {
-      ...mapState(['eventos','dialog', 'editedItem', 'organizadores', 'alertType', 'alertMessage']),
+      ...mapState(['eventos','dialog', 'editedItem', 'dialogDelete', 
+      'organizadores', 'alertType', 'alertMessage', 'editedIndex']),
       formTitle () {
         return this.editedIndex === -1 ? 'Nuevo registro' : 'Editar registro'
       },
     },
     methods: {
       save () {
-        this.crearEvento(this.editedItem).then(() => {
+        if(this.editedIndex == -1){
+          this.crearEvento(this.editedItem).then(() => {
+            this.getEventos();
+          });
+        }else{
+          this.EditarEvento(this.editedItem).then(() => {
+            this.getEventos();
+          })
+        }
+      },
+      deleteEvent () {
+        this.EliminarEvento(this.editedItem).then(() => {
           this.getEventos();
         });
       },
-      ...mapActions(['getEventos', 'closeModal', 'getOrganizadores', 'crearEvento']),
+      ...mapActions(['getEventos', 'closeModal', 'closeModalDelete',
+      'getOrganizadores', 'crearEvento', 'EditarEvento', 'EliminarEvento']),
       close () {
         this.closeModal();
       },
+      closeDeleteModal () {
+        this.closeModalDelete();
+      }
     },
     created() {
       this.getEventos();

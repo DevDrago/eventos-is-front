@@ -26,9 +26,11 @@ export default new Vuex.Store({
     loaded: false,
     editedItem:{},
     dialog: false,
+    dialogDelete: false,
     showAlert: false,
     alertType: '',
-    alertMessage: ''
+    alertMessage: '',
+    editedIndex: -1
   },
   mutations:{
     clear(state){
@@ -38,16 +40,27 @@ export default new Vuex.Store({
       state.dialog = true;
       state.editedItem = {};
     },
+    openModalDelete(state, item){
+      state.dialogDelete = true;
+      state.editedItem = item;
+      state.dialog = false;
+    },
     setActividades(state, actividades){
       state.actividades = actividades;
     },
     setItem(state, item){
       state.editedItem = item;
       state.dialog = true;
+      state.editedIndex = 1;
     },
     closeModal(state){
       state.editedItem = {};
       state.dialog = false;
+      state.editedIndex = -1;
+    },
+    closeModalDelete(state){
+      state.editedItem = {};
+      state.dialogDelete = false;
     },
     setCoordinadores(state, coordinadores){
       state.coordinadores = coordinadores;
@@ -106,6 +119,7 @@ export default new Vuex.Store({
       state.alertMessage = mensaje;
       state.showAlert = true;
       state.dialog = false;
+      state.dialogDelete = false;
       setTimeout(() => {
         state.showAlert = false;
       },3000);
@@ -117,6 +131,9 @@ export default new Vuex.Store({
     },
     closeModal(){
       this.commit('closeModal');
+    },
+    closeModalDelete(){
+      this.commit('closeModalDelete');
     },
     openModalStore(){
       this.commit('openModal');
@@ -273,6 +290,9 @@ export default new Vuex.Store({
     setItem({commit}, item){
       commit('setItem', item);
     },
+    openModalDelete({commit}, item){
+      commit('openModalDelete', item);
+    },
     getUsers({commit}){
       return new Promise((resolve, reject) => {
         axios.get(baseUrl+'/usuarios')
@@ -317,15 +337,39 @@ export default new Vuex.Store({
     },
     crearEvento({commit}, evento){
       return new Promise((resolve,reject) => {
-
         axios.post(baseUrl+'/eventos/crear', evento, {headers: { "content-type": "application/json" }, withCredentials: true})
           .then(response => {
             resolve(response);
             commit('showAlert', ['success', 'Evento guardado con éxito']);
           })
           .catch(error => {
-            const err = error.response.data.mensaje;
-            commit('auth_error', err);
+            commit('showAlert', ['error', 'Ha ocurrido un error al guardar el Evento']);
+            reject(error);
+          });
+      });
+    },
+    EditarEvento({commit}, evento){
+      return new Promise((resolve,reject) => {
+        axios.put(baseUrl+'/eventos/actualizar', evento, {headers: { "content-type": "application/json" }, withCredentials: true})
+          .then(response => {
+            resolve(response);
+            commit('showAlert', ['success', 'Evento actualizado con éxito']);
+          })
+          .catch(error => {
+            commit('showAlert', ['error', 'Ha ocurrido un error al actualizar el Evento']);
+            reject(error);
+          });
+      });
+    },
+    EliminarEvento({commit}, evento){
+      return new Promise((resolve,reject) => {
+        axios.post(baseUrl+'/eventos/eliminar', evento, {headers: { "content-type": "application/json" }, withCredentials: true})
+          .then(response => {
+            resolve(response);
+            commit('showAlert', ['success', 'Evento eliminado con éxito']);
+          })
+          .catch(error => {
+            commit('showAlert', ['error', 'Ha ocurrido un error al eliminar el Evento']);
             reject(error);
           });
       });
