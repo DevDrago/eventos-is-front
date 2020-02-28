@@ -4,6 +4,7 @@ import Router from 'vue-router';
 import store from '../store';
 import LoginRegister from '@/components/LoginRegister';
 import Dashboard from '@/components/Dashboard';
+import CategoriaActividad from '@/components/admin/CategoriaActividad';
 import Actividades from '@/components/admin/Actividades';
 import Eventos from '@/components/admin/Eventos';
 import Profile from '@/components/Profile';
@@ -60,6 +61,15 @@ let router = new Router({
       path: '/usuarios', 
       name: 'Usuarios', 
       component: Usuarios,
+      meta: {
+        requiresAuth: true,
+        is_admin: true
+      }
+    },
+    { 
+      path: '/categoria-actividad', 
+      name: 'CategoriaActividad', 
+      component: CategoriaActividad,
       meta: {
         requiresAuth: true,
         is_admin: true

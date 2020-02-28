@@ -205,25 +205,13 @@ export default new Vuex.Store({
         resolve();
       });
     },
-    getActividades({commit}){
-      return new Promise((resolve, reject) => {
-        axios.get(baseUrl+'/actividades')
-          .then(response => {
-            let actividades = response.data.actividades;
-            commit('setActividades', actividades);
-            resolve(response);
-          })
-          .catch(error => {
-            commit("error", error);
-            reject(error);
-          });
-      });
-    },
+    //LISTADOS
     getCoordinadores({commit}) {
       return new Promise((resolve, reject) => {
         axios.get(baseUrl+'/usuarios/coordinadores')
           .then(response => {
             let coordinadores = response.data.coordinadores;
+            console.log(coordinadores);
             commit('setCoordinadores', coordinadores);
             resolve(response);
           })
@@ -247,11 +235,13 @@ export default new Vuex.Store({
           });
       });
     },
+
+    //CATEGORÍAS DE ACTIVIDAD
     getActividadesCat({commit}) {
       return new Promise((resolve, reject) => {
         axios.get(baseUrl+'/actividades/categorias')
           .then(response => {
-            //console.log(response.data.coordinadores);
+            //console.log(response.data.categorias);
             let actividadesCat = response.data.categorias;
             commit('setActividadesCat', actividadesCat);
             resolve(response);
@@ -262,13 +252,54 @@ export default new Vuex.Store({
           });
       });
     },
-    getEventosAct({commit}) {
-      return new Promise((resolve, reject) => {
-        axios.get(baseUrl+'/actividades/eventos')
+    crearCatAct({commit}, actividadesCat){
+      console.log(actividadesCat);
+      return new Promise((resolve,reject) => {
+        axios.post(baseUrl+'/actividadcategoria/crear', actividadesCat, {headers: { "content-type": "application/json" }, withCredentials: true})
           .then(response => {
-            //console.log(response.data.coordinadores);
-            let eventosAct = response.data.eventos;
-            commit('setEventosAct', eventosAct);
+            resolve(response);
+            commit('showAlert', ['success', 'Categoría de actividad guardada con éxito']);
+          })
+          .catch(error => {
+            commit('showAlert', ['error', 'Ha ocurrido un error al guardar la categoría de actividad']);
+            reject(error);
+          });
+      });
+    },
+    EditarCatAct({commit}, actividadesCat){
+      return new Promise((resolve,reject) => {
+        axios.put(baseUrl+'/actividadcategoria/actualizar', actividadesCat, {headers: { "content-type": "application/json" }, withCredentials: true})
+          .then(response => {
+            resolve(response);
+            commit('showAlert', ['success', 'Categoría de actividad actualizada con éxito']);
+          })
+          .catch(error => {
+            commit('showAlert', ['error', 'Ha ocurrido un error al actualizar la categoría de actividad']);
+            reject(error);
+          });
+      });
+    },
+    EliminarCatAct({commit}, actividadesCat){
+      return new Promise((resolve,reject) => {
+        axios.post(baseUrl+'/actividadcategoria/eliminar', actividadesCat, {headers: { "content-type": "application/json" }, withCredentials: true})
+          .then(response => {
+            resolve(response);
+            commit('showAlert', ['success', 'Categoría de actividad eliminada con éxito']);
+          })
+          .catch(error => {
+            commit('showAlert', ['error', 'Ha ocurrido un error al eliminar la categoría de actividad']);
+            reject(error);
+          });
+      });
+    },
+
+    //ACTIVIDADES
+    getActividades({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/actividades')
+          .then(response => {
+            let actividades = response.data.actividades;
+            commit('setActividades', actividades);
             resolve(response);
           })
           .catch(error => {
@@ -291,60 +322,57 @@ export default new Vuex.Store({
           });
       });
     },
+    EditarActividad({commit}, actividad){
+      return new Promise((resolve,reject) => {
+        axios.put(baseUrl+'/eventos/actualizar', actividad, {headers: { "content-type": "application/json" }, withCredentials: true})
+          .then(response => {
+            resolve(response);
+            commit('showAlert', ['success', 'Actividad actualizada con éxito']);
+          })
+          .catch(error => {
+            commit('showAlert', ['error', 'Ha ocurrido un error al actualizar la actividad']);
+            reject(error);
+          });
+      });
+    },
+    EliminarActividad({commit}, actividad){
+      return new Promise((resolve,reject) => {
+        axios.post(baseUrl+'/eventos/eliminar', actividad, {headers: { "content-type": "application/json" }, withCredentials: true})
+          .then(response => {
+            resolve(response);
+            commit('showAlert', ['success', 'Actividad eliminada con éxito']);
+          })
+          .catch(error => {
+            commit('showAlert', ['error', 'Ha ocurrido un error al eliminar la actividad']);
+            reject(error);
+          });
+      });
+    },
+
+    getEventosAct({commit}) {
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/actividades/eventos')
+          .then(response => {
+            //console.log(response.data.eventos);
+            let eventosAct = response.data.eventos;
+            commit('setEventosAct', eventosAct);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
+
+    //EVENTOS
     getEventos({commit}){
       return new Promise((resolve, reject) => {
         axios.get(baseUrl+'/eventos')
           .then(response => {
+            //console.log(response.data.eventos);
             let eventos = response.data.eventos;
             commit('setEventos', eventos);
-            resolve(response);
-          })
-          .catch(error => {
-            commit("error", error);
-            reject(error);
-          });
-      });
-    },
-    setItem({commit}, item){
-      commit('setItem', item);
-    },
-    openModalDelete({commit}, item){
-      commit('openModalDelete', item);
-    },
-    getUsers({commit}){
-      return new Promise((resolve, reject) => {
-        axios.get(baseUrl+'/usuarios')
-          .then(response => {
-            let users = response.data.users;
-            commit('setUsers', users);
-            resolve(response);
-          })
-          .catch(error => {
-            commit("error", error);
-            reject(error);
-          });
-      });
-    },
-    getUsersCount({commit}){
-      return new Promise((resolve, reject) => {
-        axios.get(baseUrl+'/usuarios/count')
-          .then(response => {
-            let userCount = response.data.us;
-            commit('setUsersCount', userCount);
-            resolve(response);
-          })
-          .catch(error => {
-            commit("error", error);
-            reject(error);
-          });
-      });
-    },
-    getEventsCount({commit}){
-      return new Promise((resolve, reject) => {
-        axios.get(baseUrl+'/eventos/count')
-          .then(response => {
-            let eventCount = response.data.evCount;
-            commit('setEventsCount', eventCount);
             resolve(response);
           })
           .catch(error => {
@@ -388,6 +416,57 @@ export default new Vuex.Store({
           })
           .catch(error => {
             commit('showAlert', ['error', 'Ha ocurrido un error al eliminar el Evento']);
+            reject(error);
+          });
+      });
+    },
+
+    setItem({commit}, item){
+      commit('setItem', item);
+    },
+    openModalDelete({commit}, item){
+      commit('openModalDelete', item);
+    },
+    getUsers({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/usuarios')
+          .then(response => {
+            let users = response.data.users;
+            commit('setUsers', users);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
+    
+    //CONTADORES
+    getUsersCount({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/usuarios/count')
+          .then(response => {
+            let userCount = response.data.us;
+            commit('setUsersCount', userCount);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
+    getEventsCount({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/eventos/count')
+          .then(response => {
+            let eventCount = response.data.evCount;
+            commit('setEventsCount', eventCount);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
             reject(error);
           });
       });

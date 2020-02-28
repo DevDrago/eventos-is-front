@@ -26,8 +26,8 @@
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   <v-select
-                    :items="coordinadores" :value="editedItem.idUsuario_fk"
-                    label="Usuario" v-model="editedItem.idUsuario_fk"
+                    :items="organizadores" :value="editedItem.text"
+                    label="Organizador" v-model="editedItem.idUsuario_fk"
                   ></v-select>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
@@ -40,11 +40,54 @@
                   <v-text-field min="0" type="number" v-model="editedItem.noCupos" label="Cupos"></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
-                    <v-text-field v-model="editedItem.fechaInicio" label="Fecha de inicio"></v-text-field>
-
+                    <!--<v-text-field v-model="editedItem.fechaInicio" label="Fecha de inicio"></v-text-field>-->
+                    <v-dialog
+                      ref="dialog1"
+                      v-model="modal1"
+                      :return-value.sync="initDate"
+                      persistent
+                      width="290px"
+                    >
+                      <template v-slot:activator="{ on }">
+                        <v-text-field
+                          v-model="editedItem.fechaInicio"
+                          label="Fecha de inicio"
+                          prepend-icon="event"
+                          readonly
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker v-model="editedItem.fechaInicio" scrollable>
+                        <v-spacer></v-spacer>
+                        <v-btn text color="primary" @click="modal1 = false">Cancel</v-btn>
+                        <v-btn text color="primary" @click="$refs.dialog1.save(initDate)">OK</v-btn>
+                      </v-date-picker>
+                    </v-dialog>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
-                    <v-text-field v-model="editedItem.fechaFin" label="Fecha de fin"></v-text-field>
+                    <!--<v-text-field v-model="editedItem.fechaFin" label="Fecha de fin"></v-text-field>-->
+                    <v-dialog
+                      ref="dialog2"
+                      v-model="modal2"
+                      :return-value.sync="endDate"
+                      persistent
+                      width="290px"
+                    >
+                      <template v-slot:activator="{ on }">
+                        <v-text-field
+                          v-model="editedItem.fechaFin"
+                          label="Fecha de finalización"
+                          prepend-icon="event"
+                          readonly
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker v-model="editedItem.fechaFin" scrollable>
+                        <v-spacer></v-spacer>
+                        <v-btn text color="primary" @click="modal2 = false">Cancel</v-btn>
+                        <v-btn text color="primary" @click="$refs.dialog2.save(endDate)">OK</v-btn>
+                      </v-date-picker>
+                    </v-dialog>
                 </v-col>
                 <v-col cols="12" sm="12" md="12">
                   <v-textarea
@@ -105,6 +148,10 @@
       Alert
     },
     data: () => ({
+      initDate: new Date().toISOString().substr(0, 10),
+      endDate: new Date().toISOString().substr(0, 10),
+      modal1: false,
+      modal2: false,
       breadcrumb: [
         {
           text: 'Dashboard',
@@ -118,10 +165,10 @@
         }
       ],
       headers: [
-        { text: 'id', align: 'left', value: 'idActividad'},
+        { text: 'ID', align: 'left', value: 'idActividad'},
         { text: 'Actividad', align: 'left', value: 'nombreActividad'},
         { text: 'Evento', value: 'nombreEvento' },
-        { text: 'Usuario', value: 'usuario' },
+        { text: 'Organizador', value: 'usuario' },
         { text: 'Categoría', align: 'left', value: 'categoriaActividad'},
         { text: 'Fecha de inicio', value: 'fechaInicio' },
         { text: 'Fecha de finalización', value: 'fechaFin' },
@@ -133,24 +180,29 @@
     }),
     computed: {
       ...mapState(['actividades','dialog', 'editedItem', 'dialogDelete', 'eventosAct',
-      'alertType', 'alertMessage', 'editedIndex', 'coordinadores', 'actividadesCat']),
+      'alertType', 'alertMessage', 'editedIndex', 'organizadores', 'actividadesCat']),
       formTitle () {
         return this.editedIndex === -1 ? 'Nuevo registro' : 'Editar registro'
       },
     },
     methods: {
-      ...mapActions(['getActividades', 'getCoordinadores', 'getActividadesCat', 'getEventosAct',
-      'getEventos', 'crearActividad', 'closeModal', 'closeModalDelete']),
+      ...mapActions(['getActividades', 'getOrganizadores', 'getActividadesCat', 'getEventosAct',
+      'getEventos', 'crearActividad', 'EditarActividad', 'EliminarActividad', 'closeModal', 'closeModalDelete']),
       save (){
         if(this.editedIndex == -1){
           this.crearActividad(this.editedItem).then(() => {
             this.getActividades();
           });
         }else{
-          /*this.EditarEvento(this.editedItem).then(() => {
-            this.getEventos();
-          })*/
+          this.EditarActividad(this.editedItem).then(() => {
+            this.getActividades();
+          })
         }
+      },
+      deleteAct () {
+        this.EliminarActividad(this.editedItem).then(() => {
+          this.getActividades();
+        });
       },
       close () {
         this.closeModal();
@@ -161,7 +213,7 @@
     },
     created() {
       this.getActividades();
-      this.getCoordinadores();
+      this.getOrganizadores();
       this.getActividadesCat();
       this.getEventosAct();
     },

@@ -25,11 +25,54 @@
                   ></v-select>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
-                    <v-text-field v-model="editedItem.fechaInicio" label="Fecha de inicio"></v-text-field>
-
+                    <!--<v-text-field v-model="editedItem.fechaInicio" label="Fecha de inicio"></v-text-field>-->
+                    <v-dialog
+                      ref="dialog1"
+                      v-model="modal1"
+                      :return-value.sync="initDate"
+                      persistent
+                      width="290px"
+                    >
+                      <template v-slot:activator="{ on }">
+                        <v-text-field
+                          v-model="editedItem.fechaInicio"
+                          label="Fecha de inicio"
+                          prepend-icon="event"
+                          readonly
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker v-model="editedItem.fechaInicio" scrollable>
+                        <v-spacer></v-spacer>
+                        <v-btn text color="primary" @click="modal1 = false">Cancel</v-btn>
+                        <v-btn text color="primary" @click="$refs.dialog1.save(initDate)">OK</v-btn>
+                      </v-date-picker>
+                    </v-dialog>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
-                    <v-text-field v-model="editedItem.fechaFin" label="Fecha de fin"></v-text-field>
+                    <!--<v-text-field v-model="editedItem.fechaFin" label="Fecha de fin"></v-text-field>-->
+                    <v-dialog
+                      ref="dialog2"
+                      v-model="modal2"
+                      :return-value.sync="endDate"
+                      persistent
+                      width="290px"
+                    >
+                      <template v-slot:activator="{ on }">
+                        <v-text-field
+                          v-model="editedItem.fechaFin"
+                          label="Fecha de finalización"
+                          prepend-icon="event"
+                          readonly
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker v-model="editedItem.fechaFin" scrollable>
+                        <v-spacer></v-spacer>
+                        <v-btn text color="primary" @click="modal2 = false">Cancel</v-btn>
+                        <v-btn text color="primary" @click="$refs.dialog2.save(endDate)">OK</v-btn>
+                      </v-date-picker>
+                    </v-dialog>
                 </v-col>
             </v-row>
           </v-container>
@@ -111,9 +154,11 @@
       Datatable,
       Alert
     },
-    data: (wm) => ({
-      fechaInicio: new Date().toISOString().substr(0, 10),
-      dateFormatted: wm.formatDate(new Date().toISOString().substr(0, 10)),
+    data: (vm) => ({
+      initDate: new Date().toISOString().substr(0, 10),
+      endDate: new Date().toISOString().substr(0, 10),
+      modal1: false,
+      modal2: false,
       breadcrumb: [
         {
           text: 'Dashboard',
@@ -142,14 +187,6 @@
       formTitle () {
         return this.editedIndex === -1 ? 'Nuevo registro' : 'Editar registro'
       },
-      computedDateFormatted () {
-        return this.formatDate(this.date)
-      },
-    },
-    watch: {
-      date (val) {
-        this.dateFormatted = this.formatDate(this.date)
-      },
     },
     methods: {
       save () {
@@ -176,18 +213,14 @@
       closeDeleteModal () {
         this.closeModalDelete();
       },
-      formatDate (date) {
+      /*formatDate (date) {
+        //console.log(date);
         if (!date) return null
 
         const [year, month, day] = date.split('-')
-        return `${day}/${month}/${year}`
-      },
-      parseDate (date) {
-        if (!date) return null
-
-        const [day, month, year] = date.split('/')
-        return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
-      },
+        //console.log(`${day}/${month}/${year}`);
+        return `${day}-${month}-${year}`
+      },*/
     },
     created() {
       this.getEventos();

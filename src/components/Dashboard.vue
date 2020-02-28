@@ -2,6 +2,7 @@
   <section id="dashboard">
     <Breadcrumb :items="breadcrumb"></Breadcrumb>
     <v-container fluid style="padding: 15px 25px 0px 25px;">
+      <h1>Administración y parámetros</h1>
       <v-row>
         <v-col cols="4">
           <mdb-card cascade class="cascading-admin-card">
@@ -24,6 +25,31 @@
             </mdb-card-body>
           </mdb-card>
         </v-col>
+        <v-col cols="4">
+          <mdb-card cascade class="cascading-admin-card">
+            <div class="admin-up">
+              <mdb-icon icon="list" fas class="primary-color"/>
+              <div class="data">
+                <p>CATEGORÍAS DE ACTIVIDAD</p>
+                <h4>
+                  <strong>{{ 0 }}</strong>
+                </h4>
+              </div>
+            </div>
+            <mdb-card-body>
+              <div class="pers">
+                <hr>
+                <a href="/categoria-actividad">
+                  <h5 class="blue-text">Administrar</h5>
+                </a>
+              </div>
+            </mdb-card-body>
+          </mdb-card>
+        </v-col>
+      </v-row>
+      <v-spacer></v-spacer>
+      <h1>Gestión de eventos</h1>
+      <v-row>
         <v-col cols="4">
           <mdb-card cascade class="cascading-admin-card">
             <div class="admin-up">
