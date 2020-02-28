@@ -17,6 +17,7 @@ export default new Vuex.Store({
     actividades: [],
     coordinadores: [],
     actividadesCat: [],
+    eventosAct: [],
     organizadores:[],
     eventos: [],
     usersCount: 0,
@@ -87,6 +88,9 @@ export default new Vuex.Store({
     },
     setActsCount(state, actCount){
       state.actsCount = actCount;
+    },
+    setEventosAct(state, eventoAct){
+      state.eventosAct = eventoAct;
     },
     auth_request(state){
       state.status = 'Cargando';
@@ -258,18 +262,31 @@ export default new Vuex.Store({
           });
       });
     },
-    crearActividad({commit}, usuario){
-      return new Promise((resolve,reject) => {
-
-        axios.post(baseUrl+'/actividades/crear', usuario, {headers: { "content-type": "application/json" }, withCredentials: true})
-
-        /*axios({method: 'POST', data: {usuario}, 'url': baseUrl+'/actividades/crear', headers: { "content-type": "application/json" }, withCredentials: true })*/
+    getEventosAct({commit}) {
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/actividades/eventos')
           .then(response => {
+            //console.log(response.data.coordinadores);
+            let eventosAct = response.data.eventos;
+            commit('setEventosAct', eventosAct);
             resolve(response);
           })
           .catch(error => {
-            const err = error.response.data.mensaje;
-            commit('auth_error', err);
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
+    crearActividad({commit}, actividad){
+      console.log(actividad);
+      return new Promise((resolve,reject) => {
+        axios.post(baseUrl+'/actividades/crear', actividad, {headers: { "content-type": "application/json" }, withCredentials: true})
+          .then(response => {
+            resolve(response);
+            commit('showAlert', ['success', 'Actividad guardada con éxito']);
+          })
+          .catch(error => {
+            commit('showAlert', ['error', 'Ha ocurrido un error al guardar la Actividad']);
             reject(error);
           });
       });

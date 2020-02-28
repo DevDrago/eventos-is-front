@@ -15,7 +15,7 @@
           vertical
         ></v-divider>
         <template>
-          <v-btn v-if="nuevo" color="primary" dark style="margin-left:85%;" @click="openModal">Nuevo</v-btn>
+          <v-btn v-if="nuevo" color="primary" dark style="margin-left:82%;" @click="openModal">Nuevo</v-btn>
         </template>
         <v-spacer></v-spacer>
 
@@ -38,7 +38,15 @@
     </template>
   </v-data-table>
 </template>
-
+<style>
+  .v-toolbar__title {
+    font-size: 1.25rem;
+    line-height: 1.5;
+    overflow: unset;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+</style> 
 <script>
 import {mapActions, mapState} from 'vuex';
   export default {

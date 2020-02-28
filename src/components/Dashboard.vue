@@ -263,15 +263,15 @@ export default {
     }
   },
   methods:{
-    ...mapActions(['getActividades', 'getUsersCount', 'getEventsCount', 'setActsCount'])
+    ...mapActions(['getActsCount', 'getUsersCount', 'getEventsCount'])
   },
   created() {
-    this.getActividades();
+    this.getActsCount();
     this.getUsersCount();
     this.getEventsCount();
   },
   computed: {
-    ...mapState(['actividades', 'isAdmin', 'user', 'usersCount', 'eventsCount', 'actsCount']),
+    ...mapState(['isAdmin', 'user', 'usersCount', 'eventsCount', 'actsCount']),
     usuario(){
       if (typeof this.user === 'string') 
         return JSON.parse(this.user);

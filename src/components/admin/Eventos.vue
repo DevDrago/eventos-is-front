@@ -42,7 +42,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-        <v-dialog
+    <v-dialog
       v-model="dialogDelete"
       max-width="350"
     >

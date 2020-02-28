@@ -1,283 +1,169 @@
 <template>
-<div>
-    <div class="datatable-container">
+  <v-container fluid>
+    <Breadcrumb :items="breadcrumb"></Breadcrumb>
+    <Datatable title="Actividades"
+    :columnas="headers"
+    :datos="actividades"
+    :nuevo=true
+    ></Datatable>
+    <v-dialog v-model="dialog" max-width="500px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">{{ formTitle }}</span>
+        </v-card-title>
 
-        <transition name="fade">
-            <div style="display:none;" :class="['alert', fondoalert, 'alert-dismissible']" v-show="mostrarMensaje">
-                <button type="button" class="close" @click.prevent="ocultarMensaje" aria-hidden="true">×</button>
-                <h4 class="mensaje">
-                    <i :class="['icon', 'fas', icono]"></i> @{{mensaje}}
-                </h4>
-            </div>
-        </transition>
+        <v-card-text>
+          <v-container>
+            <v-row>
+                <v-col cols="12" sm="12" md="12">
+                    <v-text-field v-model="editedItem.nombreActividad" label="Nombre"></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="6">
+                  <v-select
+                    :items="eventosAct" :value="editedItem.idEvento_fk"
+                    label="Evento" v-model="editedItem.idEvento_fk"
+                  ></v-select>
+                </v-col>
+                <v-col cols="12" sm="6" md="6">
+                  <v-select
+                    :items="coordinadores" :value="editedItem.idUsuario_fk"
+                    label="Usuario" v-model="editedItem.idUsuario_fk"
+                  ></v-select>
+                </v-col>
+                <v-col cols="12" sm="6" md="6">
+                  <v-select
+                    :items="actividadesCat" :value="editedItem.idCategoriaActividad_fk"
+                    label="Categoría" v-model="editedItem.idCategoriaActividad_fk"
+                  ></v-select>
+                </v-col>
+                <v-col cols="12" sm="6" md="6">
+                  <v-text-field min="0" type="number" v-model="editedItem.noCupos" label="Cupos"></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="6">
+                    <v-text-field v-model="editedItem.fechaInicio" label="Fecha de inicio"></v-text-field>
 
-        <mdb-btn color="info" @click.native="modal = true"><i class="fas fa-plus"></i> Agregar</mdb-btn>
-		    <mdb-btn color="success" @click.native="modal2 = true"><i class="fas fa-plus"></i> Editar</mdb-btn>
-		    <mdb-btn color="danger" @click.native="modal3 = true"><i class="fas fa-plus"></i> Eliminar</mdb-btn>
-        <mdb-datatable :data="data" striped bordered  :key="reloadDatatable" />
-    </div>
+                </v-col>
+                <v-col cols="12" sm="6" md="6">
+                    <v-text-field v-model="editedItem.fechaFin" label="Fecha de fin"></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="12" md="12">
+                  <v-textarea
+                    outlined
+                    v-model="editedItem.descripcion"
+                    label="Descripción"
+                    value="editedItem.descripcion"
+                  ></v-textarea>
+                </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
 
-	<mdb-modal v-if="modal" @close="modal = false">
-		<mdb-modal-header>
-			<mdb-modal-title tag="h4" class="w-100 text-center font-weight-bold">Agregar actividad</mdb-modal-title>
-		</mdb-modal-header>
-		<mdb-modal-body>
-
-      <form @submit.prevent="crear">
-          <div class="row">
-              <div class="col-lg-12"><mdb-input v-model="nombre" required label="Nombre" type="text" class="mb-1"/></div>
-              <div class="col-lg-12"><mdb-input v-model="descripcion" required label="Descripción" type="text" class="mb-1"/></div>
-              <div class="col-lg-12 mt-3">
-                <label>Coordinador</label>
-                <select v-model="coordinador" class="browser-default custom-select" required>
-                  <option value=""> - Seleccione - </option>
-                  <option v-for="coor in coordinadores" :value="coor.idUsuario" :key="coor.idUsuario">{{ coor.coordinador }}</option>
-                </select>
-              </div>
-              <div class="col-lg-12 mt-3">
-                <label>Evento</label>
-                <select v-model="evento" class="browser-default custom-select" required>
-                  <option value=""> - Seleccione - </option>
-                  <option v-for="eve in eventos" :value="eve.idEvento" :key="eve.idEvento">{{ eve.nombreEvento }}</option>
-                </select>
-              </div>
-              <div class="col-lg-12 mt-3">
-                <label>Categorías</label>
-                <select v-model="categoria" class="browser-default custom-select" required>
-                  <option value=""> - Seleccione - </option>
-                  <option v-for="cat in actividadesCat" :value="cat.idCategoriaActividad" :key="cat.idCategoriaActividad">{{ cat.categoriaActividad }}</option>
-                </select>
-              </div>
-              <div class="col-lg-12 mt-3"><mdb-input v-model="fechaInicio" required label="Fecha de inicio" type="date" class="mb-1"/></div>
-              <div class="col-lg-12 mt-3"><mdb-input v-model="fechaFin" required label="Fecha de finalización" type="date" class="mb-1"/></div>
-              <div class="col-lg-12"><mdb-input v-model="cupos" required label="Cupos" type="number" class="mb-1"/></div>
-          </div>
-          <div class="row">
-              <div class="col-lg-12" v-if="submitStatus === 'ERROR'"><p class="text-danger">Favor llenar el formulario correctamente.</p></div>
-              <div class="col-lg-12" v-if="status === 'Error'"><p class="text-danger">{{errMensaje}}</p></div>
-              <div class="col-lg-12" v-if="status === 'Cargando'"><p class="text-success">Enviando...</p></div>
-          </div>
-          <div class="mt-2 text-center">
-              <mdb-btn type="submit" color="info">Agregar</mdb-btn>
-          </div>
-      </form>
-
-    </mdb-modal-body>
-	</mdb-modal>
-
-	<mdb-modal v-if="modal2" @close="modal2 = false">
-		<mdb-modal-header>
-			<mdb-modal-title tag="h4" class="w-100 text-center font-weight-bold">Editar actividad</mdb-modal-title>
-		</mdb-modal-header>
-		<mdb-modal-body>TODO: Formulario</mdb-modal-body>
-		<mdb-modal-footer class="justify-content-center">
-			<mdb-btn color="success">Actualizar</mdb-btn>
-		</mdb-modal-footer>
-	</mdb-modal>
-
-	<mdb-modal v-if="modal3" @close="modal3 = false">
-		<mdb-modal-header>
-			<mdb-modal-title tag="h4" class="w-100 text-center font-weight-bold">Eliminar actividad</mdb-modal-title>
-		</mdb-modal-header>
-		<mdb-modal-body>¿Está seguro de querer eliminar el registro seleccionado?</mdb-modal-body>
-		<mdb-modal-footer class="justify-content-center">
-			<mdb-btn color="danger">Eliminar</mdb-btn>
-		</mdb-modal-footer>
-	</mdb-modal>
-</div>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
+          <v-btn color="blue darken-1" text @click="save">Guardar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <Alert :tipo="alertType"
+    :mensaje="alertMessage"></Alert>
+  </v-container> 
 </template>
 
 <style>
-    .datatable-container {
-        background: white;
-        padding: 2%;
-        border-radius: 6px;
-    }
+  .c-red{
+    background-color:#970a0acc;
+    color:white;
+  }
+  .v-texto{
+    background-color: #8606066e;
+    color: white !important;
+    padding-top: 10px !important;
+    padding-bottom: 6px !important;
+  }
+  .v-acciones{
+    background-color:#970a0acc;
+    color: white !important;
+  }
+  .v-application .green--text.text--darken-1 {
+    color: white !important;
+    caret-color: white !important;
+  }
 </style>
 
 <script>
-  import { mdbDatatable, mdbContainer, mdbModal, mdbModalHeader, mdbModalTitle, mdbModalBody, mdbModalFooter, mdbBtn, mdbInput } from 'mdbvue';
   import {mapActions, mapState} from 'vuex';
-  import axios from "axios"; 
-  import moment from "moment";
-
-  const baseUrl = 'http://localhost:3000/api';
+  import Datatable from '../../components/Datatable';
+  import Breadcrumb from '../../components/Breadcrumbs';
+  import Alert from '../Alert';
 
   export default {
-	name: 'Actividades',
+    name: 'Eventos',
     components: {
-		mdbDatatable,
-		mdbContainer,
-		mdbModal,
-		mdbModalHeader,
-		mdbModalTitle,
-		mdbModalBody,
-		mdbModalFooter,
-    mdbBtn,
-    mdbInput
+      Breadcrumb,
+      Datatable,
+      Alert
     },
-    created: function(){
-    },
-    data() {
-      return {
-        columns: [],
-        rows: [],
-        modal: false,
-        modal2: false,
-        modal3: false,
-
-        coordinadores: [],
-        actividadesCat: [],
-        eventos: [],
-
-        submitStatus: null,
-        reloadDatatable: 0,
-
-        mostrarMensaje: false,
-        mensaje: '',
-        fondoalert: 'alert-success',
-        icono: 'fa-check',
-
-        //Al crear
-        nombre: '',
-        descripcion: '',
-        evento: '',
-        fechaInicio: '',
-        fechaFin: '',
-        cupos: '',
-        coordinador: '',
-        categoria: '',
-
-      };
-    },
+    data: () => ({
+      breadcrumb: [
+        {
+          text: 'Dashboard',
+          disabled: false,
+          href: '/',
+        },
+        {
+          text: 'Actividades',
+          disabled: true,
+          href: '/',
+        }
+      ],
+      headers: [
+        { text: 'id', align: 'left', value: 'idActividad'},
+        { text: 'Actividad', align: 'left', value: 'nombreActividad'},
+        { text: 'Evento', value: 'nombreEvento' },
+        { text: 'Usuario', value: 'usuario' },
+        { text: 'Categoría', align: 'left', value: 'categoriaActividad'},
+        { text: 'Fecha de inicio', value: 'fechaInicio' },
+        { text: 'Fecha de finalización', value: 'fechaFin' },
+        { text: 'Descripción', value: 'descripcion' },
+        { text: 'Cupos', value: 'noCupos' },
+        { text: 'Estado', value: 'estado' },
+        { text: 'Acciones', value: 'action', sortable: false }
+      ],
+    }),
     computed: {
-      ...mapState(['status', 'errMensaje']),
-      data() {
-        return {
-          columns: this.columns,
-          rows: this.rows
-        };
-      }
+      ...mapState(['actividades','dialog', 'editedItem', 'dialogDelete', 'eventosAct',
+      'alertType', 'alertMessage', 'editedIndex', 'coordinadores', 'actividadesCat']),
+      formTitle () {
+        return this.editedIndex === -1 ? 'Nuevo registro' : 'Editar registro'
+      },
     },
     methods: {
-      ...mapActions(['getActividades', 'getCoordinadores', 'getActividadesCat', 'getEventos', 'crearActividad']),
-      filterData(dataArr, keys) {
-        let data = dataArr.map(entry => {
-            let filteredEntry = {};
-            keys.forEach(key => {
-                if (key.field in entry) {
-                    filteredEntry[key.field] = entry[key.field];
-                }
-            });
-            return filteredEntry;
-        });
-        return data;
-      },
-      crear() {
-        this.crearActividad(
-          {
-            nombreActividad: this.nombre,
-            descripcion: this.descripcion,
-            evento: this.evento,
-            fechaInicio: moment(this.fechaInicio).format('DD-MM-YYYY'),
-            fechaFin: moment(this.fechaFin).format('DD-MM-YYYY'),
-            cupos: this.cupos,
-            usuario: this.coordinador,
-            categoria: this.categoria
-          }).then(response => {
-              this.mensaje = response.data.mensaje;
-              this.mostrarRespuesta(this.mensaje, 0);
-              this.habilitar=false;
-              this.modal = false;
-          }).catch(error => {
-            if(error) {
-              this.mensaje = error.response.data.mensaje;
-              this.mostrarRespuesta(this.mensaje, 2);
-              this.habilitar=false;
-            }
+      ...mapActions(['getActividades', 'getCoordinadores', 'getActividadesCat', 'getEventosAct',
+      'getEventos', 'crearActividad', 'closeModal', 'closeModalDelete']),
+      save (){
+        if(this.editedIndex == -1){
+          this.crearActividad(this.editedItem).then(() => {
+            this.getActividades();
           });
-      },
-      mostrarRespuesta: function(respuesta, tipo){
-        this.fondoalert = (tipo == 0) ? "alert-success" : (tipo == 1) ? "alert-info" : "alert-danger";
-        this.icono = (tipo == 0) ? "fa-check-circle" : (tipo == 1) ? "fa-info-circle" : "fa-exclamation-triangle";
-        this.mensaje = respuesta;
-        this.mostrarMensaje = true;
-        setTimeout(function(){
-            this.ocultarMensaje();
-        }.bind(this), 5000);
-        if(tipo == 0){
-            this.limpiar();
-            this.reload();
+        }else{
+          /*this.EditarEvento(this.editedItem).then(() => {
+            this.getEventos();
+          })*/
         }
       },
-      ocultarMensaje: function(){
-        this.mostrarMensaje = false;
+      close () {
+        this.closeModal();
       },
-      limpiar: function(){
-        this.nombre = '';
-        this.descripcion = '';
-        this.evento = '';
-        this.fechaInicio = '';
-        this.fechaFin = '';
-        this.cupos = '';
-        this.coordinador = '';
-        this.categoria = '';
+      closeDeleteModal () {
+        this.closeModalDelete();
       },
-      reload: function() {
-        this.reloadDatatable += 1;  
-      },
-
     },
-    mounted(){
-      this.getActividades()
-        .then(response => {
-          console.log(response.data.actividades);
-          let keys = [
-                { field: "idActividad", label: "ID"},
-                { field: "nombreActividad", label: "Nombre" },
-                { field: "descripcion", label: "Descripción" },
-                { field: "usuario", label: "Usuario" },
-                { field: "nombreEvento", label: "Nombre del evento" },
-                { field: "categoriaActividad", label: "Categoría" },
-                { field: "fechaInicio", label: "Fecha de inicio" },
-                { field: "fechaFin", label: "Fecha de finalización" },
-                { field: "noCupos", label: "Cupos" },
-            ];
-            let entries = this.filterData(response.data.actividades, keys);
-            //columns
-            this.columns = keys.map(key => {
-                //console.log(key);
-                return {
-                    label: key.label.toUpperCase(),
-                    field: key.field,
-                    sort: 'asc'
-                };
-            });
-            //rows
-            //console.log(entries);
-            entries.map(entry => this.rows.push(entry));
-        })
-        .catch(error => {console.log(error);});
-
-      this.getCoordinadores()
-        .then(response => {
-          this.coordinadores = response.data.coordinadores;
-        })
-        .catch(error => {console.log(error);});
-
-      this.getActividadesCat()
-        .then(response => {
-          //console.log(response.data.categorias);
-          this.actividadesCat = response.data.categorias;
-        })
-        .catch(error => {console.log(error);});
-
-      this.getEventos()
-        .then(response => {
-          //console.log(response.data.categorias);
-          this.eventos = response.data.eventos;
-        })
-        .catch(error => {console.log(error);});
-    }
+    created() {
+      this.getActividades();
+      this.getCoordinadores();
+      this.getActividadesCat();
+      this.getEventosAct();
+    },
   };
 </script>
