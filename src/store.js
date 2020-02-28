@@ -37,6 +37,7 @@ export default new Vuex.Store({
       state.status = '';
     },
     openModal(state){
+      state.editedIndex = -1;
       state.dialog = true;
       state.editedItem = {};
     },

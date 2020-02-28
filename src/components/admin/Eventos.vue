@@ -25,28 +25,8 @@
                   ></v-select>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
-                    <!--<v-text-field v-model="editedItem.fechaInicio" label="Fecha de inicio"></v-text-field>-->
-                    <v-menu
-                      v-model="fechaInicio"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="290px"
-                    >
-                      <template v-slot:activator="{ on }">
-                        <v-text-field
-                          v-model="editedItem.fechaInicio"
-                          label="Fecha de inicio"
-                          prepend-icon="event"
-                          hint="MM/DD/YYYY format"
-                          @blur="fechaInicio = parseDate(dateFormatted)"
-                          readonly
-                          v-on="on"
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker v-model="editedItem.fechaInicio" @input="fechaInicio = false"></v-date-picker>
-                    </v-menu>
+                    <v-text-field v-model="editedItem.fechaInicio" label="Fecha de inicio"></v-text-field>
+
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                     <v-text-field v-model="editedItem.fechaFin" label="Fecha de fin"></v-text-field>
@@ -134,7 +114,6 @@
     data: (wm) => ({
       fechaInicio: new Date().toISOString().substr(0, 10),
       dateFormatted: wm.formatDate(new Date().toISOString().substr(0, 10)),
-      editedIndex: -1,
       breadcrumb: [
         {
           text: 'Dashboard',
