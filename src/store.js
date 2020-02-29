@@ -23,6 +23,7 @@ export default new Vuex.Store({
     usersCount: 0,
     eventsCount: 0,
     actsCount: 0,
+    ActCatCount: 0,
     users: [],
     loaded: false,
     editedItem:{},
@@ -91,6 +92,9 @@ export default new Vuex.Store({
     },
     setEventosAct(state, eventoAct){
       state.eventosAct = eventoAct;
+    },
+    setActCatCount(state, acCat){
+      state.ActCatCount = acCat;
     },
     auth_request(state){
       state.status = 'Cargando';
@@ -241,7 +245,6 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         axios.get(baseUrl+'/actividades/categorias')
           .then(response => {
-            //console.log(response.data.categorias);
             let actividadesCat = response.data.categorias;
             commit('setActividadesCat', actividadesCat);
             resolve(response);
@@ -484,7 +487,21 @@ export default new Vuex.Store({
             reject(error);
           });
       });
-    }
+    },
+    getActCatCount({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/actividades/categorias/count')
+          .then(response => {
+            let catActCount = response.data.acCatCount;
+            commit('setActCatCount', catActCount);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
   },
   getters : {
     isLoggedIn: state => Boolean(state.token),

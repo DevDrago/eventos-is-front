@@ -32,7 +32,7 @@
               <div class="data">
                 <p>CATEGORÍAS DE ACTIVIDAD</p>
                 <h4>
-                  <strong>{{ 0 }}</strong>
+                  <strong>{{ ActCatCount }}</strong>
                 </h4>
               </div>
             </div>
@@ -289,15 +289,16 @@ export default {
     }
   },
   methods:{
-    ...mapActions(['getActsCount', 'getUsersCount', 'getEventsCount'])
+    ...mapActions(['getActsCount', 'getUsersCount', 'getEventsCount', 'getActCatCount'])
   },
   created() {
     this.getActsCount();
     this.getUsersCount();
     this.getEventsCount();
+    this.getActCatCount();
   },
   computed: {
-    ...mapState(['isAdmin', 'user', 'usersCount', 'eventsCount', 'actsCount']),
+    ...mapState(['isAdmin', 'user', 'usersCount', 'eventsCount', 'actsCount', 'ActCatCount']),
     usuario(){
       if (typeof this.user === 'string') 
         return JSON.parse(this.user);
