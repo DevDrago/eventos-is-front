@@ -15,8 +15,17 @@
         <v-card-text>
           <v-container>
             <v-row>
-                <v-col cols="12" sm="12" md="12">
+                <v-col cols="12" sm="12" md="12" v-if="editedIndex === -1">
                     <v-text-field v-model="editedItem.nombreActividad" label="Nombre"></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="6" v-if="editedIndex != -1">
+                    <v-text-field v-model="editedItem.nombreActividad" label="Nombre"></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="6" v-if="editedIndex != -1">
+                  <v-select
+                    :items="estados" :value="editedItem.id_estado"
+                    label="Estado" v-model="editedItem.id_estado"
+                  ></v-select>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   <v-select
@@ -108,6 +117,38 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog
+      v-model="dialogDelete"
+      max-width="350"
+    >
+      <v-card>
+        <v-card-title class="c-red">Eliminar</v-card-title>
+
+        <v-card-text class="v-texto">
+          <h4>¿Está seguro(a) de borrar este registro?</h4>
+        </v-card-text>
+
+        <v-card-actions class="v-acciones">
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="deleteAct"
+          >
+            Eliminar
+          </v-btn>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="closeDeleteModal"
+          >
+            Cancelar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <Alert :tipo="alertType"
     :mensaje="alertMessage"></Alert>
   </v-container> 
@@ -179,14 +220,14 @@
       ],
     }),
     computed: {
-      ...mapState(['actividades','dialog', 'editedItem', 'dialogDelete', 'eventosAct',
+      ...mapState(['actividades','dialog', 'editedItem', 'dialogDelete', 'eventosAct', 'estados',
       'alertType', 'alertMessage', 'editedIndex', 'organizadores', 'actividadesCat']),
       formTitle () {
         return this.editedIndex === -1 ? 'Nuevo registro' : 'Editar registro'
       },
     },
     methods: {
-      ...mapActions(['getActividades', 'getOrganizadores', 'getActividadesCat', 'getEventosAct',
+      ...mapActions(['getActividades', 'getOrganizadores', 'getActividadesCat', 'getEventosAct', 'getEstadosAct',
       'getEventos', 'crearActividad', 'EditarActividad', 'EliminarActividad', 'closeModal', 'closeModalDelete']),
       save (){
         if(this.editedIndex == -1){
@@ -216,6 +257,7 @@
       this.getOrganizadores();
       this.getActividadesCat();
       this.getEventosAct();
+      this.getEstadosAct();
     },
   };
 </script>

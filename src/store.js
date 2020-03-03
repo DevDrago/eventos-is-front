@@ -32,7 +32,8 @@ export default new Vuex.Store({
     showAlert: false,
     alertType: '',
     alertMessage: '',
-    editedIndex: -1
+    editedIndex: -1,
+    estados: []
   },
   mutations:{
     clear(state){
@@ -73,6 +74,9 @@ export default new Vuex.Store({
     },
     setActividadesCat(state, actividadesCat){
       state.actividadesCat = actividadesCat;
+    },
+    setStateAct(state, estado){
+      state.estados = estado;
     },
     setEventos(state, eventos){
       state.eventos = eventos;
@@ -215,7 +219,6 @@ export default new Vuex.Store({
         axios.get(baseUrl+'/usuarios/coordinadores')
           .then(response => {
             let coordinadores = response.data.coordinadores;
-            console.log(coordinadores);
             commit('setCoordinadores', coordinadores);
             resolve(response);
           })
@@ -256,7 +259,6 @@ export default new Vuex.Store({
       });
     },
     crearCatAct({commit}, actividadesCat){
-      console.log(actividadesCat);
       return new Promise((resolve,reject) => {
         axios.post(baseUrl+'/actividadcategoria/crear', actividadesCat, {headers: { "content-type": "application/json" }, withCredentials: true})
           .then(response => {
@@ -302,6 +304,7 @@ export default new Vuex.Store({
         axios.get(baseUrl+'/actividades')
           .then(response => {
             let actividades = response.data.actividades;
+            console.log(actividades);
             commit('setActividades', actividades);
             resolve(response);
           })
@@ -312,7 +315,6 @@ export default new Vuex.Store({
       });
     },
     crearActividad({commit}, actividad){
-      console.log(actividad);
       return new Promise((resolve,reject) => {
         axios.post(baseUrl+'/actividades/crear', actividad, {headers: { "content-type": "application/json" }, withCredentials: true})
           .then(response => {
@@ -327,7 +329,7 @@ export default new Vuex.Store({
     },
     EditarActividad({commit}, actividad){
       return new Promise((resolve,reject) => {
-        axios.put(baseUrl+'/eventos/actualizar', actividad, {headers: { "content-type": "application/json" }, withCredentials: true})
+        axios.put(baseUrl+'/actividades/actualizar', actividad, {headers: { "content-type": "application/json" }, withCredentials: true})
           .then(response => {
             resolve(response);
             commit('showAlert', ['success', 'Actividad actualizada con éxito']);
@@ -340,7 +342,7 @@ export default new Vuex.Store({
     },
     EliminarActividad({commit}, actividad){
       return new Promise((resolve,reject) => {
-        axios.post(baseUrl+'/eventos/eliminar', actividad, {headers: { "content-type": "application/json" }, withCredentials: true})
+        axios.post(baseUrl+'/actividades/eliminar', actividad, {headers: { "content-type": "application/json" }, withCredentials: true})
           .then(response => {
             resolve(response);
             commit('showAlert', ['success', 'Actividad eliminada con éxito']);
@@ -351,14 +353,26 @@ export default new Vuex.Store({
           });
       });
     },
-
     getEventosAct({commit}) {
       return new Promise((resolve, reject) => {
         axios.get(baseUrl+'/actividades/eventos')
           .then(response => {
-            //console.log(response.data.eventos);
             let eventosAct = response.data.eventos;
             commit('setEventosAct', eventosAct);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
+    getEstadosAct({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/actividades/estados')
+          .then(response => {
+            let estados = response.data.estados;
+            commit('setStateAct', estados);
             resolve(response);
           })
           .catch(error => {
@@ -373,7 +387,6 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         axios.get(baseUrl+'/eventos')
           .then(response => {
-            //console.log(response.data.eventos);
             let eventos = response.data.eventos;
             commit('setEventos', eventos);
             resolve(response);
