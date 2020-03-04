@@ -9,6 +9,7 @@ import Actividades from '@/components/admin/Actividades';
 import Eventos from '@/components/admin/Eventos';
 import Profile from '@/components/Profile';
 import Usuarios from '@/components/admin/Usuarios';
+import ResponsableActividad from '@/components/admin/ResponsableActividad';
 
 Vue.use(Router);
 
@@ -70,6 +71,15 @@ let router = new Router({
       path: '/categoria-actividad', 
       name: 'CategoriaActividad', 
       component: CategoriaActividad,
+      meta: {
+        requiresAuth: true,
+        is_admin: true
+      }
+    },
+    { 
+      path: '/responsable-actividad', 
+      name: 'ResponsableActividad', 
+      component: ResponsableActividad,
       meta: {
         requiresAuth: true,
         is_admin: true

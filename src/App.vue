@@ -28,13 +28,51 @@
       >
         <span>Eventos</span>
       </v-btn>
-            <v-btn
-        href="/actividades"
-        text
-        v-if="isLoggedIn && isAdmin"
-      >
-        <span>Actividades</span>
-      </v-btn>
+    
+      <v-menu open-on-hover bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn
+            color="primary"
+            dark
+            v-on="on"
+          >
+            Actividades
+          </v-btn>
+        </template>
+
+        <v-list>
+          <v-list-item>
+            <v-list-item-title>      
+              <v-btn
+                href="/actividades"
+                text
+                v-if="isLoggedIn && isAdmin">
+                <span>Actividades</span>
+              </v-btn>
+            </v-list-item-title>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-title>      
+              <v-btn
+                href="/categoria-actividad"
+                text
+                v-if="isLoggedIn && isAdmin">
+                <span>Categorías</span>
+              </v-btn>
+            </v-list-item-title>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-title>      
+              <v-btn
+                href="/responsable-actividad"
+                text
+                v-if="isLoggedIn && isAdmin">
+                <span>Responsables</span>
+              </v-btn>
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
       <v-btn
         @click="cerrarSesion" v-if="isLoggedIn" text
       >

@@ -20,10 +20,12 @@ export default new Vuex.Store({
     eventosAct: [],
     organizadores:[],
     eventos: [],
+    actResponsables: [],
     usersCount: 0,
     eventsCount: 0,
     actsCount: 0,
     ActCatCount: 0,
+    actResCount: 0,
     users: [],
     loaded: false,
     editedItem:{},
@@ -85,6 +87,9 @@ export default new Vuex.Store({
       state.users = users;
       state.loaded = true;
     },
+    setActResponsables(state, actRes){
+      state.actResponsables = actRes;
+    },
     setUsersCount(state, usersCount){
       state.usersCount = usersCount;
     },
@@ -99,6 +104,9 @@ export default new Vuex.Store({
     },
     setActCatCount(state, acCat){
       state.ActCatCount = acCat;
+    },
+    setActResCount(state, acRCount){
+      state.actResCount = acRCount;
     },
     auth_request(state){
       state.status = 'Cargando';
@@ -457,6 +465,21 @@ export default new Vuex.Store({
           });
       });
     },
+    //RESPONSABLES DE ACTIVIDAD
+    getActResponsables({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/actividadresponsable')
+          .then(response => {
+            let acR = response.data.actividadresponsable;
+            commit('setActResponsables', acR);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
     
     //CONTADORES
     getUsersCount({commit}){
@@ -507,6 +530,20 @@ export default new Vuex.Store({
           .then(response => {
             let catActCount = response.data.acCatCount;
             commit('setActCatCount', catActCount);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
+    getActResCount({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/actividadresponsable/count')
+          .then(response => {
+            let actResCount = response.data.acResCount;
+            commit('setActResCount', actResCount);
             resolve(response);
           })
           .catch(error => {
