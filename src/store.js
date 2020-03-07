@@ -19,8 +19,10 @@ export default new Vuex.Store({
     actividadesCat: [],
     eventosAct: [],
     organizadores:[],
+    apoyos: [],
     eventos: [],
     actResponsables: [],
+    ActividadesRes: [],
     usersCount: 0,
     eventsCount: 0,
     actsCount: 0,
@@ -73,6 +75,12 @@ export default new Vuex.Store({
     },
     setOrganizadores(state, organizadores){
       state.organizadores = organizadores;
+    },
+    setApoyos(state, apoyos){
+      state.apoyos = apoyos;
+    },
+    setActividadesRes(state, acRes){
+      state.ActividadesRes = acRes;
     },
     setActividadesCat(state, actividadesCat){
       state.actividadesCat = actividadesCat;
@@ -250,6 +258,20 @@ export default new Vuex.Store({
           });
       });
     },
+    getApoyos({commit}) {
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/usuarios/apoyos')
+          .then(response => {
+            let apoyos = response.data.apoyos;
+            commit('setApoyos', apoyos);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
 
     //CATEGORÍAS DE ACTIVIDAD
     getActividadesCat({commit}) {
@@ -312,7 +334,6 @@ export default new Vuex.Store({
         axios.get(baseUrl+'/actividades')
           .then(response => {
             let actividades = response.data.actividades;
-            console.log(actividades);
             commit('setActividades', actividades);
             resolve(response);
           })
@@ -476,6 +497,46 @@ export default new Vuex.Store({
           })
           .catch(error => {
             commit("error", error);
+            reject(error);
+          });
+      });
+    },
+    getActividadesRes({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/actividadresponsable/actividades')
+          .then(response => {
+            let acRes = response.data.actResponsables;
+            commit('setActividadesRes', acRes);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
+    crearActividadesRes({commit}, actividad){
+      return new Promise((resolve,reject) => {
+        axios.post(baseUrl+'/actividadresponsable/crear', actividad, {headers: { "content-type": "application/json" }, withCredentials: true})
+          .then(response => {
+            resolve(response);
+            commit('showAlert', ['success', 'Responsable de actividad guardado con éxito']);
+          })
+          .catch(error => {
+            commit('showAlert', ['error', 'Ha ocurrido un error al guardar al responsable de actividad']);
+            reject(error);
+          });
+      });
+    },
+    editarActividadesRes({commit}, actividad){
+      return new Promise((resolve,reject) => {
+        axios.put(baseUrl+'/actividadresponsable/actualizar', actividad, {headers: { "content-type": "application/json" }, withCredentials: true})
+          .then(response => {
+            resolve(response);
+            commit('showAlert', ['success', 'Responsable de actividad actualizado con éxito']);
+          })
+          .catch(error => {
+            commit('showAlert', ['error', 'Ha ocurrido un error al actualizar al responsable de actividad']);
             reject(error);
           });
       });
