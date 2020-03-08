@@ -73,6 +73,40 @@
           </v-list-item>
         </v-list>
       </v-menu>
+      <v-menu open-on-hover bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn
+            color="primary"
+            dark
+            v-on="on"
+          >
+            Recursos
+          </v-btn>
+        </template>
+
+        <v-list>
+          <v-list-item>
+            <v-list-item-title>      
+              <v-btn
+                href="/recursos"
+                text
+                v-if="isLoggedIn && isAdmin">
+                <span>Recursos</span>
+              </v-btn>
+            </v-list-item-title>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-title>      
+              <v-btn
+                href="/tipo-recurso"
+                text
+                v-if="isLoggedIn && isAdmin">
+                <span>Tipos</span>
+              </v-btn>
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
       <v-btn
         @click="cerrarSesion" v-if="isLoggedIn" text
       >
