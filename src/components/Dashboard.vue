@@ -4,7 +4,7 @@
     <v-container fluid style="padding: 15px 25px 0px 25px;">
       <h1>Administración y parámetros</h1>
       <v-row>
-        <v-col cols="4">
+        <v-col cols="6">
           <mdb-card cascade class="cascading-admin-card">
             <div class="admin-up">
               <mdb-icon icon="users" fas class="primary-color"/>
@@ -25,10 +25,10 @@
             </mdb-card-body>
           </mdb-card>
         </v-col>
-        <v-col cols="4">
+        <v-col cols="6">
           <mdb-card cascade class="cascading-admin-card">
             <div class="admin-up">
-              <mdb-icon icon="list" fas class="primary-color"/>
+              <mdb-icon icon="list" fas class="warning-color"/>
               <div class="data">
                 <p>CATEGORÍAS DE ACTIVIDAD</p>
                 <h4>
@@ -46,10 +46,10 @@
             </mdb-card-body>
           </mdb-card>
         </v-col>
-        <v-col cols="4">
+        <v-col cols="6">
           <mdb-card cascade class="cascading-admin-card">
             <div class="admin-up">
-              <mdb-icon icon="fas fa-archive" fas class="primary-color"/>
+              <mdb-icon icon="fas fa-archive" fas class="red accent-2"/>
               <div class="data">
                 <p>TIPOS DE RECURSO</p>
                 <h4>
@@ -61,6 +61,27 @@
               <div class="pers">
                 <hr>
                 <a href="/tipo-recurso">
+                  <h5 class="blue-text">Administrar</h5>
+                </a>
+              </div>
+            </mdb-card-body>
+          </mdb-card>
+        </v-col>
+        <v-col cols="6">
+          <mdb-card cascade class="cascading-admin-card">
+            <div class="admin-up">
+              <mdb-icon icon="users" fas class="indigo"/>
+              <div class="data">
+                <p>TIPOS DE USUARIO</p>
+                <h4>
+                  <strong>{{ tiposRecursoCount }}</strong>
+                </h4>
+              </div>
+            </div>
+            <mdb-card-body>
+              <div class="pers">
+                <hr>
+                <a href="/tipo-usuario">
                   <h5 class="blue-text">Administrar</h5>
                 </a>
               </div>
@@ -137,7 +158,7 @@
         <v-col cols="4">
           <mdb-card cascade class="cascading-admin-card">
             <div class="admin-up">
-              <mdb-icon icon="users" class="indigo"/>
+              <mdb-icon icon="fas fa-archive" class="primary-color"/>
               <div class="data">
                 <p>RECURSOS</p>
                 <h4>
