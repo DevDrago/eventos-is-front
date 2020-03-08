@@ -13,14 +13,40 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn
-        href="/usuarios"
-        text
-        v-if="isLoggedIn && isAdmin"
-      >
-        <span>Usuarios</span>
-        
-      </v-btn>
+      <v-menu open-on-hover bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn
+            color="primary"
+            dark
+            v-on="on"
+          >
+            Usuarios
+          </v-btn>
+        </template>
+
+        <v-list>
+          <v-list-item>
+            <v-list-item-title>      
+              <v-btn
+                href="/usuarios"
+                text
+                v-if="isLoggedIn && isAdmin">
+                <span>Usuarios</span>
+              </v-btn>
+            </v-list-item-title>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-title>      
+              <v-btn
+                href="/tipo-usuario"
+                text
+                v-if="isLoggedIn && isAdmin">
+                <span>Tipos</span>
+              </v-btn>
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
       <v-btn
         href="/eventos"
         text
