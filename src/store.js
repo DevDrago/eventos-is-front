@@ -33,6 +33,7 @@ export default new Vuex.Store({
     actsCount: 0,
     ActCatCount: 0,
     actResCount: 0,
+    tipoUsuarioCount: 0,
     tiposRecursoCount: 0,
     users: [],
     loaded: false,
@@ -121,6 +122,9 @@ export default new Vuex.Store({
     },
     setActsCount(state, actCount){
       state.actsCount = actCount;
+    },
+    setTipoUsuarioCount(state, tUsCount){
+      state.tipoUsuarioCount = tUsCount;
     },
     setEventosAct(state, eventoAct){
       state.eventosAct = eventoAct;
@@ -790,6 +794,21 @@ export default new Vuex.Store({
           });
       });
     },
+    getTipoUsuarioCount({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/tipousuario/count')
+          .then(response => {
+            let tUSCount = response.data.tipoUsCount;
+            commit('setTipoUsuarioCount', tUSCount);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
+    
   },
   getters : {
     isLoggedIn: state => Boolean(state.token),

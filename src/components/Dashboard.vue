@@ -74,7 +74,7 @@
               <div class="data">
                 <p>TIPOS DE USUARIO</p>
                 <h4>
-                  <strong>{{ tiposRecursoCount }}</strong>
+                  <strong>{{ tipoUsuarioCount }}</strong>
                 </h4>
               </div>
             </div>
@@ -374,7 +374,7 @@ export default {
   },
   methods:{
     ...mapActions(['getActsCount', 'getUsersCount', 'getEventsCount', 'getRecursosCount',
-    'getActCatCount', 'getActResCount', 'getTiposRecursoCount'])
+    'getActCatCount', 'getActResCount', 'getTiposRecursoCount', 'getTipoUsuarioCount'])
   },
   created() {
     this.getActsCount();
@@ -384,10 +384,11 @@ export default {
     this.getActResCount();
     this.getTiposRecursoCount();
     this.getRecursosCount();
+    this.getTipoUsuarioCount();
   },
   computed: {
     ...mapState(['isAdmin', 'user', 'usersCount', 'eventsCount', 'actsCount', 'recursosCount', 
-    'ActCatCount', 'actResCount', 'tiposRecursoCount']),
+    'ActCatCount', 'actResCount', 'tiposRecursoCount', 'tipoUsuarioCount']),
     usuario(){
       if (typeof this.user === 'string') 
         return JSON.parse(this.user);
