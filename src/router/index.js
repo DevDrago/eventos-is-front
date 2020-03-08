@@ -11,6 +11,7 @@ import Profile from '@/components/Profile';
 import Usuarios from '@/components/admin/Usuarios';
 import ResponsableActividad from '@/components/admin/ResponsableActividad';
 import TipoRecurso from '@/components/admin/TipoRecurso';
+import Recurso from '@/components/admin/Recurso';
 
 Vue.use(Router);
 
@@ -90,6 +91,15 @@ let router = new Router({
       path: '/tipo-recurso', 
       name: 'TipoRecurso', 
       component: TipoRecurso,
+      meta: {
+        requiresAuth: true,
+        is_admin: true
+      }
+    },
+    { 
+      path: '/recurso', 
+      name: 'Recurso', 
+      component: Recurso,
       meta: {
         requiresAuth: true,
         is_admin: true

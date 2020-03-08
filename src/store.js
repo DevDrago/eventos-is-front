@@ -16,15 +16,18 @@ export default new Vuex.Store({
     isAdmin: localStorage.getItem('isAdmin') || '',
     actividades: [],
     coordinadores: [],
+    tipRecurso: [],
     actividadesCat: [],
     eventosAct: [],
     organizadores:[],
     apoyos: [],
     apoyosC: [],
     eventos: [],
+    recursos: [],
     actResponsables: [],
     ActividadesRes: [],
     tiposRecurso: [],
+    recursosCount:0,
     usersCount: 0,
     eventsCount: 0,
     actsCount: 0,
@@ -58,6 +61,12 @@ export default new Vuex.Store({
     },
     setActividades(state, actividades){
       state.actividades = actividades;
+    },
+    setRecurso(state, rec){
+      state.recursos = rec;
+    },
+    setTipRecurso(state, tr){
+      state.tipRecurso = tr;
     },
     setItem(state, item){
       state.editedItem = item;
@@ -127,6 +136,9 @@ export default new Vuex.Store({
     },
     setTiposRecursoCount(state, tRCount){
       state.tiposRecursoCount = tRCount;
+    },
+    setRecursoCount(state, RCount){
+      state.recursosCount = RCount;
     },
     auth_request(state){
       state.status = 'Cargando';
@@ -635,6 +647,49 @@ export default new Vuex.Store({
           });
       });
     },
+
+    //RECURSOS
+    getRecurso({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/recursos')
+          .then(response => {
+            let R = response.data.recursos;
+            commit('setRecurso', R);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
+    getTipoRecursoR({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/recursos/tipos')
+          .then(response => {
+            let R = response.data.tipoRecurso;
+            commit('setTipRecurso', R);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
+    crearRecurso({commit}, recurso){
+      return new Promise((resolve,reject) => {
+        axios.post(baseUrl+'/recursos/crear', recurso, {headers: { "content-type": "application/json" }, withCredentials: true})
+          .then(response => {
+            resolve(response);
+            commit('showAlert', ['success', 'Recurso guardado con éxito']);
+          })
+          .catch(error => {
+            commit('showAlert', ['error', 'Ha ocurrido un error al guardar el recurso']);
+            reject(error);
+          });
+      });
+    },
     
     //CONTADORES
     getUsersCount({commit}){
@@ -713,6 +768,20 @@ export default new Vuex.Store({
           .then(response => {
             let tipoRCount = response.data.tipoRecCount;
             commit('setTiposRecursoCount', tipoRCount);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
+    getRecursosCount({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/recursos/count')
+          .then(response => {
+            let RCount = response.data.recCount;
+            commit('setRecursoCount', RCount);
             resolve(response);
           })
           .catch(error => {

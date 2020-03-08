@@ -88,7 +88,7 @@
           <v-list-item>
             <v-list-item-title>      
               <v-btn
-                href="/recursos"
+                href="/recurso"
                 text
                 v-if="isLoggedIn && isAdmin">
                 <span>Recursos</span>
