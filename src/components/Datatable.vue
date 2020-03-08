@@ -15,7 +15,7 @@
           vertical
         ></v-divider>
         <template>
-          <v-btn v-if="nuevo" color="primary" dark style="margin-left:82%;" @click="openModal">Nuevo</v-btn>
+          <v-btn v-if="nuevo" color="primary" dark style="margin-left:80%;" @click="openModal">Nuevo</v-btn>
         </template>
         <v-spacer></v-spacer>
 

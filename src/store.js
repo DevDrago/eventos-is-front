@@ -20,14 +20,17 @@ export default new Vuex.Store({
     eventosAct: [],
     organizadores:[],
     apoyos: [],
+    apoyosC: [],
     eventos: [],
     actResponsables: [],
     ActividadesRes: [],
+    tiposRecurso: [],
     usersCount: 0,
     eventsCount: 0,
     actsCount: 0,
     ActCatCount: 0,
     actResCount: 0,
+    tiposRecursoCount: 0,
     users: [],
     loaded: false,
     editedItem:{},
@@ -79,6 +82,9 @@ export default new Vuex.Store({
     setApoyos(state, apoyos){
       state.apoyos = apoyos;
     },
+    setApoyosC(state, aC){
+      state.apoyosC = aC;
+    },
     setActividadesRes(state, acRes){
       state.ActividadesRes = acRes;
     },
@@ -113,8 +119,14 @@ export default new Vuex.Store({
     setActCatCount(state, acCat){
       state.ActCatCount = acCat;
     },
+    setTiposRecurso(state, tipoR){
+      state.tiposRecurso = tipoR;
+    },
     setActResCount(state, acRCount){
       state.actResCount = acRCount;
+    },
+    setTiposRecursoCount(state, tRCount){
+      state.tiposRecursoCount = tRCount;
     },
     auth_request(state){
       state.status = 'Cargando';
@@ -264,6 +276,20 @@ export default new Vuex.Store({
           .then(response => {
             let apoyos = response.data.apoyos;
             commit('setApoyos', apoyos);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
+    getApoyosCoordinadores({commit}) {
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/usuarios/apoyoscoor')
+          .then(response => {
+            let apoyosC = response.data.apoyosCoor;
+            commit('setApoyosC', apoyosC);
             resolve(response);
           })
           .catch(error => {
@@ -541,6 +567,74 @@ export default new Vuex.Store({
           });
       });
     },
+    eliminarActividadesRes({commit}, actividad){
+      return new Promise((resolve,reject) => {
+        axios.post(baseUrl+'/actividadresponsable/eliminar', actividad, {headers: { "content-type": "application/json" }, withCredentials: true})
+          .then(response => {
+            resolve(response);
+            commit('showAlert', ['success', 'Responsable de actividad eliminado con éxito']);
+          })
+          .catch(error => {
+            commit('showAlert', ['error', 'Ha ocurrido un error al eliminar al responsable de actividad']);
+            reject(error);
+          });
+      });
+    },
+
+    //TIPOS DE RECURSO
+    getTiposRecurso({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/tiporecurso')
+          .then(response => {
+            let TR = response.data.tipoRecurso;
+            commit('setTiposRecurso', TR);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
+    crearTipoRecurso({commit}, tipoRecurso){
+      return new Promise((resolve,reject) => {
+        axios.post(baseUrl+'/tiporecurso/crear', tipoRecurso, {headers: { "content-type": "application/json" }, withCredentials: true})
+          .then(response => {
+            resolve(response);
+            commit('showAlert', ['success', 'Tipo de recurso guardado con éxito']);
+          })
+          .catch(error => {
+            commit('showAlert', ['error', 'Ha ocurrido un error al guardar el tipo de recurso']);
+            reject(error);
+          });
+      });
+    },
+    editarTipoRecurso({commit}, tipoRecurso){
+      return new Promise((resolve,reject) => {
+        axios.put(baseUrl+'/tiporecurso/actualizar', tipoRecurso, {headers: { "content-type": "application/json" }, withCredentials: true})
+          .then(response => {
+            resolve(response);
+            commit('showAlert', ['success', 'Tipo de recurso actualizado con éxito']);
+          })
+          .catch(error => {
+            commit('showAlert', ['error', 'Ha ocurrido un error al actualizar el tipo de recurso']);
+            reject(error);
+          });
+      });
+    },
+    eliminarTipoRecurso({commit}, tipoRecurso){
+      return new Promise((resolve,reject) => {
+        axios.post(baseUrl+'/tiporecurso/eliminar', tipoRecurso, {headers: { "content-type": "application/json" }, withCredentials: true})
+          .then(response => {
+            resolve(response);
+            commit('showAlert', ['success', 'Tipo de recurso eliminado con éxito']);
+          })
+          .catch(error => {
+            commit('showAlert', ['error', 'Ha ocurrido un error al eliminar el tipo de recurso']);
+            reject(error);
+          });
+      });
+    },
     
     //CONTADORES
     getUsersCount({commit}){
@@ -605,6 +699,20 @@ export default new Vuex.Store({
           .then(response => {
             let actResCount = response.data.acResCount;
             commit('setActResCount', actResCount);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
+    getTiposRecursoCount({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/tiporecurso/count')
+          .then(response => {
+            let tipoRCount = response.data.tipoRecCount;
+            commit('setTiposRecursoCount', tipoRCount);
             resolve(response);
           })
           .catch(error => {
