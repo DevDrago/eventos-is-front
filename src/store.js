@@ -368,7 +368,8 @@ export default new Vuex.Store({
             commit('showAlert', ['success', 'Categoría de actividad eliminada con éxito']);
           })
           .catch(error => {
-            commit('showAlert', ['error', 'Ha ocurrido un error al eliminar la categoría de actividad']);
+            let errMesj = error.response.data.error.code == 'ER_ROW_IS_REFERENCED_2' ? 'La categoría no se puede eliminar porque tiene actividades asociadas' : 'Ha ocurrido un error al eliminar la categoría de actividad';
+            commit('showAlert', ['error', errMesj]);
             reject(error);
           });
       });
@@ -650,7 +651,8 @@ export default new Vuex.Store({
             commit('showAlert', ['success', 'Tipo de recurso eliminado con éxito']);
           })
           .catch(error => {
-            commit('showAlert', ['error', 'Ha ocurrido un error al eliminar el tipo de recurso']);
+            let errMesj = error.response.data.error.code == 'ER_ROW_IS_REFERENCED_2' ? 'No se puede eliminar el tipo de recurso porque tiene recursos asociados' : 'Ha ocurrido un error al eliminar el tipo de recurso';
+            commit('showAlert', ['error', errMesj]);
             reject(error);
           });
       });
