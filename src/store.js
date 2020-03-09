@@ -27,6 +27,7 @@ export default new Vuex.Store({
     actResponsables: [],
     ActividadesRes: [],
     tiposRecurso: [],
+    tiposUsuario: [],
     recursosCount:0,
     usersCount: 0,
     eventsCount: 0,
@@ -113,6 +114,9 @@ export default new Vuex.Store({
     },
     setActResponsables(state, actRes){
       state.actResponsables = actRes;
+    },
+    setTiposUsuario(state, TUs){
+      state.tiposUsuario = TUs;
     },
     setUsersCount(state, usersCount){
       state.usersCount = usersCount;
@@ -647,6 +651,62 @@ export default new Vuex.Store({
           })
           .catch(error => {
             commit('showAlert', ['error', 'Ha ocurrido un error al eliminar el tipo de recurso']);
+            reject(error);
+          });
+      });
+    },
+
+    //TIPOS DE USUARIO
+    getTiposUsuario({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/usuarios/tipos')
+          .then(response => {
+            let TU = response.data.tiposUsuarios;
+            commit('setTiposUsuario', TU);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
+    crearTipoUsuario({commit}, tipoUsuario){
+      return new Promise((resolve,reject) => {
+        axios.post(baseUrl+'/tipousuario/crear', tipoUsuario, {headers: { "content-type": "application/json" }, withCredentials: true})
+          .then(response => {
+            resolve(response);
+            commit('showAlert', ['success', 'Tipo de usuario guardado con éxito']);
+          })
+          .catch(error => {
+            commit('showAlert', ['error', 'Ha ocurrido un error al guardar el tipo de usuario']);
+            reject(error);
+          });
+      });
+    },
+    editarTipoUsuario({commit}, tipoUsuario){
+      return new Promise((resolve,reject) => {
+        axios.put(baseUrl+'/tipousuario/actualizar', tipoUsuario, {headers: { "content-type": "application/json" }, withCredentials: true})
+          .then(response => {
+            resolve(response);
+            commit('showAlert', ['success', 'Tipo de usuario actualizado con éxito']);
+          })
+          .catch(error => {
+            commit('showAlert', ['error', 'Ha ocurrido un error al actualizar el tipo de usuario']);
+            reject(error);
+          });
+      });
+    },
+    eliminarTipoUsuario({commit}, tipoUsuario){
+      return new Promise((resolve,reject) => {
+        axios.post(baseUrl+'/tipousuario/eliminar', tipoUsuario, {headers: { "content-type": "application/json" }, withCredentials: true})
+          .then(response => {
+            resolve(response);
+            commit('showAlert', ['success', 'Tipo de usuario eliminado con éxito']);
+          })
+          .catch(error => {
+            let errMesj = error.response.data.error.code == 'ER_ROW_IS_REFERENCED_2' ? 'El tipo de usuario no se puede eliminar porque tiene usuarios asociados' : 'Ha ocurrido un error al eliminar el tipo de usuario';
+            commit('showAlert', ['error', errMesj]);
             reject(error);
           });
       });
