@@ -93,8 +93,7 @@ export default {
         headers: [
             { text: 'Actividad', align: 'left', value: 'nombreActividad'},
             { text: 'Tipo de recurso', value: 'tipoRecurso' },
-            { text: 'Fecha de registro', value: 'fechaRegistro' },
-            { text: 'Acciones', value: 'action', sortable: false }
+            { text: 'Fecha de registro', value: 'fechaRegistro' }
         ],
     }),
     computed: {
