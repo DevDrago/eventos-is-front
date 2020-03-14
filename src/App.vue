@@ -15,7 +15,7 @@
 
       <v-menu open-on-hover bottom>
         <template v-slot:activator="{ on }">
-          <v-btn
+          <v-btn v-if="isLoggedIn && isAdmin"
             color="primary"
             dark
             v-on="on"
@@ -57,7 +57,7 @@
     
       <v-menu open-on-hover bottom>
         <template v-slot:activator="{ on }">
-          <v-btn
+          <v-btn v-if="isLoggedIn && isAdmin"
             color="primary"
             dark
             v-on="on"
@@ -102,7 +102,7 @@
       <v-menu open-on-hover bottom>
         <template v-slot:activator="{ on }">
           <v-btn
-            color="primary"
+            color="primary" v-if="isLoggedIn && isAdmin"
             dark
             v-on="on"
           >
