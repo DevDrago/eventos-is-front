@@ -6,7 +6,7 @@
       dark
       v-if="isLoggedIn"
     >
-      <div class="d-flex align-center">
+      <div class="align-center">
 
         <a style="font-size:20px;" href="/" class="text-white">Sistema de Eventos IS</a>
       </div>
@@ -18,7 +18,7 @@
           <v-btn v-if="isLoggedIn && isAdmin"
             color="primary"
             dark
-            v-on="on"
+            v-on="on" style="margin-left: 0px !important;"
           >
             Usuarios
           </v-btn>
@@ -50,7 +50,7 @@
       <v-btn
         href="/eventos"
         text
-        v-if="isLoggedIn && isAdmin"
+        v-if="isLoggedIn && isAdmin" style="margin-left: 0px !important;"
       >
         <span>Eventos</span>
       </v-btn>
@@ -60,7 +60,7 @@
           <v-btn v-if="isLoggedIn && isAdmin"
             color="primary"
             dark
-            v-on="on"
+            v-on="on" style="margin-left: 0px !important;"
           >
             Actividades
           </v-btn>
@@ -104,7 +104,7 @@
           <v-btn
             color="primary" v-if="isLoggedIn && isAdmin"
             dark
-            v-on="on"
+            v-on="on" style="margin-left: 0px !important;"
           >
             Recursos
           </v-btn>
@@ -215,4 +215,5 @@ export default {
   .icon-p{
     font-size: 15px !important;
   }
+
 </style>
