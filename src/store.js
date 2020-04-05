@@ -29,6 +29,7 @@ export default new Vuex.Store({
     tiposRecurso: [],
     tiposUsuario: [],
     recursosCount:0,
+    actAsisCount:0,
     usersCount: 0,
     eventsCount: 0,
     actsCount: 0,
@@ -147,6 +148,9 @@ export default new Vuex.Store({
     },
     setRecursoCount(state, RCount){
       state.recursosCount = RCount;
+    },
+    setActAsisCount(state, aAsCount){
+      state.actAsisCount = aAsCount;
     },
     auth_request(state){
       state.status = 'Cargando';
@@ -848,6 +852,20 @@ export default new Vuex.Store({
           .then(response => {
             let RCount = response.data.recCount;
             commit('setRecursoCount', RCount);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
+    getActAsisCount({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/actividadasistencia/count')
+          .then(response => {
+            let aAsCount = response.data.acAsisCount;
+            commit('setActAsisCount', aAsCount);
             resolve(response);
           })
           .catch(error => {

@@ -176,6 +176,27 @@
             </mdb-card-body>
           </mdb-card>
         </v-col>
+        <v-col cols="4">
+          <mdb-card cascade class="cascading-admin-card">
+            <div class="admin-up">
+              <mdb-icon icon="fas fa-tasks" class="indigo"/>
+              <div class="data">
+                <p>ASISTENCIA</p>
+                <h4>
+                  <strong>{{actAsisCount}}</strong>
+                </h4>
+              </div>
+            </div>
+            <mdb-card-body>
+              <div class="pers">
+                <hr>
+                <a href="/asistencia">
+                  <h5 class="deep-orange-text">Administrar</h5>
+                </a>
+              </div>
+            </mdb-card-body>
+          </mdb-card>
+        </v-col>
       </v-row>
     </v-container>
 
@@ -373,7 +394,7 @@ export default {
     }
   },
   methods:{
-    ...mapActions(['getActsCount', 'getUsersCount', 'getEventsCount', 'getRecursosCount',
+    ...mapActions(['getActsCount', 'getUsersCount', 'getEventsCount', 'getRecursosCount', 'getActAsisCount',
     'getActCatCount', 'getActResCount', 'getTiposRecursoCount', 'getTipoUsuarioCount'])
   },
   created() {
@@ -385,10 +406,11 @@ export default {
     this.getTiposRecursoCount();
     this.getRecursosCount();
     this.getTipoUsuarioCount();
+    this.getActAsisCount();
   },
   computed: {
     ...mapState(['isAdmin', 'user', 'usersCount', 'eventsCount', 'actsCount', 'recursosCount', 
-    'ActCatCount', 'actResCount', 'tiposRecursoCount', 'tipoUsuarioCount']),
+    'ActCatCount', 'actResCount', 'tiposRecursoCount', 'tipoUsuarioCount', 'actAsisCount']),
     usuario(){
       if (typeof this.user === 'string') 
         return JSON.parse(this.user);
