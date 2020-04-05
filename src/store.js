@@ -15,6 +15,7 @@ export default new Vuex.Store({
     errMensaje: '',
     isAdmin: localStorage.getItem('isAdmin') || '',
     actividades: [],
+    actividadAsistencia: [],
     coordinadores: [],
     tipRecurso: [],
     actividadesCat: [],
@@ -64,6 +65,9 @@ export default new Vuex.Store({
     },
     setActividades(state, actividades){
       state.actividades = actividades;
+    },
+    setActividadAsistencia(state, actAsis){
+      state.actividadAsistencia = actAsis;
     },
     setRecurso(state, rec){
       state.recursos = rec;
@@ -756,6 +760,22 @@ export default new Vuex.Store({
           })
           .catch(error => {
             commit('showAlert', ['error', 'Ha ocurrido un error al guardar el recurso']);
+            reject(error);
+          });
+      });
+    },
+
+    // ASISTENCIA A ACTIVIDAD
+    getActividadAsistencia({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/actividadasistencia')
+          .then(response => {
+            let actividadAsis = response.data.actividadasistencia;
+            commit('setActividadAsistencia', actividadAsis);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
             reject(error);
           });
       });

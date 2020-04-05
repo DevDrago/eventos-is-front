@@ -97,6 +97,16 @@
               </v-btn>
             </v-list-item-title>
           </v-list-item>
+          <v-list-item>
+            <v-list-item-title>      
+              <v-btn
+                href="/asistencia"
+                text
+                v-if="isLoggedIn && isAdmin">
+                <span>Asistencia</span>
+              </v-btn>
+            </v-list-item-title>
+          </v-list-item>
         </v-list>
       </v-menu>
       <v-menu open-on-hover bottom>

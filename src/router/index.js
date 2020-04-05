@@ -13,6 +13,7 @@ import ResponsableActividad from '@/components/admin/ResponsableActividad';
 import TipoRecurso from '@/components/admin/TipoRecurso';
 import Recurso from '@/components/admin/Recurso';
 import TipoUsuario from '@/components/admin/TipoUsuario';
+import AsistenciaActividad from '@/components/admin/AsistenciaActividad';
 
 Vue.use(Router);
 
@@ -110,6 +111,15 @@ let router = new Router({
       path: '/tipo-usuario', 
       name: 'TipoUsuario', 
       component: TipoUsuario,
+      meta: {
+        requiresAuth: true,
+        is_admin: true
+      }
+    },
+    { 
+      path: '/asistencia', 
+      name: 'AsistenciaActividad', 
+      component: AsistenciaActividad,
       meta: {
         requiresAuth: true,
         is_admin: true
