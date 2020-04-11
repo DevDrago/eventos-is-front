@@ -5,6 +5,7 @@
     :columnas="headers"
     :datos="actividades"
     :nuevo=true
+    :allowDelete=true
     ></Datatable>
     <v-dialog v-model="dialog" max-width="500px">
       <v-card>

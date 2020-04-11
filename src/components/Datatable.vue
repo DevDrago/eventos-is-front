@@ -4,6 +4,8 @@
     :items="datos"
     :title="title"
     :nuevo="nuevo"
+    :pdf="pdf"
+    :allowDelete="allowDelete"
     class="elevation-1"
   >
     <template v-slot:top>
@@ -29,11 +31,18 @@
       >
         edit
       </v-icon>
-      <v-icon
+      <v-icon v-if="allowDelete"
         small
+        class="mr-2"
         @click="deleteItem(item)"
       >
         delete
+      </v-icon>
+      <v-icon v-if="pdf"
+        small
+        @click="sendPdf(item)"
+      >
+        far fa-file-pdf
       </v-icon>
     </template>
   </v-data-table>
@@ -56,6 +65,8 @@ import {mapActions, mapState} from 'vuex';
         columnas: Array,
         datos: Array,
         nuevo: Boolean,
+        pdf: Boolean,
+        allowDelete: Boolean,
         editedItem: Object
     },
 
@@ -82,7 +93,7 @@ import {mapActions, mapState} from 'vuex';
     methods: {
       initialize () {
       },
-      ...mapActions(['setItem', 'openModalStore', 'openModalDelete']),
+      ...mapActions(['setItem', 'openModalStore', 'openModalDelete', 'generatePdf', 'getActividadAsistencia']),
 
       editItem (item) {
         //let indexItem = this.datos.indexOf(item)
@@ -97,6 +108,11 @@ import {mapActions, mapState} from 'vuex';
       deleteItem (item) {
         this.openModalDelete(item);
       },
+      sendPdf (item) {
+        this.generatePdf(item).then(() => {
+          this.getActividadAsistencia();
+        });
+      }
     },
   }
 </script>

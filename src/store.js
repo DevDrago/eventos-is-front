@@ -22,11 +22,13 @@ export default new Vuex.Store({
     eventosAct: [],
     organizadores:[],
     apoyos: [],
+    participantes: [],
     apoyosC: [],
     eventos: [],
     recursos: [],
     actResponsables: [],
     ActividadesRes: [],
+    ActividadesAsis: [],
     tiposRecurso: [],
     tiposUsuario: [],
     recursosCount:0,
@@ -98,11 +100,17 @@ export default new Vuex.Store({
     setApoyos(state, apoyos){
       state.apoyos = apoyos;
     },
+    setParticipantes(state, part){
+      state.participantes = part;
+    },
     setApoyosC(state, aC){
       state.apoyosC = aC;
     },
     setActividadesRes(state, acRes){
       state.ActividadesRes = acRes;
+    },
+    setActividadesAsis(state, acAsis){
+      state.ActividadesAsis = acAsis;
     },
     setActividadesCat(state, actividadesCat){
       state.actividadesCat = actividadesCat;
@@ -777,6 +785,75 @@ export default new Vuex.Store({
           .catch(error => {
             commit("error", error);
             reject(error);
+          });
+      });
+    },
+
+    getActividadesAsis({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/actividadasistencia/actividades')
+          .then(response => {
+            let acAsis = response.data.actAsis;
+            commit('setActividadesAsis', acAsis);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
+
+    getParticipantes({commit}) {
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/usuarios/participantes')
+          .then(response => {
+            let part = response.data.participantes;
+            commit('setParticipantes', part);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
+    crearActividadAsistencia({commit}, actividadAsistencia){
+      return new Promise((resolve,reject) => {
+        axios.post(baseUrl+'/actividadasistencia/crear', actividadAsistencia, {headers: { "content-type": "application/json" }, withCredentials: true})
+          .then(response => {
+            resolve(response);
+            commit('showAlert', ['success', 'Asistencia registrada con éxito']);
+          })
+          .catch(error => {
+            commit('showAlert', ['error', 'Ha ocurrido un error al registrar la asistencia']);
+            reject(error);
+          });
+      });
+    },
+    editarActividadAsistencia({commit}, actividadAsistencia){
+      return new Promise((resolve,reject) => {
+        axios.put(baseUrl+'/actividadasistencia/actualizar', actividadAsistencia, {headers: { "content-type": "application/json" }, withCredentials: true})
+          .then(response => {
+            resolve(response);
+            commit('showAlert', ['success', 'Asistencia actualizada con éxito']);
+          })
+          .catch(error => {
+            commit('showAlert', ['error', 'Ha ocurrido un error al actualizar la asistencia']);
+            reject(error);
+          });
+      });
+    },
+
+    generatePdf({commit}, pdfData){
+      return new Promise((resolve,reject) => {
+        axios.post(baseUrl+'/actividadasistencia/pdf', pdfData, {headers: { "content-type": "application/json" }, withCredentials: true}).then(response => {
+          resolve(response);
+          commit('showAlert', ['success', 'Pdf generado con éxito']);
+        })
+          .catch(error => {
+            reject(error);
+            commit('showAlert', ['error', 'Ha ocurrido un error al generar el pdf']);
           });
       });
     },
