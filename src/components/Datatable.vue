@@ -38,7 +38,7 @@
       >
         delete
       </v-icon>
-      <v-icon v-if="pdf"
+      <v-icon v-if="pdf && item.asistio === 1"
         small
         @click="sendPdf(item)"
       >
