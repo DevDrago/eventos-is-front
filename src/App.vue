@@ -215,8 +215,6 @@ export default {
   #app {
     margin: 0 auto;
     padding-top: 15px;
-    padding-right: 15px;
-    padding-left: 15px;
     max-width: 100%;
   }
   .v-btn.v-size--default {
