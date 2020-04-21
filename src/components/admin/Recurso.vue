@@ -6,7 +6,7 @@
         :datos="recursos"
         :nuevo=true
         ></Datatable>
-        <v-dialog v-model="dialog" max-width="500px">
+        <v-dialog v-model="dialog" persistent max-width="500px">
             <v-card>
                 <v-card-title>
                     <span class="headline">{{ formTitle }}</span>
@@ -39,7 +39,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <Alert :tipo="alertType"
+        <Alert :tipo="alertType" persistent
         :mensaje="alertMessage"></Alert>
     </v-container>
 </template>

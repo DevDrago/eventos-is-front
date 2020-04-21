@@ -8,7 +8,7 @@
         :pdf=true
         :allowDelete=false
         ></Datatable>
-        <v-dialog v-model="dialog" max-width="500px">
+        <v-dialog v-model="dialog" persistent max-width="500px">
           <v-card>
             <v-card-title>
               <span class="headline">{{ formTitle }}</span>
@@ -36,6 +36,12 @@
                     <v-checkbox
                       v-model="editedItem.asistio"
                       :label="'Asistió'" 
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col cols="6" sm="6" md="6">
+                    <v-checkbox v-if="editedItem.asistio === true && this.editedIndex == -1"
+                      v-model="generateDiploma"
+                      :label="'¿Generar diploma?'" 
                     ></v-checkbox>
                   </v-col>
                 </v-row>
@@ -88,6 +94,7 @@ export default {
   },
   data: () => ({
     file: null,
+    generateDiploma: false,
     filseSend: {file: null},
     breadcrumb: [
       {
@@ -122,7 +129,7 @@ export default {
       ...mapActions(['getActividadAsistencia', 'closeModal', 'getActividadesAsis', 'getParticipantes', 'crearActividadAsistencia', 'editarActividadAsistencia']),
       save (){
         if(this.editedIndex == -1){
-          this.crearActividadAsistencia(this.editedItem).then(() => {
+          this.crearActividadAsistencia([this.editedItem, this.generateDiploma]).then(() => {
             this.getActividadAsistencia();
           });
         }else{ 
