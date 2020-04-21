@@ -535,6 +535,8 @@ export default new Vuex.Store({
     openModalDelete({commit}, item){
       commit('openModalDelete', item);
     },
+
+    //USUARIOS
     getUsers({commit}){
       return new Promise((resolve, reject) => {
         axios.get(baseUrl+'/usuarios')
@@ -549,6 +551,47 @@ export default new Vuex.Store({
           });
       });
     },
+    crearUsuario({commit}, usuario){
+      return new Promise((resolve,reject) => {
+        axios.post(baseUrl+'/usuario/crear', usuario, {headers: { "content-type": "application/json" }, withCredentials: true})
+          .then(response => {
+            resolve(response);
+            commit('showAlert', ['success', 'Usuario guardado con éxito']);
+          })
+          .catch(error => {
+            commit('showAlert', ['error', 'Ha ocurrido un error al guardar el usuario']);
+            reject(error);
+          });
+      });
+    },
+    editarUsuario({commit}, usuario){
+      return new Promise((resolve,reject) => {
+        axios.put(baseUrl+'/usuario/actualizar', usuario, {headers: { "content-type": "application/json" }, withCredentials: true})
+          .then(response => {
+            resolve(response);
+            commit('showAlert', ['success', 'Usuario actualizado con éxito']);
+          })
+          .catch(error => {
+            commit('showAlert', ['error', 'Ha ocurrido un error al actualizar el usuario']);
+            reject(error);
+          });
+      });
+    },
+    eliminarUsuario({commit}, usuario){
+      return new Promise((resolve,reject) => {
+        axios.post(baseUrl+'/usuario/eliminar', usuario, {headers: { "content-type": "application/json" }, withCredentials: true})
+          .then(response => {
+            resolve(response);
+            commit('showAlert', ['success', 'Usuario eliminado con éxito']);
+          })
+          .catch(error => {
+            let errMesj = error.response.data.error.code == 'ER_ROW_IS_REFERENCED_2' ? 'El usuario no se puede eliminar porque está referenciado' : 'Ha ocurrido un error al eliminar el usuario';
+            commit('showAlert', ['error', errMesj]);
+            reject(error);
+          });
+      });
+    },
+
     //RESPONSABLES DE ACTIVIDAD
     getActResponsables({commit}){
       return new Promise((resolve, reject) => {
