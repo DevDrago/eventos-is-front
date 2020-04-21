@@ -7,18 +7,18 @@
         <v-col cols="6">
           <mdb-card cascade class="cascading-admin-card">
             <div class="admin-up">
-              <mdb-icon icon="users" fas class="primary-color"/>
+              <mdb-icon icon="users" fas class="indigo"/>
               <div class="data">
-                <p>USUARIOS</p>
+                <p>TIPOS DE USUARIO</p>
                 <h4>
-                  <strong>{{usersCount}}</strong>
+                  <strong>{{ tipoUsuarioCount }}</strong>
                 </h4>
               </div>
             </div>
             <mdb-card-body>
               <div class="pers">
                 <hr>
-                <a href="/usuarios">
+                <a href="/tipo-usuario">
                   <h5 class="blue-text">Administrar</h5>
                 </a>
               </div>
@@ -70,18 +70,18 @@
         <v-col cols="6">
           <mdb-card cascade class="cascading-admin-card">
             <div class="admin-up">
-              <mdb-icon icon="users" fas class="indigo"/>
+              <mdb-icon icon="users" fas class="primary-color"/>
               <div class="data">
-                <p>TIPOS DE USUARIO</p>
+                <p>USUARIOS</p>
                 <h4>
-                  <strong>{{ tipoUsuarioCount }}</strong>
+                  <strong>{{usersCount}}</strong>
                 </h4>
               </div>
             </div>
             <mdb-card-body>
               <div class="pers">
                 <hr>
-                <a href="/tipo-usuario">
+                <a href="/usuarios">
                   <h5 class="blue-text">Administrar</h5>
                 </a>
               </div>

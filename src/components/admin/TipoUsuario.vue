@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid>
+    <v-container>
         <Breadcrumb :items="breadcrumb"></Breadcrumb>
         <Datatable title="Tipos de usuario"
         :columnas="headers"
@@ -62,8 +62,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <Alert :tipo="alertType"
-        :mensaje="alertMessage"></Alert>
+        <Alert :tipo="alertType" :mensaje="alertMessage"></Alert>
     </v-container>
 </template>
 
@@ -86,6 +85,10 @@
     color: white !important;
     caret-color: white !important;
   }
+  .v-btn--contained { margin-left: 65% !important; }
+  @media screen and (max-width: 959px) { .v-btn--contained { margin-left: 55% !important; } }
+  @media screen and (max-width: 767px) { .v-btn--contained { margin-left: 45% !important; } }
+  @media screen and (max-width: 575px) { .v-btn--contained { margin-left: 25% !important; } }
 </style>
 
 <script>

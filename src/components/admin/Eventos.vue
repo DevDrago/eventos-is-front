@@ -141,7 +141,13 @@
     color: white !important;
     caret-color: white !important;
   }
+  .v-btn--contained { margin-left: 85% !important; }
+  @media screen and (max-width: 1400px) { .v-btn--contained { margin-left: 80% !important; } }
+  @media screen and (max-width: 959px) { .v-btn--contained { margin-left: 75% !important; } }
+  @media screen and (max-width: 767px) { .v-btn--contained { margin-left: 65% !important; } }
+  @media screen and (max-width: 575px) { .v-btn--contained { margin-left: 45% !important; } }
 </style>
+
 <script>
   import {mapActions, mapState} from 'vuex';
   import Datatable from '../../components/Datatable';
@@ -170,7 +176,7 @@
           text: 'Eventos',
           disabled: true,
           href: '/',
-        }
+        },
       ],
       headers: [
         { text: 'id', align: 'left', value: 'idEvento'},
