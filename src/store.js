@@ -169,7 +169,8 @@ export default new Vuex.Store({
     },
     setUser(state, user){
       state.user = user;
-      state.isAdmin = (user.tipoUsuario == 1);
+      console.log(user);
+      state.isAdmin = (user.idTipoUsuario_fk == 1);
     },
     auth_success(state, token){
       state.status = 'Exitoso';
@@ -223,7 +224,7 @@ export default new Vuex.Store({
             const token = response.data.token;
             const us = response.data.user;
             localStorage.setItem('token', token);
-            const isAdmin = (us.tipoUsuario == 1) ? 'Admin' : '';
+            const isAdmin = (us.idTipoUsuario_fk == 1) ? 'Admin' : '';
             localStorage.setItem('isAdmin', isAdmin);
             localStorage.setItem('user', JSON.stringify(us));
             axios.defaults.headers.common.Authorization = token;
@@ -249,7 +250,7 @@ export default new Vuex.Store({
             const user = response.data.user;
             const token = response.data.token;
             localStorage.setItem('token', token);
-            const isAdmin = (user.tipoUsuario == 1) ? 'Admin' : '';
+            const isAdmin = (user.idTipoUsuario_fk == 1) ? 'Admin' : '';
             localStorage.setItem('isAdmin', isAdmin);
             localStorage.setItem('user', JSON.stringify(user));
             axios.defaults.headers.common.Authorization = token;
