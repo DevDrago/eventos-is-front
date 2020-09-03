@@ -3,7 +3,7 @@
         <Breadcrumb :items="breadcrumb"></Breadcrumb>
         <Datatable title="Tipos de usuario"
         :columnas="headers"
-        :datos="tiposUsuario"
+        :datos="tiposUsuarios"
         :nuevo=true
         :allowDelete=true
         ></Datatable>
@@ -15,18 +15,20 @@
 
                 <v-card-text>
                     <v-container>
-                        <v-row>
-                            <v-col cols="12" sm="12" md="12">
-                                <v-text-field type="text" v-model="editedItem.tipoUsuario" label="Tipo de usuario"></v-text-field>
-                            </v-col>
-                        </v-row>
+                        <v-form v-model="isFormValid">
+                            <v-row>
+                                <v-col cols="12" sm="12" md="12">
+                                    <v-text-field :rules="[rules.required]" type="text" v-model="editedItem.tipoUsuario" label="Tipo de usuario"></v-text-field>
+                                </v-col>
+                            </v-row>
+                        </v-form>
                     </v-container>
                 </v-card-text>
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
-                    <v-btn color="blue darken-1" text @click="save">Guardar</v-btn>
+                    <v-btn color="blue darken-1" :disabled="!isFormValid" text @click="save">Guardar</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -104,6 +106,7 @@ export default {
         Alert
     },
     data: () => ({
+        isFormValid: false,
         breadcrumb: [
             {
             text: 'Dashboard',
@@ -117,28 +120,31 @@ export default {
             }
         ],
         headers: [
-            { text: 'id', align: 'left', value: 'idTipoUsuario'},
+            { text: 'ID', align: 'left', value: 'idTipoUsuario'},
             { text: 'Tipo de usuario', value: 'tipoUsuario' },
             { text: 'Acciones', value: 'action', sortable: false }
         ],
+        rules: {
+            required: value => !!value || 'Requerido.',
+        },
     }),
     computed: {
-      ...mapState(['tiposUsuario','dialog', 'editedItem', 'dialogDelete', 
+      ...mapState(['tiposUsuarios','dialog', 'editedItem', 'dialogDelete', 
       'alertType', 'alertMessage', 'editedIndex']),
       formTitle () {
         return this.editedIndex === -1 ? 'Nuevo registro' : 'Editar registro'
       },
     },
     methods: {
-        ...mapActions(['getTiposUsuario', 'closeModal', 'closeModalDelete', 'crearTipoUsuario', 'editarTipoUsuario', 'eliminarTipoUsuario']),
+        ...mapActions(['getTiposUsuarios', 'closeModal', 'closeModalDelete', 'crearTipoUsuario', 'editarTipoUsuario', 'eliminarTipoUsuario']),
         save (){
             if(this.editedIndex == -1){
                 this.crearTipoUsuario(this.editedItem).then(() => {
-                this.getTiposUsuario();
+                this.getTiposUsuarios();
                 });
             }else{
                 this.editarTipoUsuario(this.editedItem).then(() => {
-                this.getTiposUsuario();
+                this.getTiposUsuarios();
                 })
             }
         },
@@ -150,12 +156,12 @@ export default {
         },
         deleteEvent () {
             this.eliminarTipoUsuario(this.editedItem).then(() => {
-            this.getTiposUsuario();
+            this.getTiposUsuarios();
             });
         },
     },
     created() {
-        this.getTiposUsuario();
+        this.getTiposUsuarios();
     }
 }
 </script>

@@ -15,12 +15,13 @@
 
           <v-card-text>
             <v-container>
-              <v-row>
-                <v-form v-model="isFormValid">
+              <v-form v-model="isFormValid">
+                <v-row>
                   <v-col cols="12" sm="6" md="6">
                     <v-select 
-                      :items="tiposUsuario" :value="editedItem.idTipoUsuario_fk"
+                      :items="tiposDeUsuarios" :value="editedItem.idTipoUsuario_fk"
                       label="Tipo de Usuario" v-model="editedItem.idTipoUsuario_fk"
+                      :rules="[rules.required]"
                     ></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
@@ -38,16 +39,25 @@
                   <v-col cols="12" sm="6" md="6">
                       <v-text-field v-model="editedItem.telefono" label="Telefono"></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="6" md="6">
+                  <v-col cols="12" sm="6" md="6" v-if="this.editedIndex === -1">
                       <v-text-field 
                         v-model="editedItem.contrasenia" 
                         label="Contraseña"
                         :rules="[rules.required, rules.min]"
                         hint="Al menos 6 caracteres"
+                        type="password"
                       ></v-text-field>
                   </v-col>
-                </v-form>
-              </v-row>
+                  <v-col cols="12" sm="6" md="6" v-else>
+                      <v-text-field 
+                        v-model="editedItem.contrasenia" 
+                        label="Contraseña"
+                        hint="Al menos 6 caracteres"
+                        type="password"
+                      ></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-form>
             </v-container>
           </v-card-text>
 
@@ -57,7 +67,41 @@
             <v-btn color="blue darken-1" :disabled="!isFormValid" text @click="save">Guardar</v-btn>
           </v-card-actions>
         </v-card>
+      </v-dialog>
+      <v-dialog
+      v-model="dialogDelete" persistent
+      max-width="350"
+    >
+      <v-card>
+        <v-card-title class="c-red">Eliminar</v-card-title>
+
+        <v-card-text class="v-texto">
+          <h4>¿Está seguro(a) de borrar este registro?</h4>
+        </v-card-text>
+
+        <v-card-actions class="v-acciones">
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="deleteUsuario"
+          >
+            Eliminar
+          </v-btn>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="closeDeleteModal"
+          >
+            Cancelar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
+  <Alert :tipo="alertType"
+  :mensaje="alertMessage"></Alert>
   </v-container>
 
 </template>
@@ -92,16 +136,20 @@
 import Datatable from '../../components/Datatable';
 import Breadcrumb from '../../components/Breadcrumbs';
 import {mapActions, mapState, mapGetters} from 'vuex';
+import Alert from '../Alert';
 
 export default {
     name: 'Usuarios',
     components: {
         Datatable,
-        Breadcrumb
+        Breadcrumb,
+        Alert
     },
     data: () => ({
       nuevo: false,
       isFormValid: false,
+      modal1: false,
+      modal2: false,
       breadcrumb: [
         {
           text: 'Dashboard',
@@ -122,10 +170,11 @@ export default {
         { text: 'Correo', value: 'correo' },
         { text: 'Teléfono', value: 'telefono' },
         { text: 'Tipo de usuario', value: 'tipoUsuario' },
+        { text: 'Acciones', value: 'action', sortable: false }
       ],
       rules: {
           required: value => !!value || 'Requerido.',
-          min: v => v.length >= 6 || 'Mínimo 6 caracteres.',
+          min: value => value && value.length >= 6 || 'Mínimo 6 caracteres.',
           email: value => {
             const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             return pattern.test(value) || '.'
@@ -134,7 +183,7 @@ export default {
     }),
     computed: {
         ...mapState(['users','dialog', 'editedItem', 'dialogDelete', 
-      'tiposUsuario', 'alertType', 'alertMessage', 'editedIndex']),
+      'tiposDeUsuarios', 'alertType', 'alertMessage', 'editedIndex']),
         ...mapGetters(['isLoaded']),
         formTitle () {
           return this.editedIndex === -1 ? 'Nuevo registro' : 'Editar registro'
@@ -142,7 +191,7 @@ export default {
     },
     methods: {
       ...mapActions(['getUsers', 'closeModal', 'closeModalDelete',
-      'getTiposUsuario', 'crearUsuario', 'editarUsuario', 'eliminarUsuario']),
+      'getTiposDeUsuarios', 'crearUsuario', 'editarUsuario', 'eliminarUsuario']),
       
       save () {
         if(this.editedIndex == -1){
@@ -169,7 +218,7 @@ export default {
     },
     created() {
       this.getUsers();
-      this.getTiposUsuario();
+      this.getTiposDeUsuarios();
     },
 }
 </script>

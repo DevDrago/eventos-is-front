@@ -30,7 +30,8 @@ export default new Vuex.Store({
     ActividadesRes: [],
     ActividadesAsis: [],
     tiposRecurso: [],
-    tiposUsuario: [],
+    tiposUsuarios: [],
+    tiposDeUsuarios: [],
     recursosCount:0,
     actAsisCount:0,
     usersCount: 0,
@@ -128,8 +129,11 @@ export default new Vuex.Store({
     setActResponsables(state, actRes){
       state.actResponsables = actRes;
     },
-    setTiposUsuario(state, TUs){
-      state.tiposUsuario = TUs;
+    setTiposUsuarios(state, TUs){
+      state.tiposUsuarios = TUs;
+    },
+    setTiposDeUsuarios(state, TDU){
+      state.tiposDeUsuarios = TDU;
     },
     setUsersCount(state, usersCount){
       state.usersCount = usersCount;
@@ -279,6 +283,20 @@ export default new Vuex.Store({
       });
     },
     //LISTADOS
+    getTiposDeUsuarios({commit}){
+      return new Promise((resolve, reject) => {
+        axios.get(baseUrl+'/usuarios/tipos-usuarios')
+          .then(response => {
+            let TDU = response.data.tiposDeUsuarios;
+            commit('setTiposDeUsuarios', TDU);
+            resolve(response);
+          })
+          .catch(error => {
+            commit("error", error);
+            reject(error);
+          });
+      });
+    },
     getCoordinadores({commit}) {
       return new Promise((resolve, reject) => {
         axios.get(baseUrl+'/usuarios/coordinadores')
@@ -719,12 +737,12 @@ export default new Vuex.Store({
     },
 
     //TIPOS DE USUARIO
-    getTiposUsuario({commit}){
+    getTiposUsuarios({commit}){
       return new Promise((resolve, reject) => {
         axios.get(baseUrl+'/usuarios/tipos')
           .then(response => {
             let TU = response.data.tiposUsuarios;
-            commit('setTiposUsuario', TU);
+            commit('setTiposUsuarios', TU);
             resolve(response);
           })
           .catch(error => {

@@ -1,0 +1,18 @@
+LOGIN/REGISTRO
+
+- Corregir la carga y ocultamiento de los mensajes de error.
+
+MENÚ
+
+- Corregir el hover/active de los menús
+- Definir contenido del menú
+
+TODOS LOS DATATABLES
+
+- Traducir los textos en inglés al español.
+- Al cargar, clicar en editar y luego en nuevo, lanza los mensajes de required sin haber escrito nada en el input.
+- Las fechas están en formato YYYY/MM/DD, genera problemas al cargarlos en el formato DD/MM/YYYY, particularmente al editar.
+
+MÓDULO DE USUARIOS
+
+- Agregar validación para aplicar las rules cuando se edita una contraseña.
