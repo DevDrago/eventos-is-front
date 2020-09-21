@@ -36,14 +36,14 @@
                     >
                       <template v-slot:activator="{ on }">
                         <v-text-field
-                          v-model="editedItem.fechaInicio"
+                          v-model="computedDateInitFormatted"
                           label="Fecha de inicio"
                           prepend-icon="event"
                           readonly
                           v-on="on"
                         ></v-text-field>
                       </template>
-                      <v-date-picker v-model="editedItem.fechaInicio" scrollable>
+                      <v-date-picker v-model="editedItem.fechaInicio" locale="es" scrollable>
                         <v-spacer></v-spacer>
                         <v-btn text color="primary" @click="modal1 = false">Cancel</v-btn>
                         <v-btn text color="primary" @click="$refs.dialog1.save(initDate)">OK</v-btn>
@@ -61,14 +61,14 @@
                     >
                       <template v-slot:activator="{ on }">
                         <v-text-field
-                          v-model="editedItem.fechaFin"
+                          v-model="computedDateEndFormatted"
                           label="Fecha de finalización"
                           prepend-icon="event"
                           readonly
                           v-on="on"
                         ></v-text-field>
                       </template>
-                      <v-date-picker v-model="editedItem.fechaFin" scrollable>
+                      <v-date-picker v-model="editedItem.fechaFin" locale="es" scrollable>
                         <v-spacer></v-spacer>
                         <v-btn text color="primary" @click="modal2 = false">Cancel</v-btn>
                         <v-btn text color="primary" @click="$refs.dialog2.save(endDate)">OK</v-btn>
@@ -182,8 +182,8 @@
         { text: 'id', align: 'left', value: 'idEvento'},
         { text: 'Evento', value: 'nombreEvento' },
         { text: 'Usuario', value: 'usuario' },
-        { text: 'Fecha de inicio', value: 'fechaInicio' },
-        { text: 'Fecha de finalización', value: 'fechaFin' },
+        { text: 'Fecha de inicio', value: 'fechaInicioShow' },
+        { text: 'Fecha de finalización', value: 'fechaFinShow' },
         { text: 'Acciones', value: 'action', sortable: false }
       ],
       
@@ -194,6 +194,12 @@
       formTitle () {
         return this.editedIndex === -1 ? 'Nuevo registro' : 'Editar registro'
       },
+      computedDateInitFormatted () {
+        return this.formatDate(this.editedItem.fechaInicio)
+      },
+      computedDateEndFormatted () {
+        return this.formatDate(this.editedItem.fechaFin)
+      }
     },
     methods: {
       save () {
@@ -220,14 +226,11 @@
       closeDeleteModal () {
         this.closeModalDelete();
       },
-      /*formatDate (date) {
-        //console.log(date);
+      formatDate (date) {
         if (!date) return null
-
         const [year, month, day] = date.split('-')
-        //console.log(`${day}/${month}/${year}`);
-        return `${day}-${month}-${year}`
-      },*/
+        return day.length === 4 ? date : `${day}-${month}-${year}`
+      }
     },
     created() {
       this.getEventos();

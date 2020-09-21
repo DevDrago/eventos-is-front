@@ -60,17 +60,19 @@
                     >
                       <template v-slot:activator="{ on }">
                         <v-text-field
-                          v-model="editedItem.fechaInicio"
+                          v-model="computedDateInitFormatted"
                           label="Fecha de inicio"
                           prepend-icon="event"
                           readonly
                           v-on="on"
                         ></v-text-field>
                       </template>
-                      <v-date-picker v-model="editedItem.fechaInicio" scrollable>
+                      <v-date-picker v-model="editedItem.fechaInicio" locale="es" scrollable>
                         <v-spacer></v-spacer>
+                        
                         <v-btn text color="primary" @click="modal1 = false">Cancel</v-btn>
                         <v-btn text color="primary" @click="$refs.dialog1.save(initDate)">OK</v-btn>
+                        
                       </v-date-picker>
                     </v-dialog>
                 </v-col>
@@ -85,14 +87,14 @@
                     >
                       <template v-slot:activator="{ on }">
                         <v-text-field
-                          v-model="editedItem.fechaFin"
+                          v-model="computedDateEndFormatted"
                           label="Fecha de finalización"
                           prepend-icon="event"
                           readonly
                           v-on="on"
                         ></v-text-field>
                       </template>
-                      <v-date-picker v-model="editedItem.fechaFin" scrollable>
+                      <v-date-picker v-model="editedItem.fechaFin" locale="es" scrollable>
                         <v-spacer></v-spacer>
                         <v-btn text color="primary" @click="modal2 = false">Cancel</v-btn>
                         <v-btn text color="primary" @click="$refs.dialog2.save(endDate)">OK</v-btn>
@@ -189,7 +191,7 @@
       Datatable,
       Alert
     },
-    data: () => ({
+    data:()  => ({
       initDate: new Date().toISOString().substr(0, 10),
       endDate: new Date().toISOString().substr(0, 10),
       modal1: false,
@@ -212,8 +214,8 @@
         { text: 'Evento', value: 'nombreEvento' },
         { text: 'Organizador', value: 'usuario' },
         { text: 'Categoría', align: 'left', value: 'categoriaActividad'},
-        { text: 'Fecha de inicio', value: 'fechaInicio' },
-        { text: 'Fecha de finalización', value: 'fechaFin' },
+        { text: 'Fecha de inicio', value: 'fechaInicioShow' },
+        { text: 'Fecha de finalización', value: 'fechaFinShow' },
         { text: 'Descripción', value: 'descripcion' },
         { text: 'Cupos', value: 'noCupos' },
         { text: 'Estado', value: 'estado' },
@@ -226,7 +228,14 @@
       formTitle () {
         return this.editedIndex === -1 ? 'Nuevo registro' : 'Editar registro'
       },
+      computedDateInitFormatted () {
+        return this.formatDate(this.editedItem.fechaInicio)
+      },
+      computedDateEndFormatted () {
+        return this.formatDate(this.editedItem.fechaFin)
+      }
     },
+
     methods: {
       ...mapActions(['getActividades', 'getOrganizadores', 'getActividadesCat', 'getEventosAct', 'getEstadosAct',
       'getEventos', 'crearActividad', 'EditarActividad', 'EliminarActividad', 'closeModal', 'closeModalDelete']),
@@ -252,6 +261,11 @@
       closeDeleteModal () {
         this.closeModalDelete();
       },
+      formatDate (date) {
+        if (!date) return null
+        const [year, month, day] = date.split('-')
+        return day.length === 4 ? date : `${day}-${month}-${year}`
+      }
     },
     created() {
       this.getActividades();
