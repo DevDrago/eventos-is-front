@@ -48,14 +48,6 @@
                         type="password"
                       ></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="6" md="6" v-else>
-                      <v-text-field 
-                        v-model="editedItem.contrasenia" 
-                        label="Contraseña"
-                        hint="Al menos 6 caracteres"
-                        type="password"
-                      ></v-text-field>
-                  </v-col>
                 </v-row>
               </v-form>
             </v-container>

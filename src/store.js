@@ -285,9 +285,9 @@ export default new Vuex.Store({
     //LISTADOS
     getTiposDeUsuarios({commit}){
       return new Promise((resolve, reject) => {
-        axios.get(baseUrl+'/usuarios/tipos-usuarios')
+        axios.get(baseUrl+'/usuarios/tipos')
           .then(response => {
-            let TDU = response.data.tiposDeUsuarios;
+            let TDU = response.data.tiposUsuarios;
             commit('setTiposDeUsuarios', TDU);
             resolve(response);
           })
@@ -572,6 +572,7 @@ export default new Vuex.Store({
     },
     crearUsuario({commit}, usuario){
       return new Promise((resolve,reject) => {
+        console.log(usuario);
         axios.post(baseUrl+'/usuario/crear', usuario, {headers: { "content-type": "application/json" }, withCredentials: true})
           .then(response => {
             resolve(response);
