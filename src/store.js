@@ -739,9 +739,10 @@ export default new Vuex.Store({
     //TIPOS DE USUARIO
     getTiposUsuarios({commit}){
       return new Promise((resolve, reject) => {
-        axios.get(baseUrl+'/usuarios/tipos')
+        axios.get(baseUrl+'/tipousuario/all')
           .then(response => {
-            let TU = response.data.tiposUsuarios;
+            
+            let TU = response.data.todosTipoUsuario;
             commit('setTiposUsuarios', TU);
             resolve(response);
           })
