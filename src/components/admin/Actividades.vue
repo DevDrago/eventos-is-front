@@ -238,16 +238,20 @@
 
     methods: {
       ...mapActions(['getActividades', 'getOrganizadores', 'getActividadesCat', 'getEventosAct', 'getEstadosAct',
-      'getEventos', 'crearActividad', 'EditarActividad', 'EliminarActividad', 'closeModal', 'closeModalDelete']),
+      'getEventos', 'crearActividad', 'EditarActividad', 'EliminarActividad', 'closeModal', 'closeModalDelete', 'showMsjAlert']),
       save (){
-        if(this.editedIndex == -1){
-          this.crearActividad(this.editedItem).then(() => {
-            this.getActividades();
-          });
+        if(this.editedItem.fechaInicio < this.editedItem.fechaFin){
+          if(this.editedIndex == -1){
+            this.crearActividad(this.editedItem).then(() => {
+              this.getActividades();
+            });
+          }else{
+            this.EditarActividad(this.editedItem).then(() => {
+              this.getActividades();
+            })
+          }
         }else{
-          this.EditarActividad(this.editedItem).then(() => {
-            this.getActividades();
-          })
+          this.showMsjAlert('La fecha de fin debe ser mayor que la fecha de inicio');
         }
       },
       deleteAct () {

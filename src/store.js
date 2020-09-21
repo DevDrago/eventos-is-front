@@ -1049,6 +1049,10 @@ export default new Vuex.Store({
           });
       });
     },
+
+    showMsjAlert({commit}, msj){
+      commit('showAlert', ['warning', msj]);
+    }
     
   },
   getters : {

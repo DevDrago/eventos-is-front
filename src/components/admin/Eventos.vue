@@ -203,14 +203,18 @@
     },
     methods: {
       save () {
-        if(this.editedIndex == -1){
-          this.crearEvento(this.editedItem).then(() => {
-            this.getEventos();
-          });
+        if(this.editedItem.fechaInicio < this.editedItem.fechaFin){
+          if(this.editedIndex == -1){
+            this.crearEvento(this.editedItem).then(() => {
+              this.getEventos();
+            });
+          }else{
+            this.EditarEvento(this.editedItem).then(() => {
+              this.getEventos();
+            })
+          }
         }else{
-          this.EditarEvento(this.editedItem).then(() => {
-            this.getEventos();
-          })
+          this.showMsjAlert('La fecha de fin debe ser mayor que la fecha de inicio');
         }
       },
       deleteEvent () {
@@ -219,7 +223,7 @@
         });
       },
       ...mapActions(['getEventos', 'closeModal', 'closeModalDelete',
-      'getOrganizadores', 'crearEvento', 'EditarEvento', 'EliminarEvento']),
+      'getOrganizadores', 'crearEvento', 'EditarEvento', 'EliminarEvento', 'showMsjAlert']),
       close () {
         this.closeModal();
       },
