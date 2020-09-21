@@ -204,7 +204,7 @@ export default new Vuex.Store({
       state.dialogDelete = false;
       setTimeout(() => {
         state.showAlert = false;
-      },3000);
+      },5000);
     }
   },
   actions:{

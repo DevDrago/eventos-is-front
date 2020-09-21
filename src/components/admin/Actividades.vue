@@ -241,15 +241,24 @@
       'getEventos', 'crearActividad', 'EditarActividad', 'EliminarActividad', 'closeModal', 'closeModalDelete', 'showMsjAlert']),
       save (){
         if(this.editedItem.fechaInicio < this.editedItem.fechaFin){
-          if(this.editedIndex == -1){
-            this.crearActividad(this.editedItem).then(() => {
-              this.getActividades();
-            });
-          }else{
-            this.EditarActividad(this.editedItem).then(() => {
-              this.getActividades();
-            })
+          let eventSelected = this.eventosAct.find(event => event.value == this.editedItem.idEvento_fk);
+          if(eventSelected){
+            if(eventSelected.fechaInicio <= this.editedItem.fechaInicio && this.editedItem.fechaFin <= eventSelected.fechaFin){
+
+              if(this.editedIndex == -1){
+                this.crearActividad(this.editedItem).then(() => {
+                  this.getActividades();
+                });
+              }else{
+                this.EditarActividad(this.editedItem).then(() => {
+                  this.getActividades();
+                })
+              }
+            } else{
+              this.showMsjAlert('Las fechas de inicio y fin de la actividad deben estar dentro del rango de fechas de inicio y fin del evento al que pertenecen');
+            }
           }
+
         }else{
           this.showMsjAlert('La fecha de fin debe ser mayor que la fecha de inicio');
         }
@@ -269,7 +278,7 @@
         if (!date) return null
         const [year, month, day] = date.split('-')
         return day.length === 4 ? date : `${day}-${month}-${year}`
-      }
+      },
     },
     created() {
       this.getActividades();
