@@ -1,7 +1,7 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import 'bootstrap-css-only/css/bootstrap.min.css';
-import 'mdbvue/build/css/mdb.css';
+//import 'mdbvue/build/css/mdb.css';
 
 import Vue from 'vue';
 import App from './App';
@@ -11,10 +11,16 @@ import store from './store';
 import Axios from 'axios';
 import vuetify from './plugins/vuetify';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
-import 'material-design-icons-iconfont/dist/material-design-icons.css';
+//import 'material-design-icons-iconfont/dist/material-design-icons.css';
+import "@mdi/font/css/materialdesignicons.min.css";
+
+import lodash from "lodash";
+import moment from "moment";
 
 Vue.use(Vuelidate);
 
+Vue.prototype._ = lodash;
+Vue.prototype.moment = moment;
 Vue.config.productionTip = false;
 
 Vue.prototype.$http = Axios;

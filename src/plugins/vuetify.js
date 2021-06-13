@@ -19,11 +19,11 @@ const opts = {
         success: '#4CAF50',
         warning: '#FFC107'
       },
-    },
+    }
   },
   icons: {
-    iconfont: 'md',
-  },
+    iconFont: 'md',
+  }
 };
 
 export default new Vuetify(opts);

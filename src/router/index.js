@@ -7,7 +7,7 @@ import Dashboard from '@/components/Dashboard';
 import CategoriaActividad from '@/components/admin/CategoriaActividad';
 import Actividades from '@/components/admin/Actividades';
 import Eventos from '@/components/admin/Eventos';
-import Profile from '@/components/Profile';
+//import Profile from '@/components/Profile';
 import Usuarios from '@/components/admin/Usuarios';
 import ResponsableActividad from '@/components/admin/ResponsableActividad';
 import TipoRecurso from '@/components/admin/TipoRecurso';
@@ -27,14 +27,14 @@ let router = new Router({
         guest: true
       }
     },
-    {
-      path: '/profile',
-      name: 'Profile',
-      component: Profile,
-      meta: {
-        requiresAuth: true
-      }
-    },
+    //{
+    //  path: '/profile',
+    //  name: 'Profile',
+    //  component: Profile,
+    //  meta: {
+    //    requiresAuth: true
+    //  }
+    //},
     {
       path: '/admin',
       name: 'Admin',

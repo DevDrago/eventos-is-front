@@ -1,188 +1,161 @@
 <template>
-  <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-      v-if="isLoggedIn"
-    >
-      <div class="align-center">
-
-        <a style="font-size:20px;" href="/" class="text-white">Sistema de Eventos IS</a>
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-menu open-on-hover bottom>
-        <template v-slot:activator="{ on }">
-          <v-btn v-if="isLoggedIn && isAdmin"
-            color="primary"
-            dark
-            v-on="on" style="margin-left: 0px !important;"
-          >
-            Usuarios
-          </v-btn>
-        </template>
-
-        <v-list>
-          <v-list-item>
-            <v-list-item-title>      
-              <v-btn
-                href="/usuarios"
-                text
-                v-if="isLoggedIn && isAdmin">
-                <span>Usuarios</span>
-              </v-btn>
-            </v-list-item-title>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-title>      
-              <v-btn
-                href="/tipo-usuario"
-                text
-                v-if="isLoggedIn && isAdmin">
-                <span>Tipos</span>
-              </v-btn>
-            </v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-      <v-btn
-        href="/eventos"
-        text
-        v-if="isLoggedIn && isAdmin" style="margin-left: 0px !important;"
-      >
-        <span>Eventos</span>
-      </v-btn>
+  <div id="app">
+    <v-app id="inspire">
+      <v-app id="inspire">
+        <v-navigation-drawer
+          v-model="drawer"
+          :clipped="$vuetify.breakpoint.lgAndUp"
+          app
+        >
+          <v-list dense>
+            <template v-for="item in items">
+              <v-row
+                v-if="item.heading"
+                :key="item.heading"
+                align="center"
+              >
+                <v-col cols="6">
+                  <v-subheader v-if="item.heading">
+                    {{ item.heading }}
+                  </v-subheader>
+                </v-col>
+                <v-col
+                  cols="6"
+                  class="text-center"
+                >
+                  <a
+                    href="#!"
+                    class="body-2 black--text"
+                  >EDIT</a>
+                </v-col>
+              </v-row>
+              <v-list-group
+                v-else-if="item.children"
+                :key="item.text"
+                v-model="item.model"
+                :prepend-icon="item.model ? item.icon : item['icon-alt']"
+                append-icon=""
+              >
+                <template v-slot:activator>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      {{ item.text }}
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </template>
+                <v-list-item
+                  v-for="(child, i) in item.children"
+                  :key="i"
+                  link
+                >
+                  <v-list-item-action v-if="child.icon">
+                    <v-icon>{{ child.icon }}</v-icon>
+                  </v-list-item-action>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      {{ child.text }}
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list-group>
+              <v-list-item
+                v-else
+                :key="item.text"
+                link
+              >
+                <v-list-item-action>
+                  <v-icon>{{ item.icon }}</v-icon>
+                </v-list-item-action>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ item.text }}
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+          </v-list>
+        </v-navigation-drawer>
     
-      <v-menu open-on-hover bottom>
-        <template v-slot:activator="{ on }">
-          <v-btn v-if="isLoggedIn && isAdmin"
-            color="primary"
-            dark
-            v-on="on" style="margin-left: 0px !important;"
-          >
-            Actividades
+        <v-app-bar
+          :clipped-left="$vuetify.breakpoint.lgAndUp"
+          app
+          color="blue darken-3"
+          dark
+        >
+          <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+          <v-toolbar-title style="width: 300px" class="ml-0 pl-4">
+            <span class="hidden-sm-and-down">Eventos IS UNAH</span>
+          </v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-toolbar-title class="ml-0 pl-4 mr-4">
+            <span class="hidden-sm-and-down">{{ this.usuario.nombres }} </span>
+          </v-toolbar-title>
+          <v-btn icon large @click="cerrarSesion" v-if="isLoggedIn" text>
+            <v-icon>mdi-logout</v-icon>
           </v-btn>
-        </template>
+        </v-app-bar>
 
-        <v-list>
-          <v-list-item>
-            <v-list-item-title>      
-              <v-btn
-                href="/actividades"
-                text
-                v-if="isLoggedIn && isAdmin">
-                <span>Actividades</span>
-              </v-btn>
-            </v-list-item-title>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-title>      
-              <v-btn
-                href="/categoria-actividad"
-                text
-                v-if="isLoggedIn && isAdmin">
-                <span>Categorías</span>
-              </v-btn>
-            </v-list-item-title>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-title>      
-              <v-btn
-                href="/responsable-actividad"
-                text
-                v-if="isLoggedIn && isAdmin">
-                <span>Responsables</span>
-              </v-btn>
-            </v-list-item-title>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-title>      
-              <v-btn
-                href="/asistencia"
-                text
-                v-if="isLoggedIn && isAdmin">
-                <span>Asistencia</span>
-              </v-btn>
-            </v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-      <v-menu open-on-hover bottom>
-        <template v-slot:activator="{ on }">
-          <v-btn
-            color="primary" v-if="isLoggedIn && isAdmin"
-            dark
-            v-on="on" style="margin-left: 0px !important;"
-          >
-            Recursos
-          </v-btn>
-        </template>
+        <v-main>
+          <v-container class="fill-height" fluid>
+            <v-row align="center" justify="center">
+              <router-view></router-view>
+            </v-row>
+          </v-container>
+        </v-main>
 
-        <v-list>
-          <v-list-item>
-            <v-list-item-title>      
-              <v-btn
-                href="/recurso"
-                text
-                v-if="isLoggedIn && isAdmin">
-                <span>Recursos</span>
-              </v-btn>
-            </v-list-item-title>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-title>      
-              <v-btn
-                href="/tipo-recurso"
-                text
-                v-if="isLoggedIn && isAdmin">
-                <span>Tipos</span>
-              </v-btn>
-            </v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-      <v-btn
-        @click="cerrarSesion" v-if="isLoggedIn" text
-      >
-        <span class="mr-2">Cerrar sesión</span>
-        <v-icon class="icon-p">fas fa-sign-out-alt</v-icon>
-      </v-btn>
-    </v-app-bar>
-
-    <v-content>
-      <router-view></router-view>
-    </v-content>
-    <v-footer
-      :padless=true
-    >
-      <v-card
-        flat
-        tile
-        color="primary"
-        width="100%"
-        class="text-center"
-      >
-        <v-card-text class="white--text">
-          &copy; {{ new Date().getFullYear() }} IS UNAH. Todos los derechos reservados.
-        </v-card-text>
-      </v-card>
-    </v-footer>
-  </v-app>
+      </v-app>
+    </v-app>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
 import {mapActions, mapGetters, mapState} from 'vuex';
 import router from './router/index';
+//import Vuetify from 'vuetify';
 
 export default {
   name: 'App',
-
-  components: {
-    HelloWorld,
+  //vuetify: new Vuetify(),
+  props: {
+    source: String,
   },
+  data: () => ({
+    dialog: false,
+    drawer: null,
+    items: [
+      { icon: 'mdi-contacts', text: 'Contacts' },
+      { icon: 'mdi-history', text: 'Frequently contacted' },
+      { icon: 'mdi-content-copy', text: 'Duplicates' },
+      {
+        icon: 'mdi-chevron-up',
+        'icon-alt': 'mdi-chevron-down',
+        text: 'Labels',
+        model: true,
+        children: [
+          { icon: 'mdi-plus', text: 'Create label' },
+        ],
+      },
+      {
+        icon: 'mdi-chevron-up',
+        'icon-alt': 'mdi-chevron-down',
+        text: 'More',
+        model: false,
+        children: [
+          { text: 'Import' },
+          { text: 'Export' },
+          { text: 'Print' },
+          { text: 'Undo changes' },
+          { text: 'Other contacts' },
+        ],
+      },
+      { icon: 'mdi-cog', text: 'Settings' },
+      { icon: 'mdi-message', text: 'Send feedback' },
+      { icon: 'mdi-help-circle', text: 'Help' },
+      { icon: 'mdi-cellphone-link', text: 'App downloads' },
+      { icon: 'mdi-keyboard', text: 'Go to the old version' },
+    ],
+  }),
+
   methods:{
 		...mapActions(['logout']),
 		cerrarSesion(){
@@ -190,38 +163,14 @@ export default {
 		}
 	},
 	computed:{
-		...mapGetters(['isLoggedIn', 'isAdmin'])
-	},
-
-  data: () => ({
-    icons: [
-        'mdi-home',
-        'mdi-email',
-        'mdi-calendar',
-        'mdi-delete',
-      ],
-      items: [
-        'default',
-        'absolute',
-        'fixed',
-      ],
-      padless: false,
-      variant: 'default',
-  }),
+		...mapGetters(['isLoggedIn', 'isAdmin']),
+    ...mapState(['isAdmin', 'user']),
+    usuario(){
+      if (typeof this.user === 'string') 
+        return JSON.parse(this.user);
+      else
+        return this.user;
+    }
+  }
 };
 </script>
-<style>
-  body { background-color: #DDD }
-  #app {
-    margin: 0 auto;
-    padding-top: 15px;
-    max-width: 100%;
-  }
-  .v-btn.v-size--default {
-    font-size: 0.74rem;
-  }
-  .icon-p{
-    font-size: 15px !important;
-  }
-
-</style>
